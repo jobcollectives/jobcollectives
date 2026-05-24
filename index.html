@@ -1,0 +1,2580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>the job collectives™ — Building your team beyond borders.</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
+
+<style>
+/* ══════════════════════════════════════════════════════
+   THE JOB COLLECTIVES™ — COBALT FUSION BRAND SYSTEM
+   Brand Guidelines 2025 · Strictly applied
+══════════════════════════════════════════════════════ */
+
+:root {
+  /* Cobalt Fusion Palette — exact brand colors */
+  --blue:       #131DBF;   /* Deep Ultramarine — Primary */
+  --navy:       #0A0F3C;   /* Midnight Navy — Depth */
+  --gold:       #F59E0B;   /* Golden Apricot — Accent */
+  --teal:       #14D3C4;   /* Vivid Teal — Tech */
+  --periwinkle: #566AE7;   /* Periwinkle — UI */
+  --snow:       #F1F5F9;   /* Snow Gray — Neutral */
+  --white:      #ffffff;
+  --blue-dark:  #0D1699;   /* Pressed state */
+  --blue-mid:   #1a24d4;   /* Card surface */
+  --navy-card:  #0e1450;   /* Card on navy */
+
+  /* Typography */
+  --font-body:    'Plus Jakarta Sans', sans-serif;
+  --font-display: 'Playfair Display', serif;
+
+  /* Apple ease */
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur:  0.55s;
+}
+
+
+
+/* ─── LOGO WATERMARK ────────────────────────────── */
+.logo-watermark {
+  position: absolute;
+  pointer-events: none;
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+  mix-blend-mode: screen;
+  z-index: 0;
+  opacity: 0.07;
+}
+
+/* ─── EXTRA SHINE EFFECTS ───────────────────────── */
+@keyframes lightBeam {
+  0%   { transform: translateX(-120%) rotate(20deg); opacity:0; }
+  15%  { opacity: 1; }
+  85%  { opacity: 1; }
+  100% { transform: translateX(120vw) rotate(20deg); opacity:0; }
+}
+@keyframes borderGlow {
+  0%,100% { box-shadow: 0 0 0 0 transparent, 0 0 20px rgba(19,29,191,.15); }
+  50%      { box-shadow: 0 0 0 1px rgba(86,106,231,.2), 0 0 32px rgba(86,106,231,.3); }
+}
+@keyframes pulseRing {
+  0%   { transform:scale(.92); opacity:.8; }
+  100% { transform:scale(1.5); opacity:0; }
+}
+@keyframes driftOrb {
+  0%,100% { transform:translate(0,0) scale(1); }
+  33%     { transform:translate(30px,-20px) scale(1.06); }
+  66%     { transform:translate(-20px,15px) scale(.97); }
+}
+
+.shine-card {
+  position: relative;
+  overflow: hidden;
+}
+.shine-card::after {
+  content: '';
+  position: absolute;
+  top: -50%; left: -60%;
+  width: 40%; height: 200%;
+  background: linear-gradient(105deg, transparent 40%, rgba(255,255,255,.06) 50%, transparent 60%);
+  transform: skewX(-15deg);
+  transition: left .6s var(--ease);
+  pointer-events: none;
+}
+.shine-card:hover::after { left: 130%; }
+
+/* Animated gradient border */
+.gradient-border-card {
+  position: relative;
+  background: rgba(255,255,255,.04);
+  border-radius: 20px;
+}
+.gradient-border-card::before {
+  content: '';
+  position: absolute; inset: -1px;
+  border-radius: 21px;
+  background: linear-gradient(135deg, rgba(86,106,231,.5), rgba(20,211,196,.2), rgba(19,29,191,.4), rgba(245,158,11,.15));
+  background-size: 300% 300%;
+  animation: gradientShift 5s ease infinite;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity .4s;
+}
+.gradient-border-card:hover::before { opacity: 1; }
+
+@keyframes gradientShift {
+  0%   { background-position: 0% 50%; }
+  50%  { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Ambient glow orbs — extended */
+.orb-extra {
+  position: absolute;
+  border-radius: 50%;
+  filter: blur(90px);
+  pointer-events: none;
+  animation: driftOrb 12s ease-in-out infinite;
+}
+
+/* Section divider glow line */
+.glow-divider {
+  width: 100%; height: 1px;
+  background: linear-gradient(90deg, transparent, rgba(86,106,231,.5), rgba(20,211,196,.3), transparent);
+  position: relative;
+}
+.glow-divider::after {
+  content:''; position:absolute; top:-1px; left:20%; right:20%; height:3px;
+  background: radial-gradient(ellipse at center, rgba(86,106,231,.6) 0%, transparent 70%);
+  filter: blur(2px);
+}
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+html { scroll-behavior: smooth; font-size: 16px; }
+
+body {
+  font-family: var(--font-body);
+  background: var(--navy);
+  color: var(--white);
+  -webkit-font-smoothing: antialiased;
+  overflow-x: hidden;
+}
+
+/* ─── ANIMATIONS ─────────────────────────────────── */
+@keyframes fadeUp   { from { opacity:0; transform:translateY(32px); } to { opacity:1; transform:translateY(0); } }
+@keyframes fadeIn   { from { opacity:0; } to { opacity:1; } }
+@keyframes float    { 0%,100% { transform:translateY(0) rotate(0.3deg); } 50% { transform:translateY(-14px) rotate(-0.3deg); } }
+@keyframes floatB   { 0%,100% { transform:translateY(0); } 50% { transform:translateY(-10px); } }
+@keyframes floatC   { 0%,100% { transform:translateY(0) rotate(-0.5deg); } 50% { transform:translateY(-8px) rotate(0.5deg); } }
+@keyframes pulseDot { 0%,100% { opacity:1; transform:scale(1); } 50% { opacity:.5; transform:scale(.65); } }
+@keyframes glow     { 0%,100% { opacity:.55; transform:scale(1); } 50% { opacity:.85; transform:scale(1.08); } }
+@keyframes shimmer  { 0% { background-position:-200% center; } 100% { background-position:200% center; } }
+@keyframes scanLine { 0% { top:-2px; } 100% { top:100%; } }
+@keyframes ticker   { from { transform:translateX(0); } to { transform:translateX(-50%); } }
+@keyframes rotateOrb { 0% { transform:rotate(0deg); } 100% { transform:rotate(360deg); } }
+
+.a1 { animation: fadeUp .7s var(--ease) .05s both; }
+.a2 { animation: fadeUp .7s var(--ease) .18s both; }
+.a3 { animation: fadeUp .7s var(--ease) .30s both; }
+.a4 { animation: fadeUp .7s var(--ease) .42s both; }
+.a5 { animation: fadeUp .7s var(--ease) .55s both; }
+.a6 { animation: fadeIn  .9s var(--ease) .65s both; }
+
+.reveal {
+  opacity:0; transform:translateY(26px);
+  transition: opacity .65s var(--ease), transform .65s var(--ease);
+}
+.reveal.v { opacity:1; transform:none; }
+.rd1 { transition-delay:.08s; }
+.rd2 { transition-delay:.16s; }
+.rd3 { transition-delay:.24s; }
+.rd4 { transition-delay:.32s; }
+
+/* ═══════════════════════════════════════════════════
+   NAVBAR
+═══════════════════════════════════════════════════ */
+.nav {
+  position: fixed; top:0; left:0; right:0; z-index:200;
+  padding: 0 2.5rem;
+  height: 68px;
+  display: flex; align-items: center; justify-content: space-between;
+  background: transparent;
+  transition: background .4s var(--ease), border-bottom-color .4s var(--ease);
+  border-bottom: 1px solid transparent;
+}
+.nav.scrolled {
+  background: rgba(10,15,60,0.92);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom-color: rgba(255,255,255,.07);
+}
+
+/* TJC Logo — per guidelines: horizontal lockup, lowercase, trademark */
+.nav-logo { display:flex; align-items:center; gap:10px; text-decoration:none; }
+.nav-logo-mark {
+  width:36px; height:36px;
+  background: var(--blue);
+  border-radius: 9px;
+  display:flex; align-items:center; justify-content:center;
+  transition: transform .3s var(--ease);
+}
+.nav-logo-mark:hover { transform: scale(1.07); }
+/* TJC ribbon mark — two interlocking ribbon forms */
+.nav-logo-mark svg { width:20px; height:20px; }
+.nav-logo-text {
+  font-size: 14.5px;
+  font-weight: 700;
+  letter-spacing: -.01em;
+  color: var(--white);
+  line-height: 1.2;
+}
+.nav-logo-text span { display:block; font-size:9px; font-weight:400; opacity:.5; letter-spacing:.06em; text-transform:uppercase; }
+
+.nav-links { display:flex; align-items:center; gap:2rem; list-style:none; }
+.nav-links a {
+  font-size:14px; font-weight:500;
+  color: rgba(255,255,255,.6);
+  text-decoration:none;
+  transition: color .25s var(--ease);
+}
+.nav-links a:hover { color:var(--white); }
+
+.nav-cta {
+  background: var(--gold);
+  color: var(--navy) !important;
+  padding: 9px 22px;
+  border-radius: 100px;
+  font-size: 13.5px;
+  font-weight: 700;
+  letter-spacing: .01em;
+  text-decoration: none;
+  transition: all .25s var(--ease) !important;
+  box-shadow: 0 4px 20px rgba(245,158,11,.35);
+}
+.nav-cta:hover { background:#e08e00; transform:translateY(-1px); box-shadow:0 8px 28px rgba(245,158,11,.45); }
+
+.nav-mob-btn { display:none; background:none; border:none; cursor:pointer; padding:6px; }
+
+
+/* ═══════════════════════════════════════════════════
+   HERO — AirLume style, full-screen dark, centered
+═══════════════════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  background: var(--navy);
+  display: flex; flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  padding: 120px 2rem 80px;
+}
+
+/* Vertical stripe background (like AirLume's curtain effect) */
+.hero-stripes {
+  position: absolute; inset:0; z-index:0; pointer-events:none;
+  display: flex;
+}
+.hero-stripe {
+  flex: 1;
+  background: rgba(19,29,191,0.06);
+  border-right: 1px solid rgba(19,29,191,0.08);
+  transition: background .3s;
+}
+.hero-stripe:nth-child(even) { background: rgba(19,29,191,0.03); }
+
+/* Ambient glow orbs */
+.hero-orb {
+  position: absolute; border-radius:50%; pointer-events:none; z-index:0;
+  filter: blur(80px);
+}
+.orb-1 {
+  width:700px; height:500px;
+  top:-100px; left:50%; transform:translateX(-50%);
+  background: radial-gradient(ellipse, rgba(19,29,191,.55) 0%, transparent 70%);
+  animation: glow 8s ease-in-out infinite;
+}
+.orb-2 {
+  width:400px; height:400px;
+  bottom:0; left:5%;
+  background: radial-gradient(circle, rgba(20,211,196,.18) 0%, transparent 70%);
+  animation: glow 10s ease-in-out infinite reverse;
+}
+.orb-3 {
+  width:350px; height:350px;
+  top:30%; right:5%;
+  background: radial-gradient(circle, rgba(86,106,231,.22) 0%, transparent 70%);
+  animation: glow 12s ease-in-out infinite 2s;
+}
+
+/* Scan line effect */
+.hero-scan {
+  position:absolute; left:0; right:0; height:2px; z-index:1;
+  background: linear-gradient(90deg, transparent, rgba(20,211,196,.3), rgba(19,29,191,.5), rgba(20,211,196,.3), transparent);
+  animation: scanLine 6s linear infinite;
+  pointer-events:none;
+}
+
+.hero-content {
+  position:relative; z-index:2;
+  text-align: center;
+  max-width: 800px;
+}
+
+/* Brand badge */
+.hero-badge {
+  display: inline-flex; align-items:center; gap:8px;
+  background: rgba(255,255,255,.07);
+  border: 1px solid rgba(255,255,255,.12);
+  backdrop-filter: blur(12px);
+  border-radius: 100px;
+  padding: 7px 16px;
+  font-size: 12px; font-weight: 600;
+  color: var(--teal);
+  letter-spacing: .05em;
+  margin-bottom: 28px;
+}
+.badge-dot {
+  width:6px; height:6px; border-radius:50%;
+  background:var(--teal);
+  animation: pulseDot 2.2s ease-in-out infinite;
+}
+
+/* Hero headline */
+.hero h1 {
+  font-family: var(--font-body);
+  font-size: clamp(2.5rem, 5.5vw, 4.5rem);
+  font-weight: 800;
+  line-height: 1.06;
+  letter-spacing: -.03em;
+  color: var(--white);
+  margin-bottom: 22px;
+}
+.hero h1 .gold { color: var(--gold); }
+.hero h1 .teal {
+  background: linear-gradient(135deg, var(--teal), var(--periwinkle) 60%, var(--teal));
+  background-size: 200% auto;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  animation: shimmer 4s linear infinite;
+}
+
+.hero-sub {
+  font-size: 1.1rem; line-height:1.75;
+  color: rgba(255,255,255,.55);
+  max-width: 540px; margin: 0 auto 36px;
+  font-weight: 400;
+}
+
+/* CTA group */
+.hero-cta-group { display:flex; align-items:center; justify-content:center; gap:14px; flex-wrap:wrap; margin-bottom:70px; }
+
+.btn-gold {
+  display:inline-flex; align-items:center; gap:9px;
+  background: var(--gold);
+  color: var(--navy);
+  padding: 14px 30px;
+  border-radius: 100px;
+  font-size: 15px; font-weight: 700;
+  text-decoration:none; border:none; cursor:pointer;
+  box-shadow: 0 6px 24px rgba(245,158,11,.40);
+  transition: all .25s var(--ease);
+  position:relative; overflow:hidden;
+}
+.btn-gold::after { content:''; position:absolute; inset:0; background:rgba(255,255,255,.1); opacity:0; transition:opacity .2s; }
+.btn-gold:hover { background:#e08e00; transform:translateY(-2px); box-shadow:0 12px 36px rgba(245,158,11,.50); }
+.btn-gold:hover::after { opacity:1; }
+.btn-gold:active { transform:scale(.98); }
+.btn-gold svg { width:15px; height:15px; transition:transform .2s var(--ease); }
+.btn-gold:hover svg { transform:translateX(3px); }
+
+.btn-outline-w {
+  display:inline-flex; align-items:center; gap:8px;
+  background: rgba(255,255,255,.07);
+  color: var(--white);
+  border: 1px solid rgba(255,255,255,.2);
+  padding: 13px 26px;
+  border-radius: 100px;
+  font-size: 14.5px; font-weight: 600;
+  text-decoration:none;
+  backdrop-filter: blur(8px);
+  transition: all .25s var(--ease);
+}
+.btn-outline-w:hover { background:rgba(255,255,255,.13); border-color:rgba(255,255,255,.35); transform:translateY(-1px); }
+
+/* Trust strip */
+.hero-trust { display:flex; align-items:center; justify-content:center; gap:28px; flex-wrap:wrap; margin-bottom:80px; }
+.trust-pill {
+  display:flex; align-items:center; gap:7px;
+  font-size:12.5px; font-weight:500;
+  color:rgba(255,255,255,.5);
+}
+.trust-check {
+  width:18px; height:18px; border-radius:50%;
+  background: rgba(20,211,196,.15);
+  display:flex; align-items:center; justify-content:center;
+  flex-shrink:0;
+}
+.trust-check svg { width:10px; height:10px; stroke:var(--teal); fill:none; }
+
+/* ─── FLOATING CARDS (AirLume style) ─── */
+.hero-cards {
+  position: relative; z-index:2;
+  width: 100%;
+  max-width: 1060px;
+  display: grid;
+  grid-template-columns: 260px 1fr 240px;
+  gap: 20px;
+  align-items: end;
+  padding: 0 2rem;
+}
+
+.hcard {
+  background: rgba(255,255,255,.06);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,.10);
+  border-radius: 20px;
+  padding: 18px;
+  position: relative;
+  overflow: hidden;
+}
+.hcard::before {
+  content:''; position:absolute; top:0; left:0; right:0;
+  height:1px;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,.25), transparent);
+}
+
+.hcard-left  { animation: floatB 7s ease-in-out infinite .5s; }
+.hcard-mid   { animation: float  8s ease-in-out infinite; }
+.hcard-right { animation: floatC 6s ease-in-out infinite 1.2s; }
+
+/* Left card — Partner status */
+.hcard-label {
+  font-size:9.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase;
+  color:rgba(255,255,255,.4); margin-bottom:6px;
+}
+.hcard-title { font-size:13px; font-weight:700; color:var(--white); margin-bottom:12px; }
+.hcard-big {
+  font-size:2.2rem; font-weight:800; color:var(--white);
+  letter-spacing:-.02em; line-height:1; margin-bottom:4px;
+}
+.hcard-big.gold { color:var(--gold); }
+.hcard-big.teal { color:var(--teal); }
+.hcard-sub { font-size:11px; color:rgba(255,255,255,.45); margin-bottom:14px; }
+.hcard-pill {
+  display:inline-flex; align-items:center; gap:5px;
+  background: rgba(245,158,11,.15);
+  color:var(--gold);
+  border:1px solid rgba(245,158,11,.2);
+  border-radius:100px; padding:4px 10px;
+  font-size:10px; font-weight:700;
+  letter-spacing:.03em;
+}
+.hcard-pill svg { width:9px; height:9px; stroke:var(--gold); fill:none; }
+.hcard-pill.teal-pill { background:rgba(20,211,196,.12); color:var(--teal); border-color:rgba(20,211,196,.2); }
+.hcard-pill.teal-pill svg { stroke:var(--teal); }
+
+/* Mid card — Main dashboard */
+.hcard-mid {
+  border-color: rgba(19,29,191,.5);
+  background: rgba(19,29,191,.25);
+}
+.hcard-mid::before {
+  background: linear-gradient(90deg, transparent, rgba(86,106,231,.5), transparent);
+}
+.hcard-topbar {
+  background: var(--blue);
+  border-radius:10px; padding:11px 14px;
+  display:flex; align-items:center; gap:8px; margin-bottom:14px;
+}
+.db-dots { display:flex; gap:5px; }
+.db-dot { width:9px; height:9px; border-radius:50%; }
+.db-dot-r { background:#ff5f56; } .db-dot-y { background:#febc2e; } .db-dot-g { background:#27c840; }
+.db-url { flex:1; background:rgba(255,255,255,.08); border-radius:5px; height:20px; margin-left:6px; display:flex; align-items:center; padding:0 8px; }
+.db-url span { font-size:9px; color:rgba(255,255,255,.35); }
+
+.hcard-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-bottom:12px; }
+.hcard-metric {
+  background: rgba(255,255,255,.06);
+  border-radius:10px; padding:9px 10px;
+  border: 1px solid rgba(255,255,255,.06);
+}
+.hcard-metric-label { font-size:8px; color:rgba(255,255,255,.4); font-weight:600; margin-bottom:3px; text-transform:uppercase; letter-spacing:.05em; }
+.hcard-metric-val { font-size:18px; font-weight:800; color:var(--white); line-height:1; }
+.hcard-metric-val.teal { color:var(--teal); }
+.hcard-metric-val.gold { color:var(--gold); }
+
+.hcard-tasks { display:flex; flex-direction:column; gap:5px; }
+.hcard-task {
+  background: rgba(255,255,255,.05);
+  border-radius:7px; padding:7px 10px;
+  display:flex; align-items:center; gap:7px;
+  border:1px solid rgba(255,255,255,.05);
+}
+.task-dot { width:6px; height:6px; border-radius:50%; flex-shrink:0; }
+.task-dot.done { background:var(--teal); }
+.task-dot.live { background:#3b82f6; }
+.task-dot.rev  { background:var(--gold); }
+.task-text { font-size:9.5px; font-weight:500; color:rgba(255,255,255,.7); flex:1; }
+.task-badge {
+  font-size:7.5px; font-weight:700; padding:2px 6px; border-radius:4px;
+}
+.badge-done  { background:rgba(20,211,196,.15); color:var(--teal); }
+.badge-live  { background:rgba(59,130,246,.15); color:#60a5fa; }
+.badge-rev   { background:rgba(245,158,11,.15); color:var(--gold); }
+
+.hcard-partner {
+  margin-top:10px;
+  background: linear-gradient(135deg, rgba(19,29,191,.6), rgba(86,106,231,.4));
+  border-radius:10px; padding:9px 12px;
+  display:flex; align-items:center; gap:8px;
+  border: 1px solid rgba(86,106,231,.3);
+}
+.partner-av {
+  width:24px; height:24px; border-radius:50%;
+  background:var(--teal); display:flex; align-items:center; justify-content:center;
+  font-size:8px; font-weight:800; color:var(--navy); flex-shrink:0;
+}
+.partner-name { font-size:9.5px; font-weight:700; color:var(--white); }
+.partner-role { font-size:7.5px; color:rgba(255,255,255,.4); }
+.partner-online {
+  margin-left:auto; background:rgba(20,211,196,.2); color:var(--teal);
+  font-size:7px; font-weight:700; padding:2px 7px; border-radius:20px;
+  letter-spacing:.05em; text-transform:uppercase;
+}
+
+/* Right card */
+.hcard-right { background:rgba(14,20,80,.7); }
+.hcard-right::before { background:linear-gradient(90deg, transparent, rgba(20,211,196,.3), transparent); }
+.hcard-result-label { font-size:10px; font-weight:700; color:var(--teal); margin-bottom:4px; text-transform:uppercase; letter-spacing:.07em; }
+.hcard-result-main { font-size:1.4rem; font-weight:800; color:var(--white); letter-spacing:-.02em; line-height:1.2; margin-bottom:4px; }
+.hcard-result-sub { font-size:11px; color:rgba(255,255,255,.45); margin-bottom:14px; }
+.hcard-bar-wrap { margin-bottom:12px; }
+.hcard-bar-label { display:flex; justify-content:space-between; font-size:9px; color:rgba(255,255,255,.4); margin-bottom:5px; }
+.hcard-bar { height:5px; background:rgba(255,255,255,.08); border-radius:10px; overflow:hidden; }
+.hcard-bar-fill { height:100%; border-radius:10px; background:linear-gradient(90deg, var(--teal), var(--periwinkle)); }
+.hcard-arrow-btn {
+  width:34px; height:34px; border-radius:50%;
+  background: var(--gold);
+  display:flex; align-items:center; justify-content:center;
+  cursor:pointer; margin-top:8px;
+  transition: transform .2s var(--ease), box-shadow .2s;
+}
+.hcard-arrow-btn:hover { transform:scale(1.08); box-shadow:0 6px 18px rgba(245,158,11,.4); }
+.hcard-arrow-btn svg { width:14px; height:14px; stroke:var(--navy); fill:none; }
+
+/* Satisfied strip on mid card */
+.satisfied-strip {
+  display:flex; align-items:center; gap:6px;
+  margin-top:8px;
+  font-size:9px; color:rgba(255,255,255,.5);
+}
+.satisfied-avs { display:flex; }
+.satisfied-av {
+  width:18px; height:18px; border-radius:50%;
+  border:1.5px solid rgba(10,15,60,.8);
+  margin-left:-5px; font-size:6px; font-weight:700;
+  display:flex; align-items:center; justify-content:center; color:var(--navy);
+}
+.satisfied-av:first-child { margin-left:0; }
+
+
+/* ═══════════════════════════════════════════════════
+   TICKER / MARQUEE
+═══════════════════════════════════════════════════ */
+.ticker-wrap {
+  background: rgba(19,29,191,.3);
+  border-top:1px solid rgba(255,255,255,.07);
+  border-bottom:1px solid rgba(255,255,255,.07);
+  padding: 13px 0;
+  overflow:hidden;
+  position:relative;
+}
+.ticker-track {
+  display:flex; gap:0;
+  animation: ticker 30s linear infinite;
+  width: max-content;
+}
+.ticker-item {
+  display:flex; align-items:center; gap:12px;
+  padding: 0 32px;
+  font-size:12px; font-weight:600;
+  color:rgba(255,255,255,.5);
+  white-space:nowrap;
+}
+.ticker-item span { color:var(--teal); }
+.ticker-sep { color:rgba(255,255,255,.15); }
+
+
+/* ═══════════════════════════════════════════════════
+   SECTION BASE
+═══════════════════════════════════════════════════ */
+section { padding:100px 2rem; }
+.container { max-width:1100px; margin:0 auto; }
+
+.section-eyebrow {
+  display:inline-flex; align-items:center; gap:8px;
+  font-size:11px; font-weight:700; letter-spacing:.1em; text-transform:uppercase;
+  color:var(--gold); margin-bottom:16px;
+}
+.section-eyebrow::before { content:''; width:20px; height:2px; background:var(--gold); border-radius:2px; display:block; }
+
+.section-h {
+  font-size:clamp(1.9rem,3.5vw,2.8rem);
+  font-weight:800; letter-spacing:-.03em; line-height:1.12;
+  color:var(--white); margin-bottom:14px;
+}
+.section-h .teal { color:var(--teal); }
+.section-h .gold { color:var(--gold); }
+
+.section-p {
+  font-size:1.05rem; line-height:1.75;
+  color:rgba(255,255,255,.5);
+  max-width:520px;
+}
+.section-header { margin-bottom:56px; }
+.section-header.center { text-align:center; }
+.section-header.center .section-eyebrow { justify-content:center; }
+.section-header.center .section-p { margin:0 auto; }
+
+
+/* ═══════════════════════════════════════════════════
+   PROBLEM SECTION
+═══════════════════════════════════════════════════ */
+.problem-section {
+  background: linear-gradient(180deg, var(--navy) 0%, rgba(10,15,60,.95) 100%);
+  border-top:1px solid rgba(255,255,255,.06);
+}
+.problem-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:2px; border-radius:20px; overflow:hidden; background:rgba(255,255,255,.04); margin-top:50px; }
+.prob-card {
+  background:rgba(10,15,60,.8);
+  padding:36px 28px;
+  position:relative; overflow:hidden;
+  transition:background .3s var(--ease);
+}
+.prob-card:hover { background:rgba(19,29,191,.15); }
+.prob-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:3px;
+  background:linear-gradient(90deg, var(--blue), transparent);
+  opacity:0; transition:opacity .3s;
+}
+.prob-card:hover::before { opacity:1; }
+.prob-num {
+  font-family:var(--font-body); font-size:3rem; font-weight:800;
+  color:rgba(255,255,255,.04); line-height:1; margin-bottom:12px; display:block;
+}
+.prob-title {
+  font-size:1.15rem; font-weight:700; color:var(--white);
+  margin-bottom:10px; line-height:1.25;
+}
+.prob-text { font-size:13.5px; line-height:1.7; color:rgba(255,255,255,.45); }
+
+
+/* ═══════════════════════════════════════════════════
+   FEATURES / SERVICES GRID (AirLume-style 4+4)
+═══════════════════════════════════════════════════ */
+.features-section { background:var(--navy); }
+.features-grid {
+  display:grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap:16px;
+}
+.feat-card {
+  background: rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px;
+  padding:26px 22px;
+  position:relative; overflow:hidden;
+  transition:all .3s var(--ease);
+}
+.feat-card:hover {
+  background:rgba(19,29,191,.18);
+  border-color:rgba(86,106,231,.3);
+  transform:translateY(-4px);
+  box-shadow:0 16px 40px rgba(10,15,60,.6);
+}
+.feat-card:active { transform:scale(.99); }
+
+/* Featured card (like AirLume's first blue card) */
+.feat-card.featured {
+  background:linear-gradient(135deg, var(--blue) 0%, rgba(86,106,231,.8) 100%);
+  border-color:rgba(255,255,255,.15);
+  box-shadow:0 8px 32px rgba(19,29,191,.45);
+}
+.feat-card.featured:hover { background:linear-gradient(135deg, #1724e0 0%, rgba(86,106,231,.9) 100%); box-shadow:0 20px 50px rgba(19,29,191,.55); }
+
+.feat-icon {
+  width:42px; height:42px;
+  background:rgba(255,255,255,.08);
+  border-radius:12px;
+  display:flex; align-items:center; justify-content:center;
+  margin-bottom:18px;
+  border:1px solid rgba(255,255,255,.08);
+}
+.feat-card.featured .feat-icon { background:rgba(255,255,255,.2); border-color:rgba(255,255,255,.2); }
+.feat-icon svg { width:19px; height:19px; stroke:rgba(255,255,255,.8); fill:none; }
+.feat-card.featured .feat-icon svg { stroke:var(--white); }
+
+.feat-title { font-size:15px; font-weight:700; color:var(--white); margin-bottom:8px; line-height:1.3; }
+.feat-desc  { font-size:12.5px; line-height:1.65; color:rgba(255,255,255,.5); margin-bottom:16px; }
+.feat-card.featured .feat-desc { color:rgba(255,255,255,.7); }
+
+.feat-learn {
+  display:inline-flex; align-items:center; gap:5px;
+  font-size:12px; font-weight:600; color:var(--teal);
+  text-decoration:none; cursor:pointer;
+  transition:gap .2s var(--ease);
+}
+.feat-card.featured .feat-learn { color:var(--gold); }
+.feat-learn:hover { gap:8px; }
+.feat-learn svg { width:12px; height:12px; stroke:currentColor; fill:none; }
+
+
+/* ═══════════════════════════════════════════════════
+   PRICING / SERVICES
+═══════════════════════════════════════════════════ */
+.pricing-section {
+  background: linear-gradient(180deg, var(--navy) 0%, rgba(19,29,191,.12) 50%, var(--navy) 100%);
+  border-top:1px solid rgba(255,255,255,.06);
+  border-bottom:1px solid rgba(255,255,255,.06);
+}
+.pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:22px; }
+.price-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px; padding:34px 28px;
+  position:relative; overflow:hidden;
+  display:flex; flex-direction:column;
+  transition:all .3s var(--ease);
+}
+.price-card:hover { transform:translateY(-5px); box-shadow:0 20px 50px rgba(10,15,60,.7); border-color:rgba(255,255,255,.15); }
+.price-card:active { transform:scale(.99); }
+
+.price-card.pop {
+  background:linear-gradient(145deg, rgba(19,29,191,.5) 0%, rgba(86,106,231,.3) 100%);
+  border-color:rgba(86,106,231,.5);
+  box-shadow:0 8px 40px rgba(19,29,191,.35);
+}
+.price-card.pop:hover { box-shadow:0 24px 60px rgba(19,29,191,.5); border-color:rgba(86,106,231,.7); }
+
+.pop-badge {
+  position:absolute; top:18px; right:18px;
+  background:var(--gold); color:var(--navy);
+  font-size:9.5px; font-weight:800;
+  padding:4px 11px; border-radius:20px;
+  letter-spacing:.06em; text-transform:uppercase;
+}
+
+.price-tier { font-size:10.5px; font-weight:700; letter-spacing:.1em; text-transform:uppercase; color:var(--teal); margin-bottom:7px; }
+.price-card.pop .price-tier { color:var(--gold); }
+.price-name {
+  font-size:1.5rem; font-weight:800; letter-spacing:-.02em;
+  color:var(--white); margin-bottom:5px;
+}
+.price-range {
+  font-size:1.6rem; font-weight:800; letter-spacing:-.025em;
+  color:var(--white); margin-bottom:5px; line-height:1;
+}
+.price-range span { font-size:13px; font-weight:400; color:rgba(255,255,255,.4); }
+.price-hours {
+  display:inline-flex; align-items:center;
+  background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.08);
+  border-radius:7px; padding:4px 10px;
+  font-size:11px; font-weight:500; color:rgba(255,255,255,.5);
+  margin-bottom:18px; align-self:flex-start;
+}
+.price-divider { height:1px; background:rgba(255,255,255,.08); margin-bottom:16px; }
+.price-outcome { font-size:13px; font-weight:600; color:var(--white); margin-bottom:7px; line-height:1.4; }
+.price-desc { font-size:12.5px; line-height:1.65; color:rgba(255,255,255,.45); margin-bottom:18px; }
+
+.price-includes { font-size:10px; font-weight:700; letter-spacing:.07em; text-transform:uppercase; color:rgba(255,255,255,.3); margin-bottom:11px; }
+.price-list { list-style:none; display:flex; flex-direction:column; gap:8px; margin-bottom:26px; flex:1; }
+.price-list li {
+  display:flex; align-items:flex-start; gap:8px;
+  font-size:12.5px; line-height:1.5; color:rgba(255,255,255,.65);
+}
+.price-list li::before {
+  content:''; width:14px; height:14px; border-radius:50%; flex-shrink:0; margin-top:1px;
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 14 14'%3E%3Ccircle cx='7' cy='7' r='7' fill='%2314D3C4' fill-opacity='.18'/%3E%3Cpath d='M4 7l2 2 4-4' stroke='%2314D3C4' stroke-width='1.5' stroke-linecap='round' stroke-linejoin='round' fill='none'/%3E%3C/svg%3E");
+  background-size:contain; background-repeat:no-repeat;
+}
+
+.btn-price {
+  display:block; width:100%; padding:12px;
+  border-radius:100px; border:none; cursor:pointer;
+  font-family:var(--font-body); font-size:14px; font-weight:700;
+  text-align:center; text-decoration:none;
+  transition:all .25s var(--ease);
+}
+.btn-price-outline {
+  background:rgba(255,255,255,.06);
+  color:var(--white);
+  border:1.5px solid rgba(255,255,255,.15);
+}
+.btn-price-outline:hover { background:rgba(255,255,255,.12); border-color:rgba(255,255,255,.3); transform:translateY(-1px); }
+.btn-price-gold {
+  background:var(--gold); color:var(--navy);
+  box-shadow:0 4px 20px rgba(245,158,11,.35);
+}
+.btn-price-gold:hover { background:#e08e00; transform:translateY(-1px); box-shadow:0 8px 28px rgba(245,158,11,.48); }
+.btn-price-gold:active, .btn-price-outline:active { transform:scale(.98); }
+
+
+/* ═══════════════════════════════════════════════════
+   HOW IT WORKS
+═══════════════════════════════════════════════════ */
+.how-section { background:var(--navy); }
+.how-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:0; position:relative; }
+.how-grid::before {
+  content:''; position:absolute; top:44px;
+  left:calc(12.5% + 22px); right:calc(12.5% + 22px);
+  height:1px;
+  background:repeating-linear-gradient(90deg, rgba(86,106,231,.4) 0, rgba(86,106,231,.4) 6px, transparent 6px, transparent 14px);
+}
+.how-step { padding:0 18px; text-align:center; }
+.step-num-wrap { width:88px; height:88px; margin:0 auto 22px; position:relative; }
+.step-num {
+  width:88px; height:88px; border-radius:50%;
+  background:rgba(19,29,191,.2); border:1.5px solid rgba(86,106,231,.4);
+  display:flex; align-items:center; justify-content:center;
+  font-size:1.6rem; font-weight:800; color:var(--white);
+  position:relative; z-index:1;
+  transition:all .3s var(--ease);
+}
+.how-step:hover .step-num { background:var(--blue); border-color:var(--blue); box-shadow:0 0 30px rgba(19,29,191,.5); transform:scale(1.05); }
+.step-badge-icon {
+  position:absolute; bottom:-4px; right:-4px;
+  width:28px; height:28px;
+  background:var(--gold); border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  border:2px solid var(--navy);
+}
+.step-badge-icon svg { width:12px; height:12px; stroke:var(--navy); fill:none; }
+.step-title { font-size:1.05rem; font-weight:700; color:var(--white); margin-bottom:8px; }
+.step-desc  { font-size:13px; line-height:1.65; color:rgba(255,255,255,.45); }
+
+
+/* ═══════════════════════════════════════════════════
+   DIFFERENTIATORS
+═══════════════════════════════════════════════════ */
+.diff-section { background:rgba(10,15,60,.7); border-top:1px solid rgba(255,255,255,.06); }
+.diff-grid { display:grid; grid-template-columns:1fr 1fr; gap:20px; }
+.diff-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px; padding:28px;
+  display:flex; gap:18px; align-items:flex-start;
+  backdrop-filter:blur(8px);
+  transition:all .3s var(--ease);
+}
+.diff-card:hover { background:rgba(19,29,191,.15); border-color:rgba(86,106,231,.3); transform:translateY(-3px); }
+.diff-icon-box {
+  width:46px; height:46px;
+  background:rgba(19,29,191,.25);
+  border-radius:12px; flex-shrink:0;
+  display:flex; align-items:center; justify-content:center;
+  border:1px solid rgba(86,106,231,.3);
+}
+.diff-icon-box svg { width:20px; height:20px; stroke:var(--periwinkle); fill:none; }
+.diff-card-title { font-size:15px; font-weight:700; color:var(--white); margin-bottom:6px; }
+.diff-card-text  { font-size:13px; line-height:1.65; color:rgba(255,255,255,.45); }
+.diff-metric {
+  margin-top:10px; display:inline-flex; align-items:center; gap:5px;
+  background:rgba(20,211,196,.1); color:var(--teal);
+  font-size:11.5px; font-weight:700;
+  padding:4px 10px; border-radius:6px;
+}
+
+
+/* ═══════════════════════════════════════════════════
+   TESTIMONIALS
+═══════════════════════════════════════════════════ */
+.testimonials-section { background:var(--navy); }
+.test-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:18px; }
+.test-card {
+  background:rgba(255,255,255,.04);
+  border:1px solid rgba(255,255,255,.07);
+  border-radius:18px; padding:26px;
+  transition:all .3s var(--ease);
+}
+.test-card:hover { transform:translateY(-4px); background:rgba(19,29,191,.12); border-color:rgba(86,106,231,.3); }
+.test-stars { display:flex; gap:2px; margin-bottom:12px; }
+.star { color:var(--gold); font-size:12px; }
+.test-quote { font-size:13.5px; line-height:1.75; color:rgba(255,255,255,.6); margin-bottom:18px; font-style:italic; }
+.test-author { display:flex; align-items:center; gap:10px; }
+.test-av {
+  width:34px; height:34px; border-radius:50%;
+  display:flex; align-items:center; justify-content:center;
+  font-size:11px; font-weight:800; color:var(--white); flex-shrink:0;
+}
+.test-name { font-size:12.5px; font-weight:700; color:var(--white); }
+.test-role { font-size:11px; color:rgba(255,255,255,.4); margin-top:1px; }
+
+
+/* ═══════════════════════════════════════════════════
+   CONTACT
+═══════════════════════════════════════════════════ */
+.contact-section { background:rgba(10,15,60,.8); border-top:1px solid rgba(255,255,255,.06); }
+.contact-grid { display:grid; grid-template-columns:1.1fr 1fr; gap:72px; align-items:start; }
+.contact-meta-item { display:flex; align-items:flex-start; gap:13px; margin-bottom:24px; }
+.contact-meta-icon {
+  width:38px; height:38px; background:rgba(19,29,191,.3);
+  border-radius:10px; display:flex; align-items:center; justify-content:center;
+  flex-shrink:0; border:1px solid rgba(86,106,231,.3);
+}
+.contact-meta-icon svg { width:16px; height:16px; stroke:var(--periwinkle); fill:none; }
+.meta-label { font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.07em; color:rgba(255,255,255,.35); margin-bottom:2px; }
+.meta-val   { font-size:14px; font-weight:600; color:var(--white); }
+
+.contact-form-card {
+  background:rgba(255,255,255,.04);
+  backdrop-filter:blur(16px); -webkit-backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.08);
+  border-radius:22px; padding:34px;
+  position:relative; overflow:hidden;
+}
+.contact-form-card::before {
+  content:''; position:absolute; top:0; left:0; right:0; height:1px;
+  background:linear-gradient(90deg, transparent, rgba(86,106,231,.5), transparent);
+}
+.form-card-title { font-size:1.25rem; font-weight:800; color:var(--white); margin-bottom:4px; }
+.form-card-sub   { font-size:13px; color:rgba(255,255,255,.4); margin-bottom:24px; }
+.form-group { margin-bottom:14px; }
+.form-label { display:block; font-size:11.5px; font-weight:700; color:rgba(255,255,255,.5); margin-bottom:6px; letter-spacing:.02em; }
+.form-input, .form-select, .form-textarea {
+  width:100%; padding:11px 14px;
+  border-radius:10px; border:1.5px solid rgba(255,255,255,.1);
+  font-family:var(--font-body); font-size:14px;
+  color:var(--white); background:rgba(255,255,255,.06);
+  outline:none; appearance:none; -webkit-appearance:none;
+  transition:border-color .25s var(--ease), box-shadow .25s;
+}
+.form-input::placeholder { color:rgba(255,255,255,.2); }
+.form-input:focus, .form-select:focus, .form-textarea:focus {
+  border-color:rgba(86,106,231,.6);
+  box-shadow:0 0 0 3px rgba(86,106,231,.12);
+}
+.form-select {
+  background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath d='M2 4l4 4 4-4' stroke='rgba(255,255,255,0.3)' stroke-width='1.5' fill='none' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+  background-repeat:no-repeat; background-position:right 12px center;
+  padding-right:36px; cursor:pointer;
+}
+.form-select option { background:var(--navy); color:var(--white); }
+.form-textarea { resize:vertical; min-height:84px; }
+.form-row { display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+.btn-form-submit {
+  width:100%; padding:13px;
+  background:var(--gold); color:var(--navy);
+  border:none; border-radius:100px;
+  font-family:var(--font-body); font-size:15px; font-weight:800;
+  cursor:pointer; margin-top:6px;
+  transition:all .25s var(--ease);
+  box-shadow:0 4px 20px rgba(245,158,11,.35);
+}
+.btn-form-submit:hover { background:#e08e00; transform:translateY(-1px); box-shadow:0 8px 28px rgba(245,158,11,.48); }
+.btn-form-submit:active { transform:scale(.98); }
+.form-note { font-size:11px; color:rgba(255,255,255,.25); text-align:center; margin-top:10px; }
+.form-msg { display:none; padding:14px; border-radius:10px; font-size:13.5px; font-weight:600; text-align:center; margin-top:14px; }
+.form-msg.ok  { background:rgba(20,211,196,.1); color:var(--teal); border:1px solid rgba(20,211,196,.2); }
+.form-msg.err { background:rgba(245,158,11,.1); color:var(--gold); border:1px solid rgba(245,158,11,.2); }
+
+
+/* ═══════════════════════════════════════════════════
+   FINAL CTA
+═══════════════════════════════════════════════════ */
+.final-section {
+  background:var(--blue);
+  padding:100px 2rem; text-align:center;
+  position:relative; overflow:hidden;
+}
+.final-section::before {
+  content:''; position:absolute; inset:0;
+  background:radial-gradient(ellipse 70% 80% at 50% 0%, rgba(255,255,255,.08) 0%, transparent 60%);
+  pointer-events:none;
+}
+/* Stripe pattern per brand guidelines */
+.final-section::after {
+  content:''; position:absolute; inset:0;
+  background-image:linear-gradient(rgba(255,255,255,.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.03) 1px, transparent 1px);
+  background-size:40px 40px;
+  pointer-events:none;
+}
+.final-section .container { position:relative; z-index:1; }
+.final-eyebrow { display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.1); border:1px solid rgba(255,255,255,.15); border-radius:100px; padding:6px 14px; font-size:11px; font-weight:700; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.8); margin-bottom:22px; }
+.final-h { font-family:var(--font-body); font-size:clamp(2rem,4vw,3.2rem); font-weight:800; letter-spacing:-.03em; line-height:1.1; color:var(--white); margin-bottom:18px; }
+.final-sub { font-size:1rem; color:rgba(255,255,255,.55); max-width:420px; margin:0 auto 36px; line-height:1.75; }
+.final-actions { display:flex; justify-content:center; gap:14px; flex-wrap:wrap; }
+.btn-white { background:var(--white); color:var(--blue); padding:13px 28px; border-radius:100px; font-size:14.5px; font-weight:800; text-decoration:none; transition:all .25s var(--ease); }
+.btn-white:hover { transform:translateY(-2px); box-shadow:0 10px 30px rgba(0,0,0,.25); }
+.btn-white:active { transform:scale(.98); }
+.btn-ghost-w { display:inline-flex; align-items:center; gap:7px; background:rgba(255,255,255,.1); border:1.5px solid rgba(255,255,255,.2); color:var(--white); padding:13px 26px; border-radius:100px; font-size:14px; font-weight:600; text-decoration:none; transition:all .25s var(--ease); }
+.btn-ghost-w:hover { background:rgba(255,255,255,.18); }
+
+
+/* ═══════════════════════════════════════════════════
+   FOOTER — brand-compliant per guidelines
+═══════════════════════════════════════════════════ */
+.footer {
+  background:var(--navy);
+  padding:64px 2rem 36px;
+  border-top:1px solid rgba(255,255,255,.07);
+}
+.footer-inner {
+  max-width:1100px; margin:0 auto;
+  display:grid; grid-template-columns:2fr 1fr 1fr 1fr; gap:48px;
+  padding-bottom:48px;
+  border-bottom:1px solid rgba(255,255,255,.07);
+  margin-bottom:28px;
+}
+.footer-logo-wrap { display:flex; align-items:center; gap:10px; margin-bottom:14px; }
+.footer-logo-mark {
+  width:32px; height:32px; background:var(--blue); border-radius:8px;
+  display:flex; align-items:center; justify-content:center;
+}
+.footer-logo-mark svg { width:18px; height:18px; }
+/* "the job collectives™" — always lowercase per brand guidelines */
+.footer-logo-text { font-size:15px; font-weight:700; color:var(--white); letter-spacing:-.01em; }
+.footer-tagline { font-size:13px; line-height:1.65; color:rgba(255,255,255,.35); max-width:220px; }
+.footer-col-head { font-size:10.5px; font-weight:700; letter-spacing:.09em; text-transform:uppercase; color:rgba(255,255,255,.5); margin-bottom:14px; }
+.footer-links { list-style:none; display:flex; flex-direction:column; gap:10px; }
+.footer-links a { color:rgba(255,255,255,.35); font-size:13px; text-decoration:none; transition:color .2s; }
+.footer-links a:hover { color:var(--white); }
+.footer-bottom { max-width:1100px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; }
+.footer-copy { font-size:12px; color:rgba(255,255,255,.3); }
+.footer-badges { display:flex; gap:8px; }
+.footer-badge { background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08); border-radius:5px; padding:3px 9px; font-size:9.5px; font-weight:700; letter-spacing:.06em; text-transform:uppercase; color:rgba(255,255,255,.3); }
+
+
+/* ═══════════════════════════════════════════════════
+   RESPONSIVE
+═══════════════════════════════════════════════════ */
+@media (max-width:1080px) {
+  .hero-cards { grid-template-columns:1fr; max-width:540px; }
+  .hcard-left, .hcard-right { display:none; }
+  .features-grid { grid-template-columns:repeat(2,1fr); }
+}
+@media (max-width:768px) {
+  .nav-links { display:none; }
+  .nav-mob-btn { display:flex; }
+  .nav-links.open {
+    display:flex; flex-direction:column; gap:14px;
+    position:absolute; top:68px; left:0; right:0;
+    background:rgba(10,15,60,.97); backdrop-filter:blur(20px);
+    padding:20px 2rem; border-bottom:1px solid rgba(255,255,255,.07);
+  }
+  .problem-grid  { grid-template-columns:1fr; }
+  .features-grid { grid-template-columns:1fr 1fr; }
+  .pricing-grid  { grid-template-columns:1fr; }
+  .how-grid      { grid-template-columns:1fr 1fr; }
+  .how-grid::before { display:none; }
+  .diff-grid     { grid-template-columns:1fr; }
+  .test-grid     { grid-template-columns:1fr; }
+  .contact-grid  { grid-template-columns:1fr; }
+  .form-row      { grid-template-columns:1fr; }
+  .footer-inner  { grid-template-columns:1fr 1fr; }
+  .footer-bottom { flex-direction:column; gap:14px; text-align:center; }
+  section { padding:72px 1.5rem; }
+}
+@media (max-width:480px) {
+  .features-grid { grid-template-columns:1fr; }
+  .how-grid      { grid-template-columns:1fr; }
+  .hero-cta-group { flex-direction:column; align-items:center; }
+}
+
+/* ─── PORTAL LOGIN DROPDOWN ──────────────────────── */
+.portal-login-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.nav-login {
+  font-size: 13px;
+  font-weight: 600;
+  color: rgba(255,255,255,.7);
+  text-decoration: none;
+  padding: 8px 16px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,.14);
+  background: rgba(255,255,255,.06);
+  backdrop-filter: blur(10px);
+  transition: all .25s var(--ease);
+  letter-spacing: .01em;
+  cursor: pointer;
+  font-family: var(--font-body);
+  display: flex; align-items: center;
+  white-space: nowrap;
+}
+.nav-login:hover { background:rgba(255,255,255,.13); color:#fff; border-color:rgba(255,255,255,.25); }
+.portal-dropdown {
+  position: absolute;
+  top: calc(100% + 10px);
+  right: 0;
+  min-width: 230px;
+  background: rgba(10,15,60,.96);
+  border: 1px solid rgba(86,106,231,.3);
+  border-radius: 18px;
+  padding: 10px;
+  backdrop-filter: blur(24px);
+  box-shadow: 0 24px 60px rgba(0,0,0,.5), 0 0 0 1px rgba(255,255,255,.06) inset;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(8px) scale(.97);
+  transition: all .22s var(--ease);
+  z-index: 1000;
+}
+.portal-dropdown.open {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+}
+.portal-dropdown-label {
+  font-size: 9px;
+  font-weight: 700;
+  letter-spacing: .1em;
+  text-transform: uppercase;
+  color: rgba(255,255,255,.3);
+  padding: 4px 10px 10px;
+}
+.portal-dropdown-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 12px;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: background .18s;
+  border: 1px solid transparent;
+}
+.portal-dropdown-item:hover {
+  background: rgba(255,255,255,.07);
+  border-color: rgba(86,106,231,.2);
+}
+.portal-dropdown-icon {
+  width: 36px; height: 36px;
+  border-radius: 10px;
+  display: flex; align-items: center; justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+.portal-dropdown-name {
+  font-size: 13px;
+  font-weight: 600;
+  color: #fff;
+}
+.portal-dropdown-sub {
+  font-size: 10px;
+  color: rgba(255,255,255,.4);
+  margin-top: 1px;
+}
+
+/* ─── GRADIENT BORDER — reliable approach ─────────── */
+.diff-card, .test-card {
+  transition: box-shadow .3s var(--ease), transform .3s var(--ease);
+}
+.diff-card:hover {
+  box-shadow: 0 0 0 1px rgba(86,106,231,.4), 0 20px 50px rgba(19,29,191,.3), 0 0 40px rgba(20,211,196,.08);
+  transform: translateY(-3px);
+}
+.test-card:hover {
+  box-shadow: 0 0 0 1px rgba(86,106,231,.3), 0 16px 40px rgba(19,29,191,.25);
+  transform: translateY(-2px);
+}
+
+/* Remove the broken gradient-border-card pseudo approach */
+.gradient-border-card::before { display: none !important; }
+
+
+/* ══════════════════════════════════════════════════════
+   LIGHT MODE — Cobalt Fusion Light · Full Coverage
+   Every white-text element explicitly overridden
+══════════════════════════════════════════════════════ */
+
+/* ── Root page ── */
+body.light { background:#F2F4FF; color:#0A0F3C; }
+
+/* ─────────────────────────────────────────────────────
+   LIGHT MODE — Cobalt Fusion Light
+   Strategy:
+     • Light sections → light bg + dark text (explicit !important)
+     • Intentionally dark sections → keep dark bg + keep white text
+   ──────────────────────────────────────────────────── */
+
+/* ── 1. Page shell ── */
+body.light { background:#F2F4FF; color:#0A0F3C; }
+
+/* ── 2. Nav ── */
+body.light .nav { background:rgba(242,244,255,.5); border-bottom-color:rgba(19,29,191,.07); }
+body.light .nav.scrolled { background:rgba(242,244,255,.95); box-shadow:0 1px 0 rgba(19,29,191,.08),0 4px 20px rgba(10,15,60,.06); }
+body.light .nav-logo-text { color:#0A0F3C !important; }
+body.light .nav-links a   { color:rgba(10,15,60,.55) !important; }
+body.light .nav-links a:hover { color:#131DBF !important; }
+body.light .nav-cta { background:#131DBF; color:#fff !important; }
+body.light .nav-login { background:rgba(10,15,60,.05); border-color:rgba(10,15,60,.14); color:rgba(10,15,60,.65) !important; }
+body.light .nav-login:hover { background:rgba(10,15,60,.1); border-color:rgba(10,15,60,.22); color:#0A0F3C !important; }
+body.light .portal-dropdown { background:rgba(255,255,255,.97); border-color:rgba(19,29,191,.14); box-shadow:0 20px 60px rgba(10,15,60,.15); }
+body.light .portal-dropdown-label { color:rgba(10,15,60,.35) !important; }
+body.light .portal-dropdown-name  { color:#0A0F3C !important; }
+body.light .portal-dropdown-sub   { color:rgba(10,15,60,.45) !important; }
+body.light .portal-dropdown-item:hover { background:rgba(10,15,60,.04); border-color:rgba(19,29,191,.12); }
+
+/* ── 3. Shared typography utilities ── */
+body.light .section-eyebrow          { color:#131DBF !important; }
+body.light .section-eyebrow::before  { background:#F59E0B !important; }
+body.light .section-h                { color:#0A0F3C !important; }
+body.light .section-h .teal          { color:#0A9A90 !important; }
+body.light .section-p                { color:rgba(10,15,60,.58) !important; }
+
+/* ── 4. Hero (light bg) ── */
+body.light .hero { background:linear-gradient(152deg,#E8ECFD 0%,#F4F6FF 55%,#EEF1FD 100%); }
+body.light .hero-stripe { background:rgba(19,29,191,.025); }
+body.light .hero-scan   { opacity:.025; }
+body.light .hero-orb    { opacity:.14; }
+body.light .hero-badge  { background:rgba(19,29,191,.08); border-color:rgba(19,29,191,.18); color:#131DBF !important; }
+body.light .hero-sub    { color:rgba(10,15,60,.55) !important; }
+/* hcards (floating UI preview) stay dark — intentional */
+
+/* ── 5. Ticker (light bg) ── */
+body.light .ticker-wrap { background:rgba(232,236,253,.9); border-top-color:rgba(19,29,191,.08); border-bottom-color:rgba(19,29,191,.08); }
+body.light .ticker-item { color:rgba(10,15,60,.55) !important; }
+body.light .ticker-sep  { color:rgba(19,29,191,.3) !important; }
+
+/* ── 6. PROBLEM SECTION — stays dark, keep white text ── */
+body.light .problem-section { background:linear-gradient(180deg,#0D1240 0%,rgba(10,15,60,.97) 100%); }
+body.light .prob-card { background:rgba(15,20,70,.85); border:1px solid rgba(255,255,255,.06); }
+body.light .prob-card:hover { background:rgba(19,29,191,.2); }
+body.light .prob-num   { color:rgba(255,255,255,.05) !important; }
+body.light .prob-title { color:#fff !important; }
+body.light .prob-text  { color:rgba(255,255,255,.5) !important; }
+/* keep the section heading white too */
+body.light .problem-section .section-h       { color:#fff !important; }
+body.light .problem-section .section-p       { color:rgba(255,255,255,.5) !important; }
+body.light .problem-section .section-eyebrow { color:var(--teal) !important; }
+
+/* ── 7. Features / Services (light bg) ── */
+body.light .features-section { background:#ECEFFE; }
+body.light .feat-card { background:rgba(255,255,255,.82); border-color:rgba(10,15,60,.08); box-shadow:0 2px 16px rgba(10,15,60,.05); }
+body.light .feat-card:hover { background:#fff; border-color:rgba(19,29,191,.18); box-shadow:0 8px 32px rgba(10,15,60,.12); }
+body.light .feat-icon    { background:rgba(19,29,191,.09) !important; }
+body.light .feat-title   { color:#0A0F3C !important; }
+body.light .feat-desc    { color:rgba(10,15,60,.58) !important; }
+body.light .feat-card.featured .feat-desc { color:rgba(10,15,60,.68) !important; }
+body.light .feat-learn   { color:#131DBF !important; }
+body.light .feat-learn:hover { color:#0D1699 !important; }
+
+/* ── 8. How It Works (light bg) ── */
+body.light .how-section { background:#F2F4FF; }
+body.light .how-grid::before { background:repeating-linear-gradient(90deg,rgba(19,29,191,.2) 0,rgba(19,29,191,.2) 6px,transparent 6px,transparent 14px); }
+body.light .step-num { background:rgba(255,255,255,.95) !important; border-color:rgba(19,29,191,.2) !important; color:#0A0F3C !important; box-shadow:0 4px 20px rgba(10,15,60,.1); }
+body.light .how-step:hover .step-num { background:var(--blue) !important; color:#fff !important; border-color:var(--blue) !important; }
+body.light .step-badge-icon { border-color:#F2F4FF !important; }
+body.light .step-title { color:#0A0F3C !important; }
+body.light .step-desc  { color:rgba(10,15,60,.58) !important; }
+
+/* ── 9. Differentiators (light bg) ── */
+body.light .diff-section { background:#F2F4FF; border-top-color:rgba(19,29,191,.07); }
+body.light .diff-card { background:rgba(255,255,255,.82); border-color:rgba(10,15,60,.08); }
+body.light .diff-card:hover { background:#fff; box-shadow:0 0 0 1.5px rgba(19,29,191,.2),0 16px 40px rgba(10,15,60,.12); transform:translateY(-3px); }
+body.light .diff-icon-box { background:rgba(19,29,191,.09) !important; border-color:rgba(19,29,191,.15) !important; }
+body.light .diff-icon-box svg { stroke:var(--blue) !important; }
+body.light .diff-card-title { color:#0A0F3C !important; }
+body.light .diff-card-text  { color:rgba(10,15,60,.58) !important; }
+body.light .diff-metric { background:rgba(20,180,168,.12) !important; color:#0A9A90 !important; }
+
+/* ── 10. Pricing (light bg) ── */
+body.light .price-card { background:rgba(255,255,255,.88); border-color:rgba(10,15,60,.09); box-shadow:0 4px 24px rgba(10,15,60,.07); }
+body.light .price-card.featured { background:#fff; border-color:rgba(19,29,191,.25); box-shadow:0 8px 40px rgba(19,29,191,.15); }
+body.light .price-card:hover { box-shadow:0 20px 50px rgba(10,15,60,.15) !important; }
+body.light .price-tier     { color:rgba(10,15,60,.42) !important; }
+body.light .price-name     { color:#0A0F3C !important; }
+body.light .price-amount   { color:#0A0F3C !important; }
+body.light .price-range span { color:rgba(10,15,60,.45) !important; }
+body.light .price-hours    { color:rgba(10,15,60,.45) !important; }
+body.light .price-outcome  { color:#0A0F3C !important; }
+body.light .price-desc     { color:rgba(10,15,60,.58) !important; }
+body.light .price-divider  { background:rgba(10,15,60,.07) !important; }
+body.light .price-includes { color:rgba(10,15,60,.4) !important; }
+body.light .price-list li  { color:rgba(10,15,60,.68) !important; }
+body.light .price-list li svg,
+body.light .price-list li::before { color:#0A9A90 !important; stroke:#0A9A90 !important; }
+body.light .btn-price-outline { border-color:rgba(10,15,60,.2) !important; color:#0A0F3C !important; background:transparent !important; }
+body.light .btn-price-outline:hover { background:rgba(10,15,60,.05) !important; border-color:rgba(10,15,60,.28) !important; }
+
+/* ── 11. Testimonials (light bg) ── */
+body.light .testimonials-section { background:#ECEFFE; }
+body.light .test-card { background:rgba(255,255,255,.82); border-color:rgba(10,15,60,.08); }
+body.light .test-card:hover { background:#fff; border-color:rgba(19,29,191,.15); box-shadow:0 8px 30px rgba(10,15,60,.1); }
+body.light .test-quote  { color:rgba(10,15,60,.68) !important; }
+body.light .test-name   { color:#0A0F3C !important; }
+body.light .test-role   { color:rgba(10,15,60,.42) !important; }
+body.light .test-av     { border-color:rgba(19,29,191,.15) !important; }
+
+/* ── 12. Contact (light bg) ── */
+body.light .contact-section { background:#F2F4FF; border-top-color:rgba(19,29,191,.07); }
+body.light .contact-form-card { background:rgba(255,255,255,.92); border-color:rgba(10,15,60,.09); box-shadow:0 8px 40px rgba(10,15,60,.08); }
+body.light .form-card-title   { color:#0A0F3C !important; }
+body.light .form-card-sub     { color:rgba(10,15,60,.5) !important; }
+body.light .contact-meta-item { color:rgba(10,15,60,.6) !important; }
+body.light .contact-meta-icon { background:rgba(19,29,191,.1) !important; border-color:rgba(19,29,191,.15) !important; }
+body.light .contact-meta-icon svg { stroke:var(--blue) !important; }
+body.light .meta-label { color:rgba(10,15,60,.42) !important; }
+body.light .meta-val   { color:#0A0F3C !important; }
+body.light .form-label { color:rgba(10,15,60,.6) !important; }
+body.light input.form-input,
+body.light select.form-select,
+body.light textarea.form-textarea { background:rgba(10,15,60,.04) !important; border-color:rgba(10,15,60,.14) !important; color:#0A0F3C !important; }
+body.light input.form-input:focus,
+body.light select.form-select:focus,
+body.light textarea.form-textarea:focus { border-color:#131DBF !important; box-shadow:0 0 0 3px rgba(19,29,191,.12) !important; }
+body.light input.form-input::placeholder,
+body.light textarea.form-textarea::placeholder { color:rgba(10,15,60,.28) !important; }
+body.light .form-note { color:rgba(10,15,60,.38) !important; }
+
+/* ── 13. Portal preview — stays dark ── */
+body.light #portal { background:linear-gradient(180deg,rgba(10,15,60,.97) 0%,rgba(19,29,191,.06) 50%,rgba(10,15,60,.97) 100%); }
+
+/* ── 14. CTA / Final section — stays dark ── */
+/* (no overrides — dark is intentional) */
+
+/* ── 15. Footer (light bg) ── */
+body.light footer { background:#E8ECFD; border-top:1px solid rgba(19,29,191,.08); }
+body.light .footer-logo-text { color:#0A0F3C !important; }
+body.light .footer-tagline   { color:rgba(10,15,60,.5) !important; }
+body.light .footer-col-head  { color:rgba(10,15,60,.7) !important; }
+body.light .footer-links a   { color:rgba(10,15,60,.5) !important; }
+body.light .footer-links a:hover { color:#131DBF !important; }
+body.light .footer-copy  { color:rgba(10,15,60,.4) !important; }
+body.light .footer-badge { background:rgba(10,15,60,.07) !important; color:rgba(10,15,60,.5) !important; border-color:rgba(10,15,60,.1) !important; }
+
+/* ── 16. Watermark — hide in both modes (removed from HTML) ── */
+.logo-watermark { display:none !important; }
+
+/* ══════════════════════════════════════════════════════
+   THEME TOGGLE PILL — premium switch
+══════════════════════════════════════════════════════ */
+.theme-pill {
+  display: flex;
+  align-items: center;
+  gap: 0;
+  width: 52px;
+  height: 28px;
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,.16);
+  background: rgba(255,255,255,.09);
+  backdrop-filter: blur(12px);
+  cursor: pointer;
+  padding: 3px;
+  position: relative;
+  transition: background .3s var(--ease), border-color .3s var(--ease),
+              box-shadow .3s var(--ease);
+  flex-shrink: 0;
+}
+.theme-pill:hover {
+  background: rgba(255,255,255,.16);
+  border-color: rgba(255,255,255,.25);
+  box-shadow: 0 0 0 3px rgba(255,255,255,.07);
+}
+.theme-pill-thumb {
+  position: absolute;
+  left: 3px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(255,255,255,.95);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: left .35s var(--ease), background .3s var(--ease);
+  box-shadow: 0 1px 4px rgba(0,0,0,.3);
+}
+.theme-pill-thumb svg {
+  width: 12px;
+  height: 12px;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  fill: none;
+  transition: opacity .2s, transform .35s var(--ease);
+  position: absolute;
+}
+.theme-pill-sun { stroke: #F59E0B; opacity: 1; transform: rotate(0deg) scale(1); }
+.theme-pill-moon { stroke: #566AE7; opacity: 0; transform: rotate(-30deg) scale(0.7); }
+
+/* Light mode pill state */
+body.light .theme-pill {
+  background: rgba(10,15,60,.08);
+  border-color: rgba(10,15,60,.18);
+}
+body.light .theme-pill:hover {
+  background: rgba(10,15,60,.13);
+  border-color: rgba(10,15,60,.26);
+  box-shadow: 0 0 0 3px rgba(10,15,60,.06);
+}
+body.light .theme-pill-thumb {
+  left: calc(100% - 25px);
+  background: #0A0F3C;
+}
+body.light .theme-pill-sun { opacity: 0; transform: rotate(30deg) scale(0.7); }
+body.light .theme-pill-moon { stroke: #fff; opacity: 1; transform: rotate(0deg) scale(1); }
+
+
+/* ══════════════════════════════════════════════════════
+   WEBSITE MOBILE OPTIMIZATIONS
+══════════════════════════════════════════════════════ */
+
+/* ── Nav CTA responsive ── */
+@media (max-width: 900px) {
+  .nav-cta { padding: 8px 14px !important; font-size: 12.5px !important; }
+}
+@media (max-width: 680px) {
+  .nav { padding: 0 1.2rem !important; height: 60px !important; }
+  .nav-logo-text { font-size: 13px !important; }
+  .nav-cta { padding: 7px 12px !important; font-size: 12px !important; letter-spacing: 0 !important; }
+  .portal-dropdown { min-width: 200px !important; right: -10px !important; }
+  /* Portal dropdown items */
+  .portal-dropdown-name { font-size: 12px !important; }
+  .portal-dropdown-sub { font-size: 9.5px !important; }
+  .theme-pill { width: 44px !important; height: 24px !important; }
+}
+@media (max-width: 480px) {
+  /* Hide "Contact Us" text on very small screens, keep pill */
+  .nav-cta { 
+    font-size: 11.5px !important; 
+    padding: 7px 10px !important;
+    box-shadow: 0 2px 12px rgba(245,158,11,.3) !important;
+  }
+}
+
+/* ── Hero mobile ── */
+@media (max-width: 680px) {
+  .hero { padding: 90px 1.2rem 60px !important; }
+  .hero h1 { font-size: clamp(2rem, 7vw, 3rem) !important; letter-spacing: -.025em !important; }
+  .hero-sub { font-size: 0.97rem !important; }
+  .hero-trust { gap: 16px !important; flex-direction: column !important; align-items: center !important; }
+  .hero-cta-group { gap: 10px !important; }
+  .btn-gold { padding: 12px 22px !important; font-size: 14px !important; }
+  .btn-outline-w { padding: 11px 20px !important; font-size: 13.5px !important; }
+}
+
+/* ── Sections mobile ── */
+@media (max-width: 680px) {
+  section { padding: 64px 1.2rem !important; }
+  .section-h { font-size: clamp(1.6rem, 5.5vw, 2.2rem) !important; }
+  .features-grid { grid-template-columns: 1fr 1fr !important; gap: 10px !important; }
+  .pricing-grid { grid-template-columns: 1fr !important; gap: 16px !important; }
+  .how-grid { grid-template-columns: 1fr 1fr !important; gap: 24px 10px !important; }
+  .diff-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .test-grid { grid-template-columns: 1fr !important; gap: 12px !important; }
+  .contact-grid { grid-template-columns: 1fr !important; gap: 36px !important; }
+  .footer-inner { grid-template-columns: 1fr 1fr !important; gap: 28px !important; }
+  .footer-bottom { flex-direction: column !important; gap: 10px !important; text-align: center !important; }
+  .pricing-grid .price-card.pop { order: -1 !important; }
+  .final-actions { flex-direction: column !important; align-items: center !important; gap: 10px !important; }
+}
+
+@media (max-width: 480px) {
+  .features-grid { grid-template-columns: 1fr !important; }
+  .how-grid { grid-template-columns: 1fr !important; }
+  .feat-card { padding: 20px 16px !important; }
+  .price-card { padding: 24px 20px !important; }
+  .diff-card { padding: 20px 16px !important; }
+  .form-row { grid-template-columns: 1fr !important; }
+  .footer-inner { grid-template-columns: 1fr !important; gap: 20px !important; }
+}
+
+/* ── Portal preview mobile ── */
+@media (max-width: 680px) {
+  #portal .container { padding: 0 0.8rem !important; }
+}
+
+/* Light mode mobile consistency */
+@media (max-width: 680px) {
+  body.light .nav-cta { box-shadow: 0 2px 12px rgba(19,29,191,.25) !important; }
+}
+
+</style>
+</head>
+<body>
+
+<!-- ═══════════════════════════════════════════════
+     NAVBAR — brand-compliant lockup
+═══════════════════════════════════════════════ -->
+<nav class="nav" id="nav">
+  <!-- Logo: horizontal lockup, lowercase, trademark — per brand guidelines -->
+  <a href="#" class="nav-logo">
+    <div class="nav-logo-mark" style="padding:0;overflow:hidden;border-radius:9px;width:38px;height:38px;">
+      <img src="data:image/jpeg;base64,/9j/4AAQSkZJRgABAQAAAQABAAD/4gHYSUNDX1BST0ZJTEUAAQEAAAHIAAAAAAQwAABtbnRyUkdCIFhZWiAH4AABAAEAAAAAAABhY3NwAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAQAA9tYAAQAAAADTLQAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAlkZXNjAAAA8AAAACRyWFlaAAABFAAAABRnWFlaAAABKAAAABRiWFlaAAABPAAAABR3dHB0AAABUAAAABRyVFJDAAABZAAAAChnVFJDAAABZAAAAChiVFJDAAABZAAAAChjcHJ0AAABjAAAADxtbHVjAAAAAAAAAAEAAAAMZW5VUwAAAAgAAAAcAHMAUgBHAEJYWVogAAAAAAAAb6IAADj1AAADkFhZWiAAAAAAAABimQAAt4UAABjaWFlaIAAAAAAAACSgAAAPhAAAts9YWVogAAAAAAAA9tYAAQAAAADTLXBhcmEAAAAAAAQAAAACZmYAAPKnAAANWQAAE9AAAApbAAAAAAAAAABtbHVjAAAAAAAAAAEAAAAMZW5VUwAAACAAAAAcAEcAbwBvAGcAbABlACAASQBuAGMALgAgADIAMAAxADb/2wBDAAUDBAQEAwUEBAQFBQUGBwwIBwcHBw8LCwkMEQ8SEhEPERETFhwXExQaFRERGCEYGh0dHx8fExciJCIeJBweHx7/2wBDAQUFBQcGBw4ICA4eFBEUHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh4eHh7/wAARCAQ4BDgDASIAAhEBAxEB/8QAHQABAAIBBQEAAAAAAAAAAAAAAAcIBgEDBAUJAv/EAFIQAQABAwMBBAQFEAcHAgYDAAABAgMEBQYRBwgSITETQVFhIjdxgbMUFxgyM0JSVWJ0dYKRlJXSFSM0VnKhshZDY5KiscEkkyY2U3PC8ESD0f/EABsBAQACAwEBAAAAAAAAAAAAAAAEBQMGBwIB/8QAPREBAAECAgYFCQcFAQADAAAAAAECAwQRBQYhMUFREnGBkbETFCIyM2GhwdEVFjQ1UnLwI0JTsuFiQ5Ki/9oADAMBAAIRAxEAPwCDAHdlOAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA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AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAB//Z" alt="the job collectives™ mark" style="width:38px;height:38px;display:block;object-fit:cover;border-radius:9px;" />
+    </div>
+    <div class="nav-logo-text">
+      the job collectives™
+    </div>
+  </a>
+
+  <ul class="nav-links" id="navLinks">
+    <li><a href="#services">Services</a></li>
+    <li><a href="#how">How It Works</a></li>
+    <li><a href="#about">About</a></li>
+    <li><a href="#portal" style="color:var(--teal) !important;">Portal</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+
+  <div style="display:flex;align-items:center;gap:12px;">
+    <div class="portal-login-wrap" id="portalLoginWrap">
+      <button class="nav-login" onclick="togglePortalMenu()" aria-label="Portal Login" aria-expanded="false" id="portalLoginBtn">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="display:inline;vertical-align:middle;margin-right:5px;margin-top:-1px"><circle cx="6.5" cy="4.5" r="2.2"/><path d="M2 11.5c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4"/></svg>
+        Portal Login
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" style="display:inline;vertical-align:middle;margin-left:4px;margin-top:-1px;transition:transform .2s;" id="portalChevron"><path d="M2 3.5l3 3 3-3"/></svg>
+      </button>
+      <div class="portal-dropdown" id="portalDropdown">
+        <div class="portal-dropdown-label">Access your workspace</div>
+        <a href="https://justineinacay.github.io/TJCDashboard" target="_blank" class="portal-dropdown-item">
+          <div class="portal-dropdown-icon" style="background:rgba(245,158,11,.15);">👑</div>
+          <div><div class="portal-dropdown-name">Management</div><div class="portal-dropdown-sub">Founder &amp; Operations</div></div>
+        </a>
+        <a href="https://justineinacay.github.io/TJCDashboard" target="_blank" class="portal-dropdown-item">
+          <div class="portal-dropdown-icon" style="background:rgba(20,211,196,.15);">💼</div>
+          <div><div class="portal-dropdown-name">Partner Portal</div><div class="portal-dropdown-sub">Staff &amp; VA access</div></div>
+        </a>
+        <a href="https://justineinacay.github.io/TJCDashboard" target="_blank" class="portal-dropdown-item">
+          <div class="portal-dropdown-icon" style="background:rgba(86,106,231,.15);">🤝</div>
+          <div><div class="portal-dropdown-name">Client Portal</div><div class="portal-dropdown-sub">View your deliverables</div></div>
+        </a>
+      </div>
+    </div>
+    <!-- Theme toggle pill -->
+    <button class="theme-pill" id="themePill" onclick="toggleTheme()" aria-label="Toggle light/dark mode" title="Toggle theme">
+      <span class="theme-pill-thumb" id="themePillThumb">
+        <!-- Sun icon (dark mode = show sun to switch to light) -->
+        <svg class="theme-pill-sun" viewBox="0 0 14 14"><circle cx="7" cy="7" r="2.8"/><line x1="7" y1="1" x2="7" y2="2.4"/><line x1="7" y1="11.6" x2="7" y2="13"/><line x1="1" y1="7" x2="2.4" y2="7"/><line x1="11.6" y1="7" x2="13" y2="7"/><line x1="2.9" y1="2.9" x2="3.9" y2="3.9"/><line x1="10.1" y1="10.1" x2="11.1" y2="11.1"/><line x1="11.1" y1="2.9" x2="10.1" y2="3.9"/><line x1="3.9" y1="10.1" x2="2.9" y2="11.1"/></svg>
+        <!-- Moon icon (light mode = show moon to switch to dark) -->
+        <svg class="theme-pill-moon" viewBox="0 0 14 14"><path d="M12 9A6 6 0 016 3a6 6 0 000 10 6 6 0 006-4z"/></svg>
+      </span>
+    </button>
+    <a href="#contact" class="nav-cta">Contact Us</a>
+    <button class="nav-mob-btn" onclick="document.getElementById('navLinks').classList.toggle('open')" aria-label="Menu">
+      <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round">
+        <line x1="3" y1="6" x2="19" y2="6"/><line x1="3" y1="11" x2="19" y2="11"/><line x1="3" y1="16" x2="19" y2="16"/>
+      </svg>
+    </button>
+  </div>
+</nav>
+
+
+<!-- ═══════════════════════════════════════════════
+     HERO — AirLume style, centered, floating cards
+═══════════════════════════════════════════════ -->
+<section class="hero">
+  <!-- Vertical stripes — like AirLume curtain effect -->
+  <div class="hero-stripes" aria-hidden="true">
+    <div class="hero-stripe"></div><div class="hero-stripe"></div>
+    <div class="hero-stripe"></div><div class="hero-stripe"></div>
+    <div class="hero-stripe"></div><div class="hero-stripe"></div>
+    <div class="hero-stripe"></div><div class="hero-stripe"></div>
+  </div>
+
+  <!-- Ambient glows -->
+  <div class="hero-orb orb-1" aria-hidden="true"></div>
+  <div class="hero-orb orb-2" aria-hidden="true"></div>
+  <div class="hero-orb orb-3" aria-hidden="true"></div>
+  <div class="hero-scan"      aria-hidden="true"></div>
+
+  <!-- Light beam sweep -->
+  <div class="hero-beam" aria-hidden="true" style="position:absolute;top:0;left:-30%;width:18%;height:100%;background:linear-gradient(105deg,transparent 0%,rgba(255,255,255,.03) 50%,transparent 100%);animation:lightBeam 9s ease-in-out 2s infinite;pointer-events:none;z-index:1;"></div>
+
+  <!-- Centered content -->
+  <div class="hero-content">
+    <div class="hero-badge a1">
+      <span class="badge-dot"></span>
+      Build your team beyond borders
+    </div>
+
+    <h1 class="a2">
+      Stop Doing <span class="gold">$10 Tasks.</span><br>
+      Start Running <span class="teal">a $1M Business.</span>
+    </h1>
+
+    <p class="hero-sub a3">
+      the job collectives™ builds reliable remote operations teams for North American businesses — powered by elite Filipino talent, SLA-driven execution, and structured workflows that run without you.
+    </p>
+
+    <div class="hero-cta-group a4">
+      <a href="#contact" class="btn-gold">
+        Book a Discovery Call
+        <svg viewBox="0 0 15 15" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M2.5 7.5h10M8.5 3.5l4 4-4 4"/>
+        </svg>
+      </a>
+      <a href="#how" class="btn-outline-w">See How It Works →</a>
+    </div>
+
+    <div class="hero-trust a5">
+      <div class="trust-pill">
+        <div class="trust-check"><svg viewBox="0 0 10 10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></div>
+        4-hour response SLA
+      </div>
+      <div class="trust-pill">
+        <div class="trust-check"><svg viewBox="0 0 10 10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></div>
+        SOP-driven execution
+      </div>
+      <div class="trust-pill">
+        <div class="trust-check"><svg viewBox="0 0 10 10" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M1.5 5l2.5 2.5 4.5-4.5"/></svg></div>
+        Zero-downtime backup
+      </div>
+    </div>
+  </div>
+
+  <!-- ─ Floating UI Cards (AirLume style) ─ -->
+  <div class="hero-cards a6">
+
+    <!-- Left card — Partner status -->
+    <div class="hcard hcard-left">
+      <div class="hcard-label">Last Update</div>
+      <div class="hcard-title">Your Operations Score</div>
+      <div class="hcard-big teal">99%</div>
+      <div class="hcard-sub">SLA Compliance Rate</div>
+      <div class="hcard-pill teal-pill">
+        <svg viewBox="0 0 9 9" stroke-width="1.6"><path d="M1.5 5l2 2 4-4"/></svg>
+        Saved 18 hrs this week
+      </div>
+    </div>
+
+    <!-- Center card — Dashboard preview -->
+    <div class="hcard hcard-mid">
+      <div class="hcard-topbar">
+        <div class="db-dots"><div class="db-dot db-dot-r"></div><div class="db-dot db-dot-y"></div><div class="db-dot db-dot-g"></div></div>
+        <div class="db-url"><span>app.thejobcollectives.com — Ops Hub</span></div>
+      </div>
+      <div class="hcard-metrics">
+        <div class="hcard-metric">
+          <div class="hcard-metric-label">Tasks Done</div>
+          <div class="hcard-metric-val teal">47</div>
+        </div>
+        <div class="hcard-metric">
+          <div class="hcard-metric-label">SLA Rate</div>
+          <div class="hcard-metric-val">99%</div>
+        </div>
+        <div class="hcard-metric">
+          <div class="hcard-metric-label">Hrs Saved</div>
+          <div class="hcard-metric-val gold">18h</div>
+        </div>
+      </div>
+      <div class="hcard-tasks">
+        <div class="hcard-task"><div class="task-dot done"></div><div class="task-text">Weekly analytics report compiled</div><span class="task-badge badge-done">Done</span></div>
+        <div class="hcard-task"><div class="task-dot live"></div><div class="task-text">CRM pipeline — 12 leads updated</div><span class="task-badge badge-live">Live</span></div>
+        <div class="hcard-task"><div class="task-dot rev"></div><div class="task-text">Q3 social content scheduled</div><span class="task-badge badge-rev">Review</span></div>
+      </div>
+      <div class="hcard-partner">
+        <div class="partner-av">MA</div>
+        <div><div class="partner-name">Maria A. — Your Partner VA</div><div class="partner-role">Executive VA · Growth Plan</div></div>
+        <div class="partner-online">Online</div>
+      </div>
+      <div class="satisfied-strip">
+        <div class="satisfied-avs">
+          <div class="satisfied-av" style="background:#131DBF">JM</div>
+          <div class="satisfied-av" style="background:#14D3C4;color:#0A0F3C">SR</div>
+          <div class="satisfied-av" style="background:#F59E0B;color:#0A0F3C">DK</div>
+        </div>
+        <span>98% of clients satisfied · Avg $72k saved/year</span>
+      </div>
+    </div>
+
+    <!-- Right card — Deal/result card -->
+    <div class="hcard hcard-right">
+      <div class="hcard-result-label">✓ Best Result Found</div>
+      <div class="hcard-result-main">72 hrs<br>Saved / Month</div>
+      <div class="hcard-result-sub">Powered by TJC AI Ops</div>
+      <div class="hcard-bar-wrap">
+        <div class="hcard-bar-label"><span>SLA Rate</span><span>99%</span></div>
+        <div class="hcard-bar"><div class="hcard-bar-fill" style="width:99%"></div></div>
+      </div>
+      <div class="hcard-bar-wrap">
+        <div class="hcard-bar-label"><span>Task Delivery</span><span>97%</span></div>
+        <div class="hcard-bar"><div class="hcard-bar-fill" style="width:97%"></div></div>
+      </div>
+      <div class="hcard-arrow-btn">
+        <svg viewBox="0 0 14 14" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 7h9M8 3.5l3.5 3.5L8 10.5"/></svg>
+      </div>
+    </div>
+
+  </div><!-- /hero-cards -->
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     TICKER MARQUEE
+═══════════════════════════════════════════════ -->
+<div class="ticker-wrap" aria-hidden="true">
+  <div class="ticker-track">
+    <!-- Duplicate for seamless loop -->
+    <div class="ticker-item"><span>4-Hour Response SLA</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>SOP-Driven Execution</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>Backup Partner System</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>Elite Filipino Talent</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>98% SLA Compliance</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>100% SOP Documentation</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>Zero Downtime Guarantee</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>North American Clients</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>4-Hour Response SLA</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>SOP-Driven Execution</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>Backup Partner System</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>Elite Filipino Talent</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>98% SLA Compliance</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>100% SOP Documentation</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>Zero Downtime Guarantee</span> <span class="ticker-sep">·</span></div>
+    <div class="ticker-item"><span>North American Clients</span> <span class="ticker-sep">·</span></div>
+  </div>
+</div>
+
+
+<!-- ═══════════════════════════════════════════════
+     PROBLEM
+═══════════════════════════════════════════════ -->
+<section class="problem-section">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">The Reality</div>
+      <h2 class="section-h">You didn't build a business<br>to become its <span class="teal">operator.</span></h2>
+      <p class="section-p">Most founders hit a ceiling — not because of the market, but because of themselves. You're the bottleneck holding everything back.</p>
+    </div>
+    <div class="problem-grid reveal">
+      <div class="prob-card"><span class="prob-num">01</span><div class="prob-title">You're Stuck in Operations</div><p class="prob-text">Answering emails, chasing tasks, doing work that shouldn't need you. Every hour executing is an hour not leading.</p></div>
+      <div class="prob-card"><span class="prob-num">02</span><div class="prob-title">You Are the Bottleneck</div><p class="prob-text">Nothing moves without your approval. Your team waits. Clients wait. Growth waits for capacity that never comes.</p></div>
+      <div class="prob-card"><span class="prob-num">03</span><div class="prob-title">Your Team Lacks Structure</div><p class="prob-text">A VA without SOPs, KPIs, and real systems underperforms — even great people need structure to deliver consistently.</p></div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     FEATURES GRID (AirLume 4+4 layout)
+═══════════════════════════════════════════════ -->
+<section class="features-section" id="services">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="section-eyebrow">What We Do</div>
+      <h2 class="section-h">Operational Systems.<br><span class="gold">Not Just VAs.</span></h2>
+      <p class="section-p">We engineer your back office so you can stay in the front. Every service is built on structure, SLAs, and Filipino excellence.</p>
+    </div>
+    <div class="features-grid">
+      <!-- Featured (like AirLume's first card) -->
+      <div class="feat-card featured reveal">
+        <div class="feat-icon"><svg viewBox="0 0 20 20" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="10" cy="10" r="7"/><path d="M10 7v3l2.5 2.5"/></svg></div>
+        <div class="feat-title">Real-Time SLA Tracking</div>
+        <p class="feat-desc">4-hour response guarantee tracked live. Every task has a timestamp, every partner is accountable.</p>
+        <a href="#contact" class="feat-learn">Learn more <svg viewBox="0 0 12 12" stroke-width="2"><path d="M2 6h8M6.5 3l3 3-3 3"/></svg></a>
+      </div>
+      <div class="feat-card reveal rd1">
+        <div class="feat-icon"><svg viewBox="0 0 20 20" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="14" height="12" rx="2"/><path d="M8 4V2M12 4V2M3 9h14"/></svg></div>
+        <div class="feat-title">Smart Route Operations</div>
+        <p class="feat-desc">We audit your workflows first, then assign a partner — not the other way around.</p>
+        <a href="#contact" class="feat-learn">Learn more <svg viewBox="0 0 12 12" stroke-width="2"><path d="M2 6h8M6.5 3l3 3-3 3"/></svg></a>
+      </div>
+      <div class="feat-card reveal rd2">
+        <div class="feat-icon"><svg viewBox="0 0 20 20" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H7a4 4 0 00-4 4v2"/><circle cx="10" cy="7" r="4"/></svg></div>
+        <div class="feat-title">Dedicated Partner Matching</div>
+        <p class="feat-desc">Matched by industry, work style, and skill — not just availability. Long-term, not rotating.</p>
+        <a href="#contact" class="feat-learn">Learn more <svg viewBox="0 0 12 12" stroke-width="2"><path d="M2 6h8M6.5 3l3 3-3 3"/></svg></a>
+      </div>
+      <div class="feat-card reveal rd3">
+        <div class="feat-icon"><svg viewBox="0 0 20 20" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3h14v10H3z M7 17h6M10 13v4"/></svg></div>
+        <div class="feat-title">KPI Reporting Dashboard</div>
+        <p class="feat-desc">Weekly and monthly KPI reports. You always know exactly what's moving and what's not.</p>
+        <a href="#contact" class="feat-learn">Learn more <svg viewBox="0 0 12 12" stroke-width="2"><path d="M2 6h8M6.5 3l3 3-3 3"/></svg></a>
+      </div>
+      <div class="feat-card reveal">
+        <div class="feat-icon"><svg viewBox="0 0 20 20" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="14" height="14" rx="2"/><path d="M7 10h6M10 7v6"/></svg></div>
+        <div class="feat-title">SOP Library Build-Out</div>
+        <p class="feat-desc">Every task documented. Full SOP library delivered by day 30 of every engagement.</p>
+        <a href="#contact" class="feat-learn">Learn more <svg viewBox="0 0 12 12" stroke-width="2"><path d="M2 6h8M6.5 3l3 3-3 3"/></svg></a>
+      </div>
+      <div class="feat-card reveal rd1">
+        <div class="feat-icon"><svg viewBox="0 0 20 20" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2l2.5 5 5.5.8-4 3.9.9 5.5L10 14.5 5.1 17.2l.9-5.5-4-3.9 5.5-.8z"/></svg></div>
+        <div class="feat-title">Backup Partner System</div>
+        <p class="feat-desc">Every client has a trained backup. No coverage gaps, no dropped balls — ever.</p>
+        <a href="#contact" class="feat-learn">Learn more <svg viewBox="0 0 12 12" stroke-width="2"><path d="M2 6h8M6.5 3l3 3-3 3"/></svg></a>
+      </div>
+      <div class="feat-card reveal rd2">
+        <div class="feat-icon"><svg viewBox="0 0 20 20" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L19 4"/><path d="M18 11v6a2 2 0 01-2 2H4a2 2 0 01-2-2V5a2 2 0 012-2h9"/></svg></div>
+        <div class="feat-title">Quality Control Reviews</div>
+        <p class="feat-desc">Weekly QC review on all deliverables. Our internal layer catches errors before they reach you.</p>
+        <a href="#contact" class="feat-learn">Learn more <svg viewBox="0 0 12 12" stroke-width="2"><path d="M2 6h8M6.5 3l3 3-3 3"/></svg></a>
+      </div>
+      <div class="feat-card reveal rd3">
+        <div class="feat-icon"><svg viewBox="0 0 20 20" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="16" height="12" rx="1.5"/><path d="M2 7l8 5 8-5"/></svg></div>
+        <div class="feat-title">Secure One-Call Onboarding</div>
+        <p class="feat-desc">Discovery → audit → system → partner assigned in under two weeks. Zero friction.</p>
+        <a href="#contact" class="feat-learn">Learn more <svg viewBox="0 0 12 12" stroke-width="2"><path d="M2 6h8M6.5 3l3 3-3 3"/></svg></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     PRICING
+═══════════════════════════════════════════════ -->
+<section class="pricing-section">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="section-eyebrow">Service Tiers</div>
+      <h2 class="section-h">Choose your level<br>of <span class="gold">support</span></h2>
+      <p class="section-p">Every tier includes structured onboarding, SLA commitments, and a dedicated partner. The difference is scope and depth.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Foundation -->
+      <div class="price-card reveal">
+        <div class="price-tier">Foundation</div>
+        <div class="price-name">Essentials</div>
+        <div class="price-range">$850 <span>– $1,200 / mo</span></div>
+        <div class="price-hours">20 hrs/wk · 1 Partner</div>
+        <div class="price-divider"></div>
+        <div class="price-outcome">Reclaim your calendar. Delegate your recurring work.</div>
+        <p class="price-desc">For business owners ready to stop doing everything themselves. Covers your highest-leverage recurring tasks.</p>
+        <div class="price-includes">What's Included</div>
+        <ul class="price-list">
+          <li>1 dedicated VA partner (20 hrs/wk)</li>
+          <li>Inbox and calendar management</li>
+          <li>Basic CRM data entry and follow-up</li>
+          <li>Weekly task reports</li>
+          <li>4-hour response SLA</li>
+          <li>SOP documentation on all tasks</li>
+        </ul>
+        <a href="#contact" class="btn-price btn-price-outline">Get Started →</a>
+      </div>
+      <!-- Growth — Most Popular -->
+      <div class="price-card pop reveal rd1">
+        <div class="pop-badge">Most Popular</div>
+        <div class="price-tier">Growth</div>
+        <div class="price-name">Operations</div>
+        <div class="price-range">$1,200 <span>– $2,000 / mo</span></div>
+        <div class="price-hours">40 hrs/wk · 1 Partner + Backup</div>
+        <div class="price-divider"></div>
+        <div class="price-outcome">Run your ops without running yourself into the ground.</div>
+        <p class="price-desc">For operators running a real team. Covers execution, coordination, and reporting — so you stay in strategy.</p>
+        <div class="price-includes">Everything in Foundation, plus</div>
+        <ul class="price-list">
+          <li>1 dedicated VA (full-time, 40 hrs/wk)</li>
+          <li>Project coordination and tracking</li>
+          <li>Social media scheduling and engagement</li>
+          <li>CRM pipeline management</li>
+          <li>Monthly performance KPI report</li>
+          <li>Backup partner coverage (zero downtime)</li>
+        </ul>
+        <a href="#contact" class="btn-price btn-price-gold">Book a Call →</a>
+      </div>
+      <!-- Scale -->
+      <div class="price-card reveal rd2">
+        <div class="price-tier">Scale</div>
+        <div class="price-name">Command</div>
+        <div class="price-range">$3,000 <span>– $5,500 / mo</span></div>
+        <div class="price-hours">Full team · 2–4 Specialists</div>
+        <div class="price-divider"></div>
+        <div class="price-outcome">A full remote operations team built around your business.</div>
+        <p class="price-desc">For founders scaling past the chaos. A full remote operations team with dedicated oversight and quality control.</p>
+        <div class="price-includes">Everything in Growth, plus</div>
+        <ul class="price-list">
+          <li>Operations team (2–4 specialists)</li>
+          <li>Executive VA + team coordinator</li>
+          <li>Full SOP library build-out</li>
+          <li>Custom Notion or Drive workspace</li>
+          <li>Bi-weekly strategy review calls</li>
+          <li>Priority QC and compliance review</li>
+        </ul>
+        <a href="#contact" class="btn-price btn-price-outline">Let's Talk Scale →</a>
+      </div>
+    </div>
+    <p style="text-align:center;font-size:12.5px;color:rgba(255,255,255,.3);margin-top:20px;">All plans require a discovery call. We qualify every engagement to ensure the right fit.</p>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     HOW IT WORKS
+═══════════════════════════════════════════════ -->
+<section class="how-section" id="how">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="section-eyebrow">The Process</div>
+      <h2 class="section-h">From call to running system<br>in under <span class="teal">two weeks</span></h2>
+      <p class="section-p">We don't hand you a VA and wish you luck. Every engagement follows a structured deployment.</p>
+    </div>
+    <div class="how-grid">
+      <div class="how-step reveal">
+        <div class="step-num-wrap">
+          <div class="step-num">1</div>
+          <div class="step-badge-icon"><svg viewBox="0 0 12 12" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="6" r="4.5"/><path d="M6 4v2l1.5 1.5"/></svg></div>
+        </div>
+        <div class="step-title">Book a Discovery Call</div>
+        <p class="step-desc">30 minutes. No pitch — just clarity on your business, workflows, and where your time is going.</p>
+      </div>
+      <div class="how-step reveal rd1">
+        <div class="step-num-wrap">
+          <div class="step-num">2</div>
+          <div class="step-badge-icon"><svg viewBox="0 0 12 12" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h8M2 6h5M2 9h7"/></svg></div>
+        </div>
+        <div class="step-title">We Audit Your Operations</div>
+        <p class="step-desc">We map your recurring tasks, identify gaps, and design your VA's workflow before anyone starts.</p>
+      </div>
+      <div class="how-step reveal rd2">
+        <div class="step-num-wrap">
+          <div class="step-num">3</div>
+          <div class="step-badge-icon"><svg viewBox="0 0 12 12" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="6" cy="4" r="2"/><path d="M2 10c0-2.2 1.8-4 4-4s4 1.8 4 4"/></svg></div>
+        </div>
+        <div class="step-title">We Assign Your Partner</div>
+        <p class="step-desc">Matched by industry, work style, and needs — not just availability. Long-term from day one.</p>
+      </div>
+      <div class="how-step reveal rd3">
+        <div class="step-num-wrap">
+          <div class="step-num">4</div>
+          <div class="step-badge-icon"><svg viewBox="0 0 12 12" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="2" width="10" height="8" rx="1.5"/><path d="M4 5l2 2 3-3"/></svg></div>
+        </div>
+        <div class="step-title">We Build Your System</div>
+        <p class="step-desc">SOPs documented. Tools connected. KPIs set. Your partner is running ops in 5–10 business days.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     DIFFERENTIATORS
+═══════════════════════════════════════════════ -->
+<section class="diff-section" id="about">
+  <div class="container">
+    <div class="section-header reveal">
+      <div class="section-eyebrow">Why TJC</div>
+      <h2 class="section-h">Built for reliability.<br>Designed to <span class="gold">scale.</span></h2>
+      <p class="section-p">Every part of our model is engineered to protect your business continuity and deliver measurable outcomes.</p>
+    </div>
+    <div class="diff-grid">
+      <div class="diff-card reveal">
+        <div class="diff-icon-box"><svg viewBox="0 0 22 22" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="M11 7v4l2.5 2.5"/></svg></div>
+        <div>
+          <div class="diff-card-title">4-Hour Response SLA</div>
+          <p class="diff-card-text">Contractually bound, tracked, reported, and enforced. You never chase anyone down.</p>
+          <div class="diff-metric">↗ 98% SLA compliance across all clients</div>
+        </div>
+      </div>
+      <div class="diff-card reveal rd1">
+        <div class="diff-icon-box"><svg viewBox="0 0 22 22" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="16" height="14" rx="2"/><path d="M8 4V2M14 4V2M3 9h16"/></svg></div>
+        <div>
+          <div class="diff-card-title">SOP-Driven Execution</div>
+          <p class="diff-card-text">Nothing done from memory. Every task documented, making your team scalable and transferable.</p>
+          <div class="diff-metric">↗ Full SOP library delivered at day 30</div>
+        </div>
+      </div>
+      <div class="diff-card reveal rd2">
+        <div class="diff-icon-box"><svg viewBox="0 0 22 22" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H9a4 4 0 00-4 4v2"/><circle cx="11" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87M16 3.13a4 4 0 010 7.75"/></svg></div>
+        <div>
+          <div class="diff-card-title">Backup Partner System</div>
+          <p class="diff-card-text">Primary and backup always ready. If your VA is unavailable, coverage continues seamlessly.</p>
+          <div class="diff-metric">↗ Zero-interruption continuity guarantee</div>
+        </div>
+      </div>
+      <div class="diff-card reveal rd3">
+        <div class="diff-icon-box"><svg viewBox="0 0 22 22" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 01-2 2H5a2 2 0 01-2-2V5a2 2 0 012-2h11"/></svg></div>
+        <div>
+          <div class="diff-card-title">Quality Control Process</div>
+          <p class="diff-card-text">Weekly QC reviews. Our internal layer catches errors before they reach you — every time.</p>
+          <div class="diff-metric">↗ Weekly QC review on all client work</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     TESTIMONIALS
+═══════════════════════════════════════════════ -->
+<section class="testimonials-section">
+  <div class="container">
+    <div class="section-header center reveal">
+      <div class="section-eyebrow">Client Results</div>
+      <h2 class="section-h">What clients actually say</h2>
+      <p class="section-p">Real outcomes from business owners who got their operations — and their time — back.</p>
+    </div>
+    <div class="test-grid">
+      <div class="test-card reveal">
+        <div class="test-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="test-quote">"I went from 60-hour weeks to actually taking Fridays off. My VA handles everything I used to dread — inbox, scheduling, CRM. The system they built is cleaner than anything I had before."</p>
+        <div class="test-author"><div class="test-av" style="background:var(--blue)">JM</div><div><div class="test-name">Jason M.</div><div class="test-role">Marketing Agency · Austin, TX</div></div></div>
+      </div>
+      <div class="test-card reveal rd1">
+        <div class="test-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="test-quote">"They audited our ops before anyone started working, and the SOP documentation alone was worth the investment. We actually run smoother now. The structure is unmatched."</p>
+        <div class="test-author"><div class="test-av" style="background:var(--teal);color:var(--navy)">SR</div><div><div class="test-name">Sarah R.</div><div class="test-role">E-Commerce Founder · Toronto, ON</div></div></div>
+      </div>
+      <div class="test-card reveal rd2">
+        <div class="test-stars"><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span><span class="star">★</span></div>
+        <p class="test-quote">"I've tried three other VA services. TJC is the first that actually behaves like a team. The backup system means I've never been left without coverage. Night and day difference."</p>
+        <div class="test-author"><div class="test-av" style="background:var(--gold);color:var(--navy)">DK</div><div><div class="test-name">David K.</div><div class="test-role">Real Estate Investor · Phoenix, AZ</div></div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     CLIENT PORTAL — Preview / Demo
+═══════════════════════════════════════════════ -->
+<section id="portal" style="background:linear-gradient(180deg,rgba(10,15,60,.9) 0%,rgba(19,29,191,.08) 50%,rgba(10,15,60,.9) 100%);border-top:1px solid rgba(255,255,255,.06);padding:100px 2rem;">
+  <div class="container">
+
+    <!-- Header -->
+    <div class="section-header center reveal">
+      <div class="section-eyebrow">Client &amp; Partner Portal</div>
+      <h2 class="section-h">Your operations hub.<br><span class="teal">Always on. Always clear.</span></h2>
+      <p class="section-p">Clients track progress and deliverables. Partners manage tasks and log updates. Everything in one place — no chasing, no guessing.</p>
+    </div>
+
+    <!-- Role toggle tabs -->
+    <div style="display:flex;justify-content:center;margin-bottom:48px;" class="reveal">
+      <div style="display:inline-flex;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:14px;padding:5px;gap:4px;">
+        <button id="tabClient" onclick="switchPortalTab('client')" style="padding:10px 28px;border-radius:10px;border:none;font-family:var(--font-body);font-size:13.5px;font-weight:700;cursor:pointer;background:var(--blue);color:var(--white);box-shadow:0 4px 14px rgba(19,29,191,.4);transition:all .25s var(--ease);">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="vertical-align:middle;margin-right:5px;margin-top:-1px"><circle cx="6.5" cy="4" r="2.2"/><path d="M2 11c0-2.5 2-4.5 4.5-4.5S11 8.5 11 11"/></svg>
+          Client Portal
+        </button>
+        <button id="tabPartner" onclick="switchPortalTab('partner')" style="padding:10px 28px;border-radius:10px;border:none;font-family:var(--font-body);font-size:13.5px;font-weight:700;cursor:pointer;background:transparent;color:rgba(255,255,255,.5);transition:all .25s var(--ease);">
+          <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" style="vertical-align:middle;margin-right:5px;margin-top:-1px"><path d="M2 11v-1a3 3 0 013-3h3a3 3 0 013 3v1"/><circle cx="6.5" cy="4" r="2.2"/></svg>
+          Partner Portal
+        </button>
+      </div>
+    </div>
+
+    <!-- ── CLIENT PORTAL VIEW ── -->
+    <div id="portalClient" class="reveal">
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(10,15,60,.6);">
+
+        <!-- Portal top bar -->
+        <div style="background:var(--navy);border-bottom:1px solid rgba(255,255,255,.07);padding:14px 24px;display:flex;align-items:center;gap:12px;">
+          <div style="display:flex;gap:6px;"><div style="width:10px;height:10px;border-radius:50%;background:#ff5f56"></div><div style="width:10px;height:10px;border-radius:50%;background:#febc2e"></div><div style="width:10px;height:10px;border-radius:50%;background:#27c840"></div></div>
+          <div style="flex:1;background:rgba(255,255,255,.06);border-radius:7px;height:24px;display:flex;align-items:center;padding:0 12px;margin-left:8px;">
+            <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="rgba(255,255,255,.3)" stroke-width="1.5" style="margin-right:6px"><circle cx="4.5" cy="4.5" r="3"/><path d="M7 7l2 2"/></svg>
+            <span style="font-size:10px;color:rgba(255,255,255,.3);">portal.thejobcollectives.com/client</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--blue);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:white;">JM</div>
+            <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.6);">Jason M.</span>
+          </div>
+        </div>
+
+        <!-- Portal body -->
+        <div style="display:grid;grid-template-columns:200px 1fr;min-height:480px;">
+
+          <!-- Sidebar -->
+          <div style="background:rgba(10,15,60,.6);border-right:1px solid rgba(255,255,255,.06);padding:20px 0;">
+            <div style="padding:0 16px 16px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:12px;">
+              <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:8px;">Client Menu</div>
+            </div>
+            <style>
+              .portal-nav-item{display:flex;align-items:center;gap:9px;padding:9px 16px;font-size:12.5px;font-weight:600;color:rgba(255,255,255,.5);cursor:pointer;border-radius:0;transition:all .2s;margin:1px 8px;border-radius:8px;}
+              .portal-nav-item:hover{background:rgba(255,255,255,.05);color:rgba(255,255,255,.8);}
+              .portal-nav-item.active{background:rgba(19,29,191,.4);color:var(--white);border:1px solid rgba(86,106,231,.25);}
+              .portal-nav-item svg{width:14px;height:14px;stroke:currentColor;fill:none;flex-shrink:0;}
+            </style>
+            <div class="portal-nav-item active"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="11" height="11" rx="2"/><path d="M4.5 7h5M7 4.5v5"/></svg>Dashboard</div>
+            <div class="portal-nav-item"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h10M2 7h7M2 11h9"/></svg>Task Progress</div>
+            <div class="portal-nav-item"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M5 2v10M2 5h3M2 9h3"/></svg>Deliverables</div>
+            <div class="portal-nav-item"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5,10 4.5,6 7,8 10,4 12.5,6"/></svg>Reports &amp; KPIs</div>
+            <div class="portal-nav-item"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="3" width="11" height="8" rx="1.2"/><path d="M1.5 6h11"/><path d="M5 3V1.5M9 3V1.5"/></svg>Invoices &amp; Billing</div>
+            <div class="portal-nav-item"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 10.5a1 1 0 01-1 1H3l-1.5 1.5V3a1 1 0 011-1h9.5a1 1 0 011 1z"/></svg>Comms Log</div>
+          </div>
+
+          <!-- Main content -->
+          <div style="padding:24px;background:rgba(8,12,48,.5);">
+            <!-- Greeting -->
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <div>
+                <div style="font-size:18px;font-weight:800;color:var(--white);letter-spacing:-.02em;">Good morning, Jason 👋</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px;">Growth Plan · Week 14 · All systems normal</div>
+              </div>
+              <div style="display:flex;gap:8px;">
+                <div style="background:rgba(20,211,196,.12);border:1px solid rgba(20,211,196,.2);color:var(--teal);font-size:11px;font-weight:700;padding:5px 12px;border-radius:20px;">● SLA: Active</div>
+              </div>
+            </div>
+
+            <!-- KPI row -->
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+              <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px;">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);margin-bottom:5px;">Tasks Done</div>
+                <div style="font-size:26px;font-weight:800;color:var(--teal);letter-spacing:-.03em;">47</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">↑ 8 from last week</div>
+              </div>
+              <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px;">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);margin-bottom:5px;">SLA Rate</div>
+                <div style="font-size:26px;font-weight:800;color:var(--white);letter-spacing:-.03em;">99%</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">4-hr response</div>
+              </div>
+              <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px;">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);margin-bottom:5px;">Hrs Saved</div>
+                <div style="font-size:26px;font-weight:800;color:var(--gold);letter-spacing:-.03em;">18h</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">this week</div>
+              </div>
+              <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px;">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);margin-bottom:5px;">Next Invoice</div>
+                <div style="font-size:26px;font-weight:800;color:var(--white);letter-spacing:-.03em;">Jun 1</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">$1,500 due</div>
+              </div>
+            </div>
+
+            <!-- Task list + Deliverables side by side -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <!-- Tasks -->
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;">
+                <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:12px;">Active Tasks</div>
+                <div style="display:flex;flex-direction:column;gap:7px;">
+                  <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:8px;border:1px solid rgba(255,255,255,.05);">
+                    <div style="width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0;"></div>
+                    <span style="font-size:11.5px;font-weight:500;color:rgba(255,255,255,.7);flex:1;">Weekly analytics report</span>
+                    <span style="font-size:8px;font-weight:700;background:rgba(20,211,196,.14);color:var(--teal);padding:2px 7px;border-radius:4px;">Done</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:8px;border:1px solid rgba(255,255,255,.05);">
+                    <div style="width:7px;height:7px;border-radius:50%;background:#3b82f6;flex-shrink:0;"></div>
+                    <span style="font-size:11.5px;font-weight:500;color:rgba(255,255,255,.7);flex:1;">CRM pipeline — 12 leads</span>
+                    <span style="font-size:8px;font-weight:700;background:rgba(59,130,246,.14);color:#60a5fa;padding:2px 7px;border-radius:4px;">Live</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:8px;border:1px solid rgba(255,255,255,.05);">
+                    <div style="width:7px;height:7px;border-radius:50%;background:var(--gold);flex-shrink:0;"></div>
+                    <span style="font-size:11.5px;font-weight:500;color:rgba(255,255,255,.7);flex:1;">Q3 social content</span>
+                    <span style="font-size:8px;font-weight:700;background:rgba(245,158,11,.14);color:var(--gold);padding:2px 7px;border-radius:4px;">Review</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:8px 10px;background:rgba(255,255,255,.04);border-radius:8px;border:1px solid rgba(255,255,255,.05);">
+                    <div style="width:7px;height:7px;border-radius:50%;background:var(--teal);flex-shrink:0;"></div>
+                    <span style="font-size:11.5px;font-weight:500;color:rgba(255,255,255,.7);flex:1;">Onboarding docs sent</span>
+                    <span style="font-size:8px;font-weight:700;background:rgba(20,211,196,.14);color:var(--teal);padding:2px 7px;border-radius:4px;">Done</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- Deliverables + Comms -->
+              <div style="display:flex;flex-direction:column;gap:10px;">
+                <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px;">
+                  <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:10px;">Recent Deliverables</div>
+                  <div style="display:flex;flex-direction:column;gap:6px;">
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--periwinkle)" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="9" height="10" rx="1.5"/><path d="M4.5 5h4M4.5 7.5h2.5"/></svg>
+                      <span style="font-size:11px;color:rgba(255,255,255,.6);flex:1;">May KPI Report.pdf</span>
+                      <span style="font-size:9px;color:rgba(255,255,255,.3);">May 24</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--periwinkle)" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="9" height="10" rx="1.5"/><path d="M4.5 5h4M4.5 7.5h2.5"/></svg>
+                      <span style="font-size:11px;color:rgba(255,255,255,.6);flex:1;">CRM Cleanup Summary</span>
+                      <span style="font-size:9px;color:rgba(255,255,255,.3);">May 21</span>
+                    </div>
+                    <div style="display:flex;align-items:center;gap:8px;">
+                      <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="var(--periwinkle)" stroke-width="1.5" stroke-linecap="round"><rect x="2" y="1.5" width="9" height="10" rx="1.5"/><path d="M4.5 5h4M4.5 7.5h2.5"/></svg>
+                      <span style="font-size:11px;color:rgba(255,255,255,.6);flex:1;">Social Content Calendar Q3</span>
+                      <span style="font-size:9px;color:rgba(255,255,255,.3);">May 19</span>
+                    </div>
+                  </div>
+                </div>
+                <!-- Latest message -->
+                <div style="background:rgba(19,29,191,.2);border:1px solid rgba(86,106,231,.25);border-radius:14px;padding:14px;">
+                  <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:8px;">Latest from Maria A.</div>
+                  <p style="font-size:11.5px;line-height:1.65;color:rgba(255,255,255,.65);">"CRM cleanup done — 12 leads updated and tagged. Analytics report will be ready by EOD. Anything to add to the Q3 content brief?"</p>
+                  <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:6px;">Today · 9:42 AM</div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Portal footer bar -->
+        <div style="background:rgba(10,15,60,.8);border-top:1px solid rgba(255,255,255,.06);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:11px;color:rgba(255,255,255,.3);">the job collectives™ Portal · All data encrypted</div>
+          <div style="display:flex;align-items:center;gap:6px;font-size:11px;color:rgba(20,211,196,.8);font-weight:600;">
+            <div style="width:6px;height:6px;border-radius:50%;background:var(--teal);animation:pulseDot 2s infinite;"></div>
+            Maria A. is online now
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── PARTNER PORTAL VIEW ── -->
+    <div id="portalPartner" class="reveal" style="display:none;">
+      <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:24px;overflow:hidden;box-shadow:0 20px 60px rgba(10,15,60,.6);">
+
+        <!-- Top bar -->
+        <div style="background:var(--navy);border-bottom:1px solid rgba(255,255,255,.07);padding:14px 24px;display:flex;align-items:center;gap:12px;">
+          <div style="display:flex;gap:6px;"><div style="width:10px;height:10px;border-radius:50%;background:#ff5f56"></div><div style="width:10px;height:10px;border-radius:50%;background:#febc2e"></div><div style="width:10px;height:10px;border-radius:50%;background:#27c840"></div></div>
+          <div style="flex:1;background:rgba(255,255,255,.06);border-radius:7px;height:24px;display:flex;align-items:center;padding:0 12px;margin-left:8px;">
+            <span style="font-size:10px;color:rgba(255,255,255,.3);">portal.thejobcollectives.com/partner</span>
+          </div>
+          <div style="display:flex;align-items:center;gap:8px;">
+            <div style="width:28px;height:28px;border-radius:50%;background:var(--teal);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:800;color:var(--navy);">MA</div>
+            <span style="font-size:12px;font-weight:600;color:rgba(255,255,255,.6);">Maria A. · Partner</span>
+          </div>
+        </div>
+
+        <!-- Body -->
+        <div style="display:grid;grid-template-columns:200px 1fr;min-height:480px;">
+
+          <!-- Sidebar -->
+          <div style="background:rgba(10,15,60,.6);border-right:1px solid rgba(255,255,255,.06);padding:20px 0;">
+            <div style="padding:0 16px 16px;border-bottom:1px solid rgba(255,255,255,.06);margin-bottom:12px;">
+              <div style="font-size:9px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;color:rgba(255,255,255,.3);margin-bottom:8px;">Partner Menu</div>
+            </div>
+            <div class="portal-nav-item active"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="1.5" y="1.5" width="11" height="11" rx="2"/><path d="M4.5 7h5M7 4.5v5"/></svg>My Dashboard</div>
+            <div class="portal-nav-item"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M2 3h10M2 7h7M2 11h9"/></svg>Assigned Tasks</div>
+            <div class="portal-nav-item"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="2" width="10" height="10" rx="1.5"/><path d="M5 2v10M2 5h3M2 9h3"/></svg>SOPs &amp; Playbooks</div>
+            <div class="portal-nav-item"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><polyline points="1.5,10 4.5,6 7,8 10,4 12.5,6"/></svg>My Performance</div>
+            <div class="portal-nav-item"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M7 1.5v11M1.5 7h11"/></svg>EOD Update Form</div>
+            <div class="portal-nav-item"><svg viewBox="0 0 14 14" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5.5"/><path d="M7 4.5v3l2 1.5"/></svg>Escalation Log</div>
+          </div>
+
+          <!-- Main -->
+          <div style="padding:24px;background:rgba(8,12,48,.5);">
+            <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px;">
+              <div>
+                <div style="font-size:18px;font-weight:800;color:var(--white);letter-spacing:-.02em;">Good morning, Maria 🌅</div>
+                <div style="font-size:12px;color:rgba(255,255,255,.4);margin-top:2px;">Jason M. · Growth Plan · 3 active tasks today</div>
+              </div>
+              <button onclick="showEOD()" style="background:var(--gold);color:var(--navy);border:none;padding:9px 18px;border-radius:100px;font-size:12.5px;font-weight:800;cursor:pointer;font-family:var(--font-body);transition:all .2s;" onmouseover="this.style.background='#e08e00'" onmouseout="this.style.background='var(--gold)'">
+                + Submit EOD Update
+              </button>
+            </div>
+
+            <!-- Performance row -->
+            <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px;">
+              <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px;">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);margin-bottom:5px;">SLA Score</div>
+                <div style="font-size:26px;font-weight:800;color:var(--teal);letter-spacing:-.03em;">100%</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">This month</div>
+              </div>
+              <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px;">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);margin-bottom:5px;">Tasks Done</div>
+                <div style="font-size:26px;font-weight:800;color:var(--white);letter-spacing:-.03em;">47</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">↑ 8 this week</div>
+              </div>
+              <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px;">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);margin-bottom:5px;">QC Score</div>
+                <div style="font-size:26px;font-weight:800;color:var(--gold);letter-spacing:-.03em;">97%</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">Last review</div>
+              </div>
+              <div style="background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:14px 16px;">
+                <div style="font-size:9px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:rgba(255,255,255,.35);margin-bottom:5px;">Escalations</div>
+                <div style="font-size:26px;font-weight:800;color:var(--white);letter-spacing:-.03em;">0</div>
+                <div style="font-size:10px;color:rgba(255,255,255,.3);margin-top:2px;">All clear</div>
+              </div>
+            </div>
+
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;">
+              <!-- Task list -->
+              <div style="background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:16px;">
+                <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:12px;">Today's Tasks</div>
+                <div style="display:flex;flex-direction:column;gap:7px;">
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 10px;background:rgba(255,255,255,.04);border-radius:9px;border:1px solid rgba(255,255,255,.05);">
+                    <input type="checkbox" checked style="accent-color:var(--teal);width:13px;height:13px;flex-shrink:0;">
+                    <span style="font-size:11.5px;font-weight:500;color:rgba(255,255,255,.5);flex:1;text-decoration:line-through;">Weekly analytics report</span>
+                    <span style="font-size:9px;color:rgba(255,255,255,.25);">Due 9am</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 10px;background:rgba(255,255,255,.04);border-radius:9px;border:1px solid rgba(86,106,231,.2);">
+                    <input type="checkbox" style="accent-color:var(--teal);width:13px;height:13px;flex-shrink:0;">
+                    <span style="font-size:11.5px;font-weight:600;color:rgba(255,255,255,.8);flex:1;">Update CRM — 12 new leads</span>
+                    <span style="font-size:9px;color:var(--teal);">Due 2pm</span>
+                  </div>
+                  <div style="display:flex;align-items:center;gap:8px;padding:9px 10px;background:rgba(255,255,255,.04);border-radius:9px;border:1px solid rgba(255,255,255,.05);">
+                    <input type="checkbox" style="accent-color:var(--teal);width:13px;height:13px;flex-shrink:0;">
+                    <span style="font-size:11.5px;font-weight:600;color:rgba(255,255,255,.8);flex:1;">Review Q3 social content brief</span>
+                    <span style="font-size:9px;color:var(--gold);">Due 5pm</span>
+                  </div>
+                </div>
+              </div>
+
+              <!-- EOD form preview -->
+              <div id="eodPanel" style="background:rgba(19,29,191,.15);border:1px solid rgba(86,106,231,.25);border-radius:14px;padding:16px;">
+                <div style="font-size:10px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:rgba(255,255,255,.35);margin-bottom:12px;">EOD Update — May 27</div>
+                <div style="display:flex;flex-direction:column;gap:10px;">
+                  <div>
+                    <div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:4px;">Tasks Completed Today</div>
+                    <textarea placeholder="Summarise what you accomplished..." style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 10px;font-family:var(--font-body);font-size:11.5px;color:rgba(255,255,255,.7);outline:none;resize:none;height:56px;"></textarea>
+                  </div>
+                  <div>
+                    <div style="font-size:10.5px;font-weight:700;color:rgba(255,255,255,.5);margin-bottom:4px;">Blockers / Escalations</div>
+                    <textarea placeholder="Any issues to flag?" style="width:100%;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 10px;font-family:var(--font-body);font-size:11.5px;color:rgba(255,255,255,.7);outline:none;resize:none;height:42px;"></textarea>
+                  </div>
+                  <button style="width:100%;padding:9px;background:var(--gold);color:var(--navy);border:none;border-radius:100px;font-family:var(--font-body);font-size:12.5px;font-weight:800;cursor:pointer;">Submit EOD Report →</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Footer -->
+        <div style="background:rgba(10,15,60,.8);border-top:1px solid rgba(255,255,255,.06);padding:12px 24px;display:flex;align-items:center;justify-content:space-between;">
+          <div style="font-size:11px;color:rgba(255,255,255,.3);">the job collectives™ Partner Portal · Secure workspace</div>
+          <div style="font-size:11px;color:rgba(255,255,255,.3);">SOPs last updated: May 24, 2025</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Login CTA strip -->
+    <div class="reveal" style="margin-top:40px;text-align:center;">
+      <div style="display:inline-flex;align-items:center;gap:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 28px;backdrop-filter:blur(12px);">
+        <div>
+          <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px;">Already a client or partner?</div>
+          <div style="font-size:12px;color:rgba(255,255,255,.4);">Access your dedicated workspace below.</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <a href="https://justineinacay.github.io/TJCDashboard" target="_blank" style="background:var(--blue);color:var(--white);padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid rgba(86,106,231,.4);transition:all .2s;" onmouseover="this.style.background='#1a24d4'" onmouseout="this.style.background='var(--blue)'">Client Login →</a>
+          <a href="https://justineinacay.github.io/TJCDashboard" target="_blank" style="background:rgba(20,211,196,.12);color:var(--teal);padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid rgba(20,211,196,.25);transition:all .2s;" onmouseover="this.style.background='rgba(20,211,196,.2)'" onmouseout="this.style.background='rgba(20,211,196,.12)'">Partner Login →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     CONTACT
+═══════════════════════════════════════════════ -->
+<section class="contact-section" id="contact">
+  <div class="container">
+    <div class="contact-grid">
+      <div>
+        <div class="section-eyebrow reveal">Get Started</div>
+        <h2 class="section-h reveal rd1">Let's talk about<br>your <span class="gold">operations.</span></h2>
+        <p class="section-p reveal rd2" style="margin-bottom:40px;">Book a no-pressure discovery call or fill out the form. We only work with clients we know we can genuinely help.</p>
+        <div class="contact-meta-item reveal rd2">
+          <div class="contact-meta-icon"><svg viewBox="0 0 18 18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="9" cy="9" r="7"/><path d="M9 5v4l2.5 2.5"/></svg></div>
+          <div><div class="meta-label">Response Time</div><div class="meta-val">Within 1 business day</div></div>
+        </div>
+        <div class="contact-meta-item reveal rd3">
+          <div class="contact-meta-icon"><svg viewBox="0 0 18 18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="10" rx="1.5"/><path d="M2 7l7 5 7-5"/></svg></div>
+          <div><div class="meta-label">Email</div><div class="meta-val">hello@thejobcollectives.com</div></div>
+        </div>
+        <div class="contact-meta-item reveal rd4">
+          <div class="contact-meta-icon"><svg viewBox="0 0 18 18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h.5a1 1 0 011 .85l.5 3a1 1 0 01-.29.9L6 9a11 11 0 005 5l1.25-1.7a1 1 0 01.9-.3l3 .5a1 1 0 01.85 1v.5a2 2 0 01-2 2C6 16 2 12 2 7l1-2z"/></svg></div>
+          <div><div class="meta-label">Discovery Call</div><div class="meta-val">30 min · Free · No commitment</div></div>
+        </div>
+      </div>
+
+      <div class="contact-form-card reveal rd1">
+        <div class="form-card-title">Tell us about your business</div>
+        <p class="form-card-sub">We review every submission and only reach out when we're confident we can help.</p>
+        <form id="contactForm" onsubmit="handleSubmit(event)">
+          <div class="form-row">
+            <div class="form-group"><label class="form-label">First Name</label><input type="text" class="form-input" placeholder="Alex" required></div>
+            <div class="form-group"><label class="form-label">Last Name</label><input type="text" class="form-input" placeholder="Johnson" required></div>
+          </div>
+          <div class="form-group"><label class="form-label">Business Email</label><input type="email" class="form-input" placeholder="alex@yourcompany.com" required></div>
+          <div class="form-group">
+            <label class="form-label">Business Type</label>
+            <select class="form-select" required>
+              <option value="" disabled selected>Select your industry</option>
+              <option>Agency (Marketing / Design / Dev)</option><option>E-Commerce</option>
+              <option>Coaching / Consulting</option><option>Real Estate</option>
+              <option>SaaS / Tech</option><option>Professional Services</option>
+              <option>Healthcare / Wellness</option><option>Other</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Monthly Revenue</label>
+            <select class="form-select" id="rev" required>
+              <option value="" disabled selected>Select revenue range</option>
+              <option value="u10">Under $10,000/month</option>
+              <option value="10-25">$10,000 – $25,000/month</option>
+              <option value="25-50">$25,000 – $50,000/month</option>
+              <option value="50p">$50,000+/month</option>
+            </select>
+          </div>
+          <div class="form-group">
+            <label class="form-label">Monthly Budget for VA Support</label>
+            <select class="form-select" id="bud" required>
+              <option value="" disabled selected>Select budget range</option>
+              <option value="u500">Under $500/month</option>
+              <option value="500-850">$500 – $850/month</option>
+              <option value="f">$850 – $1,200/month (Foundation)</option>
+              <option value="g">$1,200 – $2,000/month (Growth)</option>
+              <option value="s">$3,000+/month (Scale)</option>
+            </select>
+          </div>
+          <div class="form-group"><label class="form-label">Biggest Operational Challenge</label><textarea class="form-textarea" placeholder="Briefly describe what's taking up most of your time..."></textarea></div>
+          <button type="submit" class="btn-form-submit">Request Discovery Call →</button>
+          <p class="form-note">We respond within 1 business day. No spam, ever.</p>
+        </form>
+        <div class="form-msg ok"  id="msgOk">Your application has been received. We'll reach out within one business day to schedule your discovery call.</div>
+        <div class="form-msg err" id="msgErr">Based on your selections, TJC may not be the right fit right now. We're designed for businesses generating $10k+/month. We'd love to work together when you reach that milestone.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     FINAL CTA
+═══════════════════════════════════════════════ -->
+<section class="final-section">
+  <div class="container">
+    <div class="final-eyebrow reveal">The Decision Point</div>
+    <h2 class="final-h reveal rd1">Ready to get<br>your time back?</h2>
+    <p class="final-sub reveal rd2">Every week you stay in operations is a week you're not leading. Book a call. Let's build your system.</p>
+    <div class="final-actions reveal rd3">
+      <a href="#contact" class="btn-white">Book a Discovery Call →</a>
+      <a href="#services" class="btn-ghost-w">View Services</a>
+    </div>
+  </div>
+</section>
+
+
+<!-- ═══════════════════════════════════════════════
+     FOOTER — brand-compliant
+═══════════════════════════════════════════════ -->
+<footer class="footer">
+  <div class="footer-inner">
+    <div>
+      <div class="footer-logo-wrap">
+        <div class="footer-logo-mark">
+          <svg viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M5 4c0 0 2 1.5 2 6s-2 6-2 6" stroke="white" stroke-width="2.5" stroke-linecap="round"/>
+            <path d="M9 4c0 0 6 2 6 6s-6 6-6 6" stroke="rgba(255,255,255,0.6)" stroke-width="2.5" stroke-linecap="round"/>
+          </svg>
+        </div>
+        <!-- Lowercase + trademark per brand guidelines -->
+        <span class="footer-logo-text">the job collectives™</span>
+      </div>
+      <p class="footer-tagline">Building your team beyond borders. Virtual staffing for modern North American businesses.</p>
+    </div>
+    <div>
+      <div class="footer-col-head">Services</div>
+      <ul class="footer-links">
+        <li><a href="#services">Foundation Plan</a></li>
+        <li><a href="#services">Growth Plan</a></li>
+        <li><a href="#services">Scale Plan</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-head">Company</div>
+      <ul class="footer-links">
+        <li><a href="#about">About Us</a></li>
+        <li><a href="#how">How It Works</a></li>
+        <li><a href="#contact">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <div class="footer-col-head">Connect</div>
+      <ul class="footer-links">
+        <li><a href="#">LinkedIn</a></li>
+        <li><a href="#">Instagram</a></li>
+        <li><a href="mailto:hello@thejobcollectives.com">Email Us</a></li>
+      </ul>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <span class="footer-copy">© 2025 the job collectives™. All rights reserved.</span>
+    <div class="footer-badges">
+      <span class="footer-badge">SLA Certified</span>
+      <span class="footer-badge">SOP Driven</span>
+      <span class="footer-badge">Filipino Talent</span>
+    </div>
+  </div>
+</footer>
+
+
+<!-- ═══════════════════════════════════════════════
+     JAVASCRIPT
+═══════════════════════════════════════════════ -->
+<script>
+/* ─── Navbar scroll state ─── */
+const nav = document.getElementById('nav');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 16);
+}, { passive: true });
+
+/* ─── Scroll reveal ─── */
+const reveals = document.querySelectorAll('.reveal');
+new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('v'); } });
+}, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' }).observe
+  || new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('v'); } });
+}, { threshold: 0.10, rootMargin: '0px 0px -40px 0px' });
+
+const obs = new IntersectionObserver((entries) => {
+  entries.forEach(e => { if(e.isIntersecting){ e.target.classList.add('v'); obs.unobserve(e.target); } });
+}, { threshold: 0.09, rootMargin: '0px 0px -40px 0px' });
+reveals.forEach(el => obs.observe(el));
+
+/* ─── Form qualification filter ─── */
+function handleSubmit(e) {
+  e.preventDefault();
+  const bud = document.getElementById('bud').value;
+  const rev = document.getElementById('rev').value;
+  const form = document.getElementById('contactForm');
+  document.getElementById('msgOk').style.display  = 'none';
+  document.getElementById('msgErr').style.display = 'none';
+  if (bud === 'u500' || rev === 'u10') {
+    form.style.display = 'none';
+    document.getElementById('msgErr').style.display = 'block';
+  } else {
+    form.style.display = 'none';
+    document.getElementById('msgOk').style.display  = 'block';
+  }
+}
+
+/* ─── Button press micro-interaction ─── */
+document.querySelectorAll('.btn-gold,.btn-price,.btn-form-submit,.btn-white').forEach(b => {
+  b.addEventListener('mousedown', () => { b.style.transform = 'scale(0.97)'; });
+  ['mouseup','mouseleave'].forEach(ev => b.addEventListener(ev, () => { b.style.transform = ''; }));
+});
+
+/* ─── Portal tab switch ─── */
+function switchPortalTab(tab) {
+  const client = document.getElementById('portalClient');
+  const partner = document.getElementById('portalPartner');
+  const tClient = document.getElementById('tabClient');
+  const tPartner = document.getElementById('tabPartner');
+  if (tab === 'client') {
+    client.style.display = 'block';
+    partner.style.display = 'none';
+    tClient.style.background = 'var(--blue)';
+    tClient.style.color = 'var(--white)';
+    tClient.style.boxShadow = '0 4px 14px rgba(19,29,191,.4)';
+    tPartner.style.background = 'transparent';
+    tPartner.style.color = 'rgba(255,255,255,.5)';
+    tPartner.style.boxShadow = 'none';
+  } else {
+    partner.style.display = 'block';
+    client.style.display = 'none';
+    tPartner.style.background = 'var(--teal)';
+    tPartner.style.color = 'var(--navy)';
+    tPartner.style.boxShadow = '0 4px 14px rgba(20,211,196,.35)';
+    tClient.style.background = 'transparent';
+    tClient.style.color = 'rgba(255,255,255,.5)';
+    tClient.style.boxShadow = 'none';
+  }
+}
+
+
+/* ─── Portal Login Dropdown ─── */
+function togglePortalMenu() {
+  const dd = document.getElementById('portalDropdown');
+  const btn = document.getElementById('portalLoginBtn');
+  const chev = document.getElementById('portalChevron');
+  const isOpen = dd.classList.toggle('open');
+  btn.setAttribute('aria-expanded', isOpen);
+  chev.style.transform = isOpen ? 'rotate(180deg)' : 'rotate(0deg)';
+}
+document.addEventListener('click', function(e) {
+  const wrap = document.getElementById('portalLoginWrap');
+  if (wrap && !wrap.contains(e.target)) {
+    const dd = document.getElementById('portalDropdown');
+    const chev = document.getElementById('portalChevron');
+    const btn = document.getElementById('portalLoginBtn');
+    if (dd) dd.classList.remove('open');
+    if (chev) chev.style.transform = 'rotate(0deg)';
+    if (btn) btn.setAttribute('aria-expanded', 'false');
+  }
+});
+
+
+/* ─── Theme Toggle ─── */
+function toggleTheme() {
+  const isLight = document.body.classList.toggle('light');
+  localStorage.setItem('tjc-site-theme', isLight ? 'light' : 'dark');
+}
+// Restore saved preference on load
+(function initTheme() {
+  if (localStorage.getItem('tjc-site-theme') === 'light') {
+    document.body.classList.add('light');
+  }
+})();
+
+/* ─── Smooth scroll ─── */
+document.querySelectorAll('a[href^="#"]').forEach(a => {
+  a.addEventListener('click', e => {
+    const t = document.querySelector(a.getAttribute('href'));
+    if (t) { e.preventDefault(); window.scrollTo({ top: t.getBoundingClientRect().top + window.scrollY - 80, behavior: 'smooth' }); document.getElementById('navLinks').classList.remove('open'); }
+  });
+});
+</script>
+</body>
+</html>
