@@ -4790,7 +4790,7 @@ function renderFinance(){
       <span style=&quot;font-size:10px;color:var(--text3)&quot;>Due ${inv.dueDate||'—'}</span>
       <div class=&quot;dual-currency&quot; style=&quot;text-align:right;min-width:80px&quot;><span class=&quot;dc-primary currency-usd&quot; style=&quot;font-size:13px&quot;>$${inv.amountUsd.toLocaleString()}</span><span class=&quot;dc-secondary&quot;>₱${FIN.toPhp(inv.amountUsd).toLocaleString()}</span></div>
       ${inv.status!=='Paid'?`<button class=&quot;btn btn-xs&quot; style=&quot;background:var(--green-pale);color:var(--green);border:1px solid #a7d9bb;flex-shrink:0&quot; onclick=&quot;event.stopPropagation();markPaid('${inv.id}')&quot;>Mark Paid</button>`:`<span style=&quot;font-size:10px;color:var(--green);font-weight:600;flex-shrink:0&quot;> ${inv.paidAt}</span>`}
-      <button class=&quot;btn-icon&quot; onclick=&quot;event.stopPropagation();archiveDoc('invoices','${inv.id}','${inv.number}')&quot; style=&quot;opacity:0&quot; onmouseenter=&quot;this.style.opacity=1&quot; onmouseleave=&quot;this.style.opacity=0&quot;></button>
+      <button class=&quot;btn-icon&quot; onclick=&quot;event.stopPropagation();archiveDoc('invoices','${inv.id}','${inv.number}')&quot; style=&quot;opacity:0&quot; onmouseenter=&quot;this.style.opacity=1&quot; onmouseleave=&quot;this.style.opacity=0&quot; title=&quot;Archive&quot;>${ic('archive',13)}</button>
     </div>`).join('')}
     ${invoices.length===0?emptyState('No invoices.'):''}
   </div>`;
@@ -5061,7 +5061,7 @@ function renderTasks(){
   <div class=&quot;card&quot;>
     <table class=&quot;data-table&quot;>
       <thead><tr><th></th><th>Task</th><th>Assignee</th><th>Priority</th><th>Due Date</th><th>Project</th><th>SLA</th><th></th></tr></thead>
-      <tbody>${shown.map(t=>{const late=t.dueDate&amp;&amp;t.dueDate<td&amp;&amp;!t.done;return `<tr style=&quot;background:${late?'#FFF8F8':t.requestedByClient?'#FFFDF0':''}${t.isOos?';border-left:3px solid var(--purple)':t.requestedByClient?';border-left:3px solid var(--gold)':''}&quot; onclick=&quot;openTaskDetail('${t.id}')&quot;><td onclick=&quot;event.stopPropagation();toggleTask('${t.id}')&quot;><div class=&quot;chk${t.done?' done':''}&quot;></div></td><td style=&quot;font-weight:${t.done?400:500}&quot; class=&quot;${t.done?'task-name done':''}&quot;>${t.isOos?`<span class=&quot;oos-badge&quot;>OOS</span> `:''}${t.requestedByClient?`<span class=&quot;tag t-amber&quot; style=&quot;font-size:9px;margin-right:4px&quot;>Client ↑</span>`:''}${t.title}</td><td><div style=&quot;display:flex;align-items:center;gap:4px&quot;>${t.assigneeInitials?`<div class=&quot;av av-xs ${avColor(t.assigneeColor)}&quot;>${t.assigneeInitials}</div>`:''}<span style=&quot;font-size:11px&quot;>${(t.assigneeName||'').split(' ')[0]||'—'}</span></div></td><td>${tagHtml(t.priority)}</td><td style=&quot;font-size:11px;color:${late?'var(--red)':'var(--text3)'}&quot;>${late?' Overdue':t.dueDate||'—'}</td><td style=&quot;font-size:11px;color:var(--text3)&quot;>${t.project||'—'}</td><td>${SLA.badge(t)}</td><td onclick=&quot;event.stopPropagation()&quot;><button class=&quot;btn-icon&quot; onclick=&quot;archiveDoc('tasks','${t.id}','${t.title.slice(0,30)}')&quot; style=&quot;opacity:0&quot; onmouseenter=&quot;this.style.opacity=1&quot; onmouseleave=&quot;this.style.opacity=0&quot;></button></td></tr>`;}).join('')}</tbody>
+      <tbody>${shown.map(t=>{const late=t.dueDate&amp;&amp;t.dueDate<td&amp;&amp;!t.done;return `<tr style=&quot;background:${late?'#FFF8F8':t.requestedByClient?'#FFFDF0':''}${t.isOos?';border-left:3px solid var(--purple)':t.requestedByClient?';border-left:3px solid var(--gold)':''}&quot; onclick=&quot;openTaskDetail('${t.id}')&quot;><td onclick=&quot;event.stopPropagation();toggleTask('${t.id}')&quot;><div class=&quot;chk${t.done?' done':''}&quot;></div></td><td style=&quot;font-weight:${t.done?400:500}&quot; class=&quot;${t.done?'task-name done':''}&quot;>${t.isOos?`<span class=&quot;oos-badge&quot;>OOS</span> `:''}${t.requestedByClient?`<span class=&quot;tag t-amber&quot; style=&quot;font-size:9px;margin-right:4px&quot;>Client ↑</span>`:''}${t.title}</td><td><div style=&quot;display:flex;align-items:center;gap:4px&quot;>${t.assigneeInitials?`<div class=&quot;av av-xs ${avColor(t.assigneeColor)}&quot;>${t.assigneeInitials}</div>`:''}<span style=&quot;font-size:11px&quot;>${(t.assigneeName||'').split(' ')[0]||'—'}</span></div></td><td>${tagHtml(t.priority)}</td><td style=&quot;font-size:11px;color:${late?'var(--red)':'var(--text3)'}&quot;>${late?' Overdue':t.dueDate||'—'}</td><td style=&quot;font-size:11px;color:var(--text3)&quot;>${t.project||'—'}</td><td>${SLA.badge(t)}</td><td onclick=&quot;event.stopPropagation()&quot;><button class=&quot;btn-icon&quot; onclick=&quot;archiveDoc('tasks','${t.id}','${t.title.slice(0,30)}')&quot; style=&quot;opacity:0&quot; onmouseenter=&quot;this.style.opacity=1&quot; onmouseleave=&quot;this.style.opacity=0&quot; title=&quot;Archive&quot;>${ic('archive',13)}</button></td></tr>`;}).join('')}</tbody>
     </table>
     ${shown.length===0?emptyState('No tasks in this view.'):''}
   </div>`;
@@ -5281,8 +5281,8 @@ function renderInvoices(){
         <span class=&quot;dc-secondary&quot;>₱${FIN.toPhp(inv.amountUsd).toLocaleString()}</span>
       </div>
       ${inv.status!=='Paid'?`<button class=&quot;btn btn-xs&quot; style=&quot;background:var(--green-pale);color:var(--green);border:1px solid #a7d9bb;flex-shrink:0&quot; onclick=&quot;event.stopPropagation();markPaid('${inv.id}')&quot;> Mark Paid</button>`:`<span style=&quot;font-size:11px;color:var(--green);font-weight:600;flex-shrink:0;min-width:60px&quot;> ${inv.paidAt}</span>`}
-      <button class=&quot;btn btn-xs btn-secondary&quot; onclick=&quot;event.stopPropagation();openEditInvoice('${inv.id}')&quot; title=&quot;Edit invoice&quot;></button>
-      <button class=&quot;btn btn-xs btn-danger&quot; onclick=&quot;event.stopPropagation();deleteInvoice('${inv.id}')&quot; title=&quot;Delete invoice&quot;></button>
+      <button class=&quot;btn btn-xs btn-secondary&quot; onclick=&quot;event.stopPropagation();openEditInvoice('${inv.id}')&quot; title=&quot;Edit invoice&quot;>${ic('edit',12)}</button>
+      <button class=&quot;btn btn-xs btn-danger&quot; onclick=&quot;event.stopPropagation();deleteInvoice('${inv.id}')&quot; title=&quot;Delete invoice&quot;>${ic('trash',12)}</button>
     </div>`).join('')}
     ${invs.length===0?emptyState('No invoices.'):''}
   </div>`;
@@ -5307,7 +5307,7 @@ function renderGoals(){
     <div style=&quot;font-size:13px;color:var(--text2)&quot;>Q2 2025 · ${goals.filter(g=>g.status==='On Track').length} on track · ${goals.filter(g=>g.status==='At Risk').length} at risk</div>
     <button class=&quot;btn btn-sm btn-primary&quot; onclick=&quot;openAddGoal()&quot;>+ Add Goal</button>
   </div>
-  <div class=&quot;card&quot;>${goals.map(g=>{const pct=Math.min(100,Math.round(((g.current||0)/(g.target||1))*100));const col=g.status==='At Risk'?'var(--red)':g.status==='On Track'?'var(--teal)':'var(--gold)';const display=g.unit==='USD'?`$${(g.current||0).toLocaleString()} / $${(g.target||0).toLocaleString()}`:g.unit==='PHP'?`₱${(g.current||0).toLocaleString()} / ₱${(g.target||0).toLocaleString()}`:`${g.current||0} / ${g.target||0}${g.unit==='%'?' %':''}`;return `<div style=&quot;padding:12px 16px;border-bottom:1px solid var(--border)&quot;><div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px&quot;><div><span style=&quot;font-size:13px;font-weight:600&quot;>${g.name}</span><span class=&quot;tag ${g.status==='At Risk'?'t-red':g.status==='On Track'?'t-teal':'t-amber'}&quot; style=&quot;margin-left:8px&quot;>${g.status}</span><span class=&quot;tag t-gray&quot; style=&quot;margin-left:4px&quot;>${g.category}</span></div><div style=&quot;display:flex;align-items:center;gap:8px&quot;><span style=&quot;font-size:14px;font-weight:700;color:${col}&quot;>${pct}%</span><button class=&quot;btn btn-xs btn-secondary&quot; onclick=&quot;openUpdateGoal('${g.id}')&quot;>Update</button><button class=&quot;btn-icon&quot; onclick=&quot;archiveDoc('goals','${g.id}','${g.name.slice(0,30)}')&quot; style=&quot;font-size:12px&quot;></button></div></div><div class=&quot;prog-lg&quot;><div class=&quot;prog-fill&quot; style=&quot;width:${pct}%;background:${col}&quot;></div></div><div style=&quot;font-size:11px;color:var(--text3);margin-top:4px&quot;>${display} · ${g.quarter} ${g.year}</div></div>`;}).join('') || emptyState('No goals. Add your first goal above.')}</div>`;
+  <div class=&quot;card&quot;>${goals.map(g=>{const pct=Math.min(100,Math.round(((g.current||0)/(g.target||1))*100));const col=g.status==='At Risk'?'var(--red)':g.status==='On Track'?'var(--teal)':'var(--gold)';const display=g.unit==='USD'?`$${(g.current||0).toLocaleString()} / $${(g.target||0).toLocaleString()}`:g.unit==='PHP'?`₱${(g.current||0).toLocaleString()} / ₱${(g.target||0).toLocaleString()}`:`${g.current||0} / ${g.target||0}${g.unit==='%'?' %':''}`;return `<div style=&quot;padding:12px 16px;border-bottom:1px solid var(--border)&quot;><div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:6px&quot;><div><span style=&quot;font-size:13px;font-weight:600&quot;>${g.name}</span><span class=&quot;tag ${g.status==='At Risk'?'t-red':g.status==='On Track'?'t-teal':'t-amber'}&quot; style=&quot;margin-left:8px&quot;>${g.status}</span><span class=&quot;tag t-gray&quot; style=&quot;margin-left:4px&quot;>${g.category}</span></div><div style=&quot;display:flex;align-items:center;gap:8px&quot;><span style=&quot;font-size:14px;font-weight:700;color:${col}&quot;>${pct}%</span><button class=&quot;btn btn-xs btn-secondary&quot; onclick=&quot;openUpdateGoal('${g.id}')&quot;>Update</button><button class=&quot;btn-icon&quot; onclick=&quot;archiveDoc('goals','${g.id}','${g.name.slice(0,30)}')&quot; style=&quot;font-size:12px&quot; title=&quot;Archive&quot;>${ic('archive',13)}</button></div></div><div class=&quot;prog-lg&quot;><div class=&quot;prog-fill&quot; style=&quot;width:${pct}%;background:${col}&quot;></div></div><div style=&quot;font-size:11px;color:var(--text3);margin-top:4px&quot;>${display} · ${g.quarter} ${g.year}</div></div>`;}).join('') || emptyState('No goals. Add your first goal above.')}</div>`;
 }
 
 const OB_STEPS = ['Contract Signed','Payment Received','Intake Form Sent','Intake Form Received','Kickoff Call Scheduled','Kickoff Call Done','Access Granted &amp; Fully Onboarded'];
@@ -5794,7 +5794,7 @@ function renderVATabTimelog(va, myTasks, myLogs, td, todayMins){
       <td style=&quot;font-size:12px&quot;>${l.description||'—'}</td>
       <td style=&quot;font-size:11px;color:var(--text3)&quot;>${l.project||'—'}</td>
       <td style=&quot;text-align:right;font-weight:600;font-size:12px;white-space:nowrap&quot;>${fmtDuration(l.minutes||0,l.seconds||0)}</td>
-      <td><button class=&quot;btn-icon&quot; onclick=&quot;archiveDoc('timelogs','${l.id}','${(l.description||'Log').slice(0,20)}')&quot; style=&quot;opacity:0&quot; onmouseenter=&quot;this.style.opacity=1&quot; onmouseleave=&quot;this.style.opacity=0&quot;></button></td>
+      <td><button class=&quot;btn-icon&quot; onclick=&quot;archiveDoc('timelogs','${l.id}','${(l.description||'Log').slice(0,20)}')&quot; style=&quot;opacity:0&quot; onmouseenter=&quot;this.style.opacity=1&quot; onmouseleave=&quot;this.style.opacity=0&quot; title=&quot;Archive&quot;>${ic('archive',13)}</button></td>
     </tr>`).join('')}</tbody>
     </table>${myLogs.length===0?emptyState('No time entries yet.'):''}
   </div>`;
@@ -6025,7 +6025,7 @@ async function quickUpdateClientStatus(id){
 
 function renderCPContacts(c){
   if(!c.contacts) c.contacts=[];
-  return `<div style=&quot;display:flex;justify-content:space-between;margin-bottom:12px&quot;><div style=&quot;font-size:13px;color:var(--text2)&quot;>${c.contacts.length} contact${c.contacts.length!==1?'s':''}</div><button class=&quot;btn btn-sm btn-primary&quot; onclick=&quot;openAddContact('${c.id}')&quot;>+ Add Contact</button></div><div style=&quot;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px&quot;>${c.contacts.map((ct,i)=>`<div class=&quot;card card-pad&quot;><div style=&quot;display:flex;align-items:center;gap:10px;margin-bottom:8px&quot;><div class=&quot;av av-md av-navy&quot;>${(ct.name||'?').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}</div><div><div style=&quot;font-size:13px;font-weight:600&quot;>${ct.name||'—'}</div><div style=&quot;font-size:11px;color:var(--text3)&quot;>${ct.role||'—'}</div></div></div>${ct.email?`<div style=&quot;font-size:11px;margin-bottom:3px&quot;> ${ct.email}</div>`:''}${ct.phone?`<div style=&quot;font-size:11px;margin-bottom:3px&quot;> ${ct.phone}</div>`:''}${ct.preferred?`<div style=&quot;font-size:10px;color:var(--text3)&quot;>Preferred: ${ct.preferred}</div>`:''}<div style=&quot;margin-top:8px;display:flex;gap:6px;align-items:center&quot;><span class=&quot;tag ${ct.isPrimary?'t-teal':'t-gray'}&quot;>${ct.isPrimary?'Primary':'Secondary'}</span><button class=&quot;btn-icon&quot; style=&quot;margin-left:auto;opacity:.6&quot; onclick=&quot;deleteContact('${c.id}',${i})&quot;></button></div></div>`).join('')}${c.contacts.length===0?emptyState('No contacts yet.'):''}</div>`;
+  return `<div style=&quot;display:flex;justify-content:space-between;margin-bottom:12px&quot;><div style=&quot;font-size:13px;color:var(--text2)&quot;>${c.contacts.length} contact${c.contacts.length!==1?'s':''}</div><button class=&quot;btn btn-sm btn-primary&quot; onclick=&quot;openAddContact('${c.id}')&quot;>+ Add Contact</button></div><div style=&quot;display:grid;grid-template-columns:repeat(auto-fill,minmax(240px,1fr));gap:10px&quot;>${c.contacts.map((ct,i)=>`<div class=&quot;card card-pad&quot;><div style=&quot;display:flex;align-items:center;gap:10px;margin-bottom:8px&quot;><div class=&quot;av av-md av-navy&quot;>${(ct.name||'?').split(' ').map(n=>n[0]).join('').slice(0,2).toUpperCase()}</div><div><div style=&quot;font-size:13px;font-weight:600&quot;>${ct.name||'—'}</div><div style=&quot;font-size:11px;color:var(--text3)&quot;>${ct.role||'—'}</div></div></div>${ct.email?`<div style=&quot;font-size:11px;margin-bottom:3px&quot;> ${ct.email}</div>`:''}${ct.phone?`<div style=&quot;font-size:11px;margin-bottom:3px&quot;> ${ct.phone}</div>`:''}${ct.preferred?`<div style=&quot;font-size:10px;color:var(--text3)&quot;>Preferred: ${ct.preferred}</div>`:''}<div style=&quot;margin-top:8px;display:flex;gap:6px;align-items:center&quot;><span class=&quot;tag ${ct.isPrimary?'t-teal':'t-gray'}&quot;>${ct.isPrimary?'Primary':'Secondary'}</span><button class=&quot;btn-icon&quot; style=&quot;margin-left:auto;opacity:.6&quot; onclick=&quot;deleteContact('${c.id}',${i})&quot;>${ic('trash',13)}</button></div></div>`).join('')}${c.contacts.length===0?emptyState('No contacts yet.'):''}</div>`;
 }
 
 function renderCPTasksBody(myTasks){
@@ -6045,7 +6045,7 @@ function renderCPFinance(c,myInvs,totalBilledUsd,totalPaidUsd,margin){
 
 function renderCPDeliverables(c){
   if(!c.deliverables) c.deliverables=[];
-  return `<div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px&quot;><div style=&quot;font-size:13px;color:var(--text2)&quot;>${c.deliverables.length} deliverable${c.deliverables.length!==1?'s':''}</div><button class=&quot;btn btn-sm btn-primary&quot; onclick=&quot;openAddDeliverable('${c.id}')&quot;>+ Add Deliverable</button></div><div class=&quot;card&quot;>${c.deliverables.map((d,i)=>`<div style=&quot;display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--border)&quot; onmouseover=&quot;this.style.background='var(--hover-row-bg)'&quot; onmouseout=&quot;this.style.background=''&quot;><div style=&quot;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:${d.type==='Report'?'var(--navy-pale)':d.type==='Design'?'var(--gold-pale)':d.type==='Video'?'var(--red-pale)':'var(--teal-pale)'}&quot;>${{Report:'',Design:'',Video:'',Copy:'️',Presentation:'️'}[d.type]||''}</div><div style=&quot;flex:1;min-width:0&quot;><div style=&quot;font-size:13px;font-weight:500&quot;>${d.name}</div><div style=&quot;display:flex;gap:6px;margin-top:3px;align-items:center&quot;><span class=&quot;tag t-navy&quot; style=&quot;font-size:9px&quot;>${d.type||'Other'}</span><span class=&quot;tag ${d.status==='Approved'?'t-green':d.status==='Pending'?'t-amber':'t-gray'}&quot;>${d.status||'Draft'}</span>${d.url?`<a href=&quot;${d.url}&quot; target=&quot;_blank&quot; style=&quot;font-size:10px;color:var(--teal)&quot;> View</a>`:''}</div></div><div style=&quot;text-align:right;flex-shrink:0&quot;><div style=&quot;font-size:11px;color:var(--text3)&quot;>${d.date||'—'}</div></div><button class=&quot;btn-icon&quot; style=&quot;opacity:0&quot; onmouseenter=&quot;this.style.opacity=1&quot; onmouseleave=&quot;this.style.opacity=0&quot; onclick=&quot;deleteDeliverable('${c.id}',${i})&quot;></button></div>`).join('')}${c.deliverables.length===0?emptyState('No deliverables recorded yet.'):''}</div>`;
+  return `<div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px&quot;><div style=&quot;font-size:13px;color:var(--text2)&quot;>${c.deliverables.length} deliverable${c.deliverables.length!==1?'s':''}</div><button class=&quot;btn btn-sm btn-primary&quot; onclick=&quot;openAddDeliverable('${c.id}')&quot;>+ Add Deliverable</button></div><div class=&quot;card&quot;>${c.deliverables.map((d,i)=>`<div style=&quot;display:flex;align-items:center;gap:10px;padding:9px 12px;border-bottom:1px solid var(--border)&quot; onmouseover=&quot;this.style.background='var(--hover-row-bg)'&quot; onmouseout=&quot;this.style.background=''&quot;><div style=&quot;width:34px;height:34px;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:16px;flex-shrink:0;background:${d.type==='Report'?'var(--navy-pale)':d.type==='Design'?'var(--gold-pale)':d.type==='Video'?'var(--red-pale)':'var(--teal-pale)'}&quot;>${{Report:'',Design:'',Video:'',Copy:'️',Presentation:'️'}[d.type]||''}</div><div style=&quot;flex:1;min-width:0&quot;><div style=&quot;font-size:13px;font-weight:500&quot;>${d.name}</div><div style=&quot;display:flex;gap:6px;margin-top:3px;align-items:center&quot;><span class=&quot;tag t-navy&quot; style=&quot;font-size:9px&quot;>${d.type||'Other'}</span><span class=&quot;tag ${d.status==='Approved'?'t-green':d.status==='Pending'?'t-amber':'t-gray'}&quot;>${d.status||'Draft'}</span>${d.url?`<a href=&quot;${d.url}&quot; target=&quot;_blank&quot; style=&quot;font-size:10px;color:var(--teal)&quot;> View</a>`:''}</div></div><div style=&quot;text-align:right;flex-shrink:0&quot;><div style=&quot;font-size:11px;color:var(--text3)&quot;>${d.date||'—'}</div></div><button class=&quot;btn-icon&quot; style=&quot;opacity:0&quot; onmouseenter=&quot;this.style.opacity=1&quot; onmouseleave=&quot;this.style.opacity=0&quot; onclick=&quot;deleteDeliverable('${c.id}',${i})&quot;>${ic('trash',13)}</button></div>`).join('')}${c.deliverables.length===0?emptyState('No deliverables recorded yet.'):''}</div>`;
 }
 
 function renderCPReports(c){
@@ -6063,7 +6063,7 @@ function renderCPReports(c){
     <div class=&quot;form-row&quot;><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Posts Published</label><input type=&quot;number&quot; class=&quot;form-control&quot; id=&quot;mkt-postsPublished&quot; value=&quot;${m.postsPublished||''}&quot; placeholder=&quot;e.g. 18&quot;></div><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Follower Growth</label><input type=&quot;number&quot; class=&quot;form-control&quot; id=&quot;mkt-followerGrowth&quot; value=&quot;${m.followerGrowth||''}&quot; placeholder=&quot;e.g. +120&quot;></div></div>
     <button class=&quot;btn btn-primary&quot; onclick=&quot;saveMarketingMetrics('${c.id}')&quot;> Save Marketing Metrics</button>
   </div>` : `<div class=&quot;card card-pad&quot; style=&quot;margin-bottom:16px;background:var(--bg);border-color:var(--border)&quot;><div style=&quot;font-size:12px;color:var(--text3)&quot;>Marketing metrics are only available for marketing-focused partners. ${c.assignedVa} is not assigned marketing skills.</div></div>`;
-  return `<div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px&quot;><div style=&quot;font-size:13px;color:var(--text2)&quot;>${c.reports.length} monthly report${c.reports.length!==1?'s':''}</div><button class=&quot;btn btn-sm btn-primary&quot; onclick=&quot;openAddReport('${c.id}')&quot;>+ Add Report</button></div>${mktSection}${c.reports.map((r,i)=>`<div class=&quot;card card-pad&quot; style=&quot;margin-bottom:10px&quot;><div style=&quot;display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px&quot;><div><div style=&quot;font-size:14px;font-weight:700&quot;>${r.month||'—'}</div><div style=&quot;font-size:12px;color:var(--text2);margin-top:2px&quot;>${r.summary||'No summary.'}</div></div><div style=&quot;display:flex;gap:6px;flex-shrink:0&quot;>${r.url?`<a href=&quot;${r.url}&quot; target=&quot;_blank&quot; class=&quot;btn btn-xs btn-secondary&quot;> View</a>`:''}<button class=&quot;btn-icon&quot; onclick=&quot;deleteReport('${c.id}',${i})&quot;></button></div></div><div class=&quot;report-metrics&quot;><div class=&quot;rmet&quot;><div class=&quot;rmet-val&quot;>${r.postsPublished||0}</div><div class=&quot;rmet-lbl&quot;>Posts</div></div><div class=&quot;rmet&quot;><div class=&quot;rmet-val&quot;>${r.tasksCompleted||0}</div><div class=&quot;rmet-lbl&quot;>Tasks Done</div></div><div class=&quot;rmet&quot;><div class=&quot;rmet-val&quot;>${r.hoursLogged||0}h</div><div class=&quot;rmet-lbl&quot;>Hours</div></div></div>${r.highlights?`<div style=&quot;margin-top:10px;font-size:12px;color:var(--text2);border-top:1px solid var(--border);padding-top:8px&quot;><strong>Highlights:</strong> ${r.highlights}</div>`:''}</div>`).join('')}${c.reports.length===0?'<div class=&quot;card card-pad&quot; style=&quot;color:var(--text3);font-size:13px&quot;>No reports yet. Add your first monthly report above.</div>':''}` + renderPartnerReportsSection(c.id,'owner');
+  return `<div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px&quot;><div style=&quot;font-size:13px;color:var(--text2)&quot;>${c.reports.length} monthly report${c.reports.length!==1?'s':''}</div><button class=&quot;btn btn-sm btn-primary&quot; onclick=&quot;openAddReport('${c.id}')&quot;>+ Add Report</button></div>${mktSection}${c.reports.map((r,i)=>`<div class=&quot;card card-pad&quot; style=&quot;margin-bottom:10px&quot;><div style=&quot;display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px&quot;><div><div style=&quot;font-size:14px;font-weight:700&quot;>${r.month||'—'}</div><div style=&quot;font-size:12px;color:var(--text2);margin-top:2px&quot;>${r.summary||'No summary.'}</div></div><div style=&quot;display:flex;gap:6px;flex-shrink:0&quot;>${r.url?`<a href=&quot;${r.url}&quot; target=&quot;_blank&quot; class=&quot;btn btn-xs btn-secondary&quot;> View</a>`:''}<button class=&quot;btn-icon&quot; onclick=&quot;deleteReport('${c.id}',${i})&quot;>${ic('trash',13)}</button></div></div><div class=&quot;report-metrics&quot;><div class=&quot;rmet&quot;><div class=&quot;rmet-val&quot;>${r.postsPublished||0}</div><div class=&quot;rmet-lbl&quot;>Posts</div></div><div class=&quot;rmet&quot;><div class=&quot;rmet-val&quot;>${r.tasksCompleted||0}</div><div class=&quot;rmet-lbl&quot;>Tasks Done</div></div><div class=&quot;rmet&quot;><div class=&quot;rmet-val&quot;>${r.hoursLogged||0}h</div><div class=&quot;rmet-lbl&quot;>Hours</div></div></div>${r.highlights?`<div style=&quot;margin-top:10px;font-size:12px;color:var(--text2);border-top:1px solid var(--border);padding-top:8px&quot;><strong>Highlights:</strong> ${r.highlights}</div>`:''}</div>`).join('')}${c.reports.length===0?'<div class=&quot;card card-pad&quot; style=&quot;color:var(--text3);font-size:13px&quot;>No reports yet. Add your first monthly report above.</div>':''}` + renderPartnerReportsSection(c.id,'owner');
 }
 
 async function saveMarketingMetrics(clientId){
@@ -6085,13 +6085,13 @@ async function saveMarketingMetrics(clientId){
 
 function renderCPNotes(c){
   if(!c.notes) c.notes=[];
-  return `<div class=&quot;card card-pad&quot; style=&quot;margin-bottom:14px&quot;><div style=&quot;font-size:13px;font-weight:600;margin-bottom:10px&quot;>Add Note</div><div class=&quot;form-row&quot;><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Type</label><select class=&quot;form-control&quot; id=&quot;note-type&quot;><option>General</option><option>Meeting Notes</option><option>Feedback</option><option>Instruction</option><option>Concern</option><option>OOS Request</option></select></div><div class=&quot;form-group&quot; style=&quot;grid-column:span 1&quot;></div></div><div class=&quot;form-group&quot;><textarea class=&quot;form-control&quot; id=&quot;new-note-text&quot; rows=&quot;3&quot; placeholder=&quot;Add meeting notes, client instructions, feedback, or concerns...&quot;></textarea></div><button class=&quot;btn btn-primary&quot; onclick=&quot;addNote('${c.id}')&quot;>+ Save Note</button></div>${c.notes.slice().reverse().map((n,ri)=>{const i=c.notes.length-1-ri;return `<div class=&quot;card card-pad&quot; style=&quot;margin-bottom:8px&quot;><div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:5px&quot;><div style=&quot;display:flex;gap:6px;align-items:center&quot;><span class=&quot;tag ${n.type==='Concern'?'t-red':n.type==='Feedback'?'t-teal':n.type==='Instruction'?'t-gold':n.type==='OOS Request'?'t-purple':'t-gray'}&quot; style=&quot;font-size:9px&quot;>${n.type||'General'}</span><span style=&quot;font-size:10px;color:var(--text3)&quot;>${n.date||'—'}</span></div><button class=&quot;btn-icon&quot; onclick=&quot;deleteNote('${c.id}',${i})&quot;></button></div><div style=&quot;font-size:13px;line-height:1.6&quot;>${n.text}</div></div>`;}).join('')}${c.notes.length===0?emptyState('No notes yet.'):''}`;
+  return `<div class=&quot;card card-pad&quot; style=&quot;margin-bottom:14px&quot;><div style=&quot;font-size:13px;font-weight:600;margin-bottom:10px&quot;>Add Note</div><div class=&quot;form-row&quot;><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Type</label><select class=&quot;form-control&quot; id=&quot;note-type&quot;><option>General</option><option>Meeting Notes</option><option>Feedback</option><option>Instruction</option><option>Concern</option><option>OOS Request</option></select></div><div class=&quot;form-group&quot; style=&quot;grid-column:span 1&quot;></div></div><div class=&quot;form-group&quot;><textarea class=&quot;form-control&quot; id=&quot;new-note-text&quot; rows=&quot;3&quot; placeholder=&quot;Add meeting notes, client instructions, feedback, or concerns...&quot;></textarea></div><button class=&quot;btn btn-primary&quot; onclick=&quot;addNote('${c.id}')&quot;>+ Save Note</button></div>${c.notes.slice().reverse().map((n,ri)=>{const i=c.notes.length-1-ri;return `<div class=&quot;card card-pad&quot; style=&quot;margin-bottom:8px&quot;><div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:5px&quot;><div style=&quot;display:flex;gap:6px;align-items:center&quot;><span class=&quot;tag ${n.type==='Concern'?'t-red':n.type==='Feedback'?'t-teal':n.type==='Instruction'?'t-gold':n.type==='OOS Request'?'t-purple':'t-gray'}&quot; style=&quot;font-size:9px&quot;>${n.type||'General'}</span><span style=&quot;font-size:10px;color:var(--text3)&quot;>${n.date||'—'}</span></div><button class=&quot;btn-icon&quot; onclick=&quot;deleteNote('${c.id}',${i})&quot; title=&quot;Delete&quot;>${ic('trash',12)}</button></div><div style=&quot;font-size:13px;line-height:1.6&quot;>${n.text}</div></div>`;}).join('')}${c.notes.length===0?emptyState('No notes yet.'):''}`;
 }
 
 function renderCPAccess(c){
   if(!c.tools) c.tools=[];
   if(!c.socials) c.socials={};
-  return `<div class=&quot;form-danger&quot;> <strong>Confidential.</strong> Never share credentials via chat. Use the TJC password manager. Store access info here for team reference only.</div><div class=&quot;card card-pad&quot; style=&quot;margin-bottom:14px&quot;><div style=&quot;font-size:13px;font-weight:600;margin-bottom:12px&quot;>Social Media Accounts</div><div class=&quot;form-row&quot;><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Facebook Page URL</label><input class=&quot;form-control&quot; id=&quot;s-fb&quot; value=&quot;${c.socials.facebook||''}&quot; placeholder=&quot;https://facebook.com/...&quot;></div><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Instagram Handle</label><input class=&quot;form-control&quot; id=&quot;s-ig&quot; value=&quot;${c.socials.instagram||''}&quot; placeholder=&quot;@handle&quot;></div></div><div class=&quot;form-row&quot;><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>TikTok</label><input class=&quot;form-control&quot; id=&quot;s-tt&quot; value=&quot;${c.socials.tiktok||''}&quot; placeholder=&quot;@handle&quot;></div><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>LinkedIn</label><input class=&quot;form-control&quot; id=&quot;s-li&quot; value=&quot;${c.socials.linkedin||''}&quot; placeholder=&quot;linkedin.com/in/...&quot;></div></div><div class=&quot;form-row&quot;><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Website</label><input class=&quot;form-control&quot; id=&quot;s-web&quot; value=&quot;${c.socials.website||''}&quot; placeholder=&quot;https://...&quot;></div><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Other Platforms</label><input class=&quot;form-control&quot; id=&quot;s-other&quot; value=&quot;${c.socials.other||''}&quot; placeholder=&quot;Pinterest, X, etc.&quot;></div></div><button class=&quot;btn btn-primary&quot; onclick=&quot;saveSocials('${c.id}')&quot;>Save Social Accounts</button></div><div class=&quot;card card-pad&quot; style=&quot;margin-bottom:14px&quot;><div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px&quot;><div style=&quot;font-size:13px;font-weight:600&quot;>Tools &amp; Access</div><button class=&quot;btn btn-sm btn-primary&quot; onclick=&quot;openAddTool('${c.id}')&quot;>+ Add Tool</button></div>${c.tools.map((t,i)=>`<div style=&quot;display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)&quot; onmouseover=&quot;this.style.background='var(--hover-row-bg)'&quot; onmouseout=&quot;this.style.background=''&quot;><div style=&quot;font-size:18px;flex-shrink:0&quot;>${t.emoji||''}</div><div style=&quot;flex:1;min-width:0&quot;><div style=&quot;font-size:13px;font-weight:500&quot;>${t.name}</div><div style=&quot;font-size:10px;color:var(--text3)&quot;>${t.username||''} ${t.note?'· '+t.note:''}</div></div><span class=&quot;tag ${t.hasAccess?'t-green':'t-red'}&quot;>${t.hasAccess?' Access OK':'No Access'}</span><button class=&quot;btn-icon&quot; onclick=&quot;deleteTool('${c.id}',${i})&quot; style=&quot;opacity:0&quot; onmouseenter=&quot;this.style.opacity=1&quot; onmouseleave=&quot;this.style.opacity=0&quot;></button></div>`).join('')}${c.tools.length===0?'<div style=&quot;font-size:12px;color:var(--text3);padding:10px 0&quot;>No tools listed yet.</div>':''}</div><div class=&quot;card card-pad&quot;><div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px&quot;><div><div style=&quot;font-size:13px;font-weight:600&quot;>Client Portal PIN</div><div style=&quot;font-size:11px;color:var(--text3);margin-top:2px&quot;>This PIN lets ${c.name} log in to their private client portal.</div></div><button class=&quot;btn btn-sm btn-secondary&quot; onclick=&quot;openSetClientPin('${c.id}')&quot;> Change PIN</button></div><div style=&quot;display:flex;align-items:center;gap:10px&quot;><div style=&quot;background:var(--navy-pale);border:1px solid var(--border2);border-radius:8px;padding:8px 16px;letter-spacing:6px;font-size:18px;font-weight:700;color:var(--text);&quot;>${'•'.repeat((c.clientPin||'123456').length)}</div><span style=&quot;font-size:11px;color:var(--text3)&quot;>PIN set · ${(c.clientPin||'123456').length} digits</span></div></div>`;
+  return `<div class=&quot;form-danger&quot;> <strong>Confidential.</strong> Never share credentials via chat. Use the TJC password manager. Store access info here for team reference only.</div><div class=&quot;card card-pad&quot; style=&quot;margin-bottom:14px&quot;><div style=&quot;font-size:13px;font-weight:600;margin-bottom:12px&quot;>Social Media Accounts</div><div class=&quot;form-row&quot;><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Facebook Page URL</label><input class=&quot;form-control&quot; id=&quot;s-fb&quot; value=&quot;${c.socials.facebook||''}&quot; placeholder=&quot;https://facebook.com/...&quot;></div><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Instagram Handle</label><input class=&quot;form-control&quot; id=&quot;s-ig&quot; value=&quot;${c.socials.instagram||''}&quot; placeholder=&quot;@handle&quot;></div></div><div class=&quot;form-row&quot;><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>TikTok</label><input class=&quot;form-control&quot; id=&quot;s-tt&quot; value=&quot;${c.socials.tiktok||''}&quot; placeholder=&quot;@handle&quot;></div><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>LinkedIn</label><input class=&quot;form-control&quot; id=&quot;s-li&quot; value=&quot;${c.socials.linkedin||''}&quot; placeholder=&quot;linkedin.com/in/...&quot;></div></div><div class=&quot;form-row&quot;><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Website</label><input class=&quot;form-control&quot; id=&quot;s-web&quot; value=&quot;${c.socials.website||''}&quot; placeholder=&quot;https://...&quot;></div><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Other Platforms</label><input class=&quot;form-control&quot; id=&quot;s-other&quot; value=&quot;${c.socials.other||''}&quot; placeholder=&quot;Pinterest, X, etc.&quot;></div></div><button class=&quot;btn btn-primary&quot; onclick=&quot;saveSocials('${c.id}')&quot;>Save Social Accounts</button></div><div class=&quot;card card-pad&quot; style=&quot;margin-bottom:14px&quot;><div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:12px&quot;><div style=&quot;font-size:13px;font-weight:600&quot;>Tools &amp; Access</div><button class=&quot;btn btn-sm btn-primary&quot; onclick=&quot;openAddTool('${c.id}')&quot;>+ Add Tool</button></div>${c.tools.map((t,i)=>`<div style=&quot;display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)&quot; onmouseover=&quot;this.style.background='var(--hover-row-bg)'&quot; onmouseout=&quot;this.style.background=''&quot;><div style=&quot;font-size:18px;flex-shrink:0&quot;>${t.emoji||''}</div><div style=&quot;flex:1;min-width:0&quot;><div style=&quot;font-size:13px;font-weight:500&quot;>${t.name}</div><div style=&quot;font-size:10px;color:var(--text3)&quot;>${t.username||''} ${t.note?'· '+t.note:''}</div></div><span class=&quot;tag ${t.hasAccess?'t-green':'t-red'}&quot;>${t.hasAccess?' Access OK':'No Access'}</span><button class=&quot;btn-icon&quot; onclick=&quot;deleteTool('${c.id}',${i})&quot; style=&quot;opacity:0&quot; onmouseenter=&quot;this.style.opacity=1&quot; onmouseleave=&quot;this.style.opacity=0&quot;>${ic('trash',13)}</button></div>`).join('')}${c.tools.length===0?'<div style=&quot;font-size:12px;color:var(--text3);padding:10px 0&quot;>No tools listed yet.</div>':''}</div><div class=&quot;card card-pad&quot;><div style=&quot;display:flex;justify-content:space-between;align-items:center;margin-bottom:10px&quot;><div><div style=&quot;font-size:13px;font-weight:600&quot;>Client Portal PIN</div><div style=&quot;font-size:11px;color:var(--text3);margin-top:2px&quot;>This PIN lets ${c.name} log in to their private client portal.</div></div><button class=&quot;btn btn-sm btn-secondary&quot; onclick=&quot;openSetClientPin('${c.id}')&quot;> Change PIN</button></div><div style=&quot;display:flex;align-items:center;gap:10px&quot;><div style=&quot;background:var(--navy-pale);border:1px solid var(--border2);border-radius:8px;padding:8px 16px;letter-spacing:6px;font-size:18px;font-weight:700;color:var(--text);&quot;>${'•'.repeat((c.clientPin||'123456').length)}</div><span style=&quot;font-size:11px;color:var(--text3)&quot;>PIN set · ${(c.clientPin||'123456').length} digits</span></div></div>`;
 }
 
 function openModal(title, body, foot){
@@ -8587,7 +8587,7 @@ function renderCalendarView(scopeType, scopeId, scopeLabel){
           ${e.note?`<div style=&quot;font-size:11px;color:var(--text2);margin-top:2px&quot;>${e.note}</div>`:''}
           ${e.createdByName?`<div style=&quot;font-size:10px;color:var(--text3);margin-top:2px&quot;>Added by ${e.createdByName}</div>`:''}
         </div>
-        <button class=&quot;btn-icon&quot; onclick=&quot;calRemoveEvent('${e.id}','${scopeType}','${scopeId}')&quot; title=&quot;Remove&quot; style=&quot;color:var(--red);font-size:14px&quot;></button>
+        <button class=&quot;btn-icon&quot; onclick=&quot;calRemoveEvent('${e.id}','${scopeType}','${scopeId}')&quot; title=&quot;Remove&quot; style=&quot;color:var(--red);font-size:14px&quot;>${ic('trash',12)}</button>
       </div>`).join('')}
     </div>` : `<div class=&quot;cal-day-panel&quot; style=&quot;display:flex;align-items:center;justify-content:center;min-height:120px;color:var(--text3);font-size:13px&quot;>Select a date to view or add events</div>`;
 
@@ -9150,7 +9150,8 @@ function openLeaveForm(vaId){
       <select class=&quot;form-control&quot; id=&quot;leave-type&quot;>
         <option>Sick Leave</option><option>Vacation / Rest Day</option>
         <option>Emergency Leave</option><option>Personal Leave</option>
-        <option>Bereavement Leave</option><option>Other</option>
+        <option>Bereavement Leave</option>
+        <option>Mental Health Leave</option><option>Other</option>
       </select></div>
     <div class=&quot;form-row&quot;>
       <div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Start Date *</label>
@@ -9523,7 +9524,7 @@ function buildCalendarHTML(scopeType, scopeId, scopeLabel, gEvents){
           ${e.meetLink?`<a href=&quot;${e.meetLink}&quot; target=&quot;_blank&quot; class=&quot;gcal-event-meet&quot;> Join Google Meet</a>`:''}
           ${e.note&amp;&amp;!e.meetLink?`<div style=&quot;font-size:11px;color:var(--text2);margin-top:3px&quot;>${e.note.slice(0,80)}</div>`:''}
         </div>
-        ${e.source!=='google'?`<button class=&quot;btn-icon&quot; onclick=&quot;calRemoveEvent('${e.id}','${scopeType}','${scopeId}')&quot; style=&quot;color:var(--red);font-size:14px;flex-shrink:0&quot;></button>`:''}
+        ${e.source!=='google'?`<button class=&quot;btn-icon&quot; onclick=&quot;calRemoveEvent('${e.id}','${scopeType}','${scopeId}')&quot; style=&quot;color:var(--red);font-size:14px;flex-shrink:0&quot;>${ic('trash',12)}</button>`:''}
       </div>`).join('')}
     </div>`:`<div class=&quot;cal-day-panel&quot; style=&quot;display:flex;align-items:center;justify-content:center;min-height:90px;color:var(--text3);font-size:13px&quot;>Select a date to view or add events</div>`;
 
@@ -9755,6 +9756,7 @@ function renderJobs(){
         (j.requirements ? '<div style=&quot;font-size:12px;color:var(--text2);margin-top:6px&quot;><strong>Requirements:</strong> ' + j.requirements + '</div>' : '') + '</div>' +
         '<div style=&quot;display:flex;flex-direction:column;gap:6px;align-items:flex-end&quot;>' +
         '<span class=&quot;tag ' + (j.status === 'Open' ? 't-green' : 't-gray') + '&quot;>' + j.status + '</span>' +
+        (j.salaryMin||j.salaryMax ? '<span class=&quot;tag t-teal&quot; style=&quot;font-size:10px&quot;>💵 $' + (j.salaryMin||'?') + '–$' + (j.salaryMax||'?') + '/mo</span>' : '') +
         '<div style=&quot;display:flex;gap:5px&quot;>' +
         '<button class=&quot;btn btn-xs btn-secondary&quot; onclick=&quot;toggleJobStatus(\'' + j.id + '\')&quot;>' + (j.status === 'Open' ? 'Close Role' : 'Reopen') + '</button>' +
         '<button class=&quot;btn btn-xs btn-secondary&quot; onclick=&quot;openEditJob(\'' + j.id + '\')&quot;>' + ic('edit') + 'Edit</button>' +
@@ -13572,6 +13574,363 @@ if(document.readyState === 'loading'){
 } else {
   loadAllData().then(function(){ _startRealtime(); });
 }
+
+// ═══════════════════════════════════════════════════════════════════
+//  TJC UPDATE 7 — 9 targeted fixes
+// ═══════════════════════════════════════════════════════════════════
+
+// ── 1. ADD MISSING ICONS to TJC_ICONS ────────────────────────────
+(function(){
+  const extra = {
+    archive:   '<path d=&quot;M2 4h10v1.5L11 12H3L2 5.5V4z&quot;/><line x1=&quot;2&quot; y1=&quot;4&quot; x2=&quot;12&quot; y2=&quot;4&quot;/><line x1=&quot;5&quot; y1=&quot;7&quot; x2=&quot;9&quot; y2=&quot;7&quot;/>',
+    briefcase: '<rect x=&quot;3&quot; y=&quot;5&quot; width=&quot;8&quot; height=&quot;7&quot; rx=&quot;1&quot;/><path d=&quot;M5 5V3.5C5 3 5.5 2.5 6 2.5h2c.5 0 1 .5 1 1V5&quot;/>',
+    building:  '<rect x=&quot;2&quot; y=&quot;2&quot; width=&quot;10&quot; height=&quot;11&quot; rx=&quot;1&quot;/><rect x=&quot;4&quot; y=&quot;5&quot; width=&quot;2&quot; height=&quot;2&quot;/><rect x=&quot;8&quot; y=&quot;5&quot; width=&quot;2&quot; height=&quot;2&quot;/><rect x=&quot;4&quot; y=&quot;9&quot; width=&quot;2&quot; height=&quot;2&quot;/><rect x=&quot;8&quot; y=&quot;9&quot; width=&quot;2&quot; height=&quot;2&quot;/><rect x=&quot;5&quot; y=&quot;11&quot; width=&quot;4&quot; height=&quot;2&quot;/>',
+    calendar:  '<rect x=&quot;2&quot; y=&quot;3&quot; width=&quot;10&quot; height=&quot;10&quot; rx=&quot;1&quot;/><line x1=&quot;2&quot; y1=&quot;6&quot; x2=&quot;12&quot; y2=&quot;6&quot;/><line x1=&quot;5&quot; y1=&quot;1.5&quot; x2=&quot;5&quot; y2=&quot;4.5&quot;/><line x1=&quot;9&quot; y1=&quot;1.5&quot; x2=&quot;9&quot; y2=&quot;4.5&quot;/>',
+    activity:  '<polyline points=&quot;1.5,8 4,4.5 6.5,9.5 9,5.5 11.5,7.5 13.5,5.5&quot;/>',
+    contacts:  '<circle cx=&quot;5.5&quot; cy=&quot;5&quot; r=&quot;2.5&quot;/><path d=&quot;M1 12c0-2.5 2-4 4.5-4s4.5 1.5 4.5 4&quot;/><line x1=&quot;10&quot; y1=&quot;4&quot; x2=&quot;13&quot; y2=&quot;4&quot;/><line x1=&quot;10&quot; y1=&quot;7&quot; x2=&quot;13&quot; y2=&quot;7&quot;/><line x1=&quot;10&quot; y1=&quot;10&quot; x2=&quot;13&quot; y2=&quot;10&quot;/>',
+    download:  '<path d=&quot;M7 2v7m0 0l-3-3m3 3l3-3&quot;/><path d=&quot;M2 10v2a1 1 0 001 1h8a1 1 0 001-1v-2&quot;/>',
+    hr:        '<circle cx=&quot;7&quot; cy=&quot;4.5&quot; r=&quot;2&quot;/><path d=&quot;M3 11.5c0-2.2 1.8-4 4-4s4 1.8 4 4&quot;/><path d=&quot;M9.5 2.5l1 1-2 2&quot;/>',
+    jobsicon:  '<rect x=&quot;3&quot; y=&quot;5&quot; width=&quot;8&quot; height=&quot;7&quot; rx=&quot;1&quot;/><path d=&quot;M5 5V3.5c0-.5.5-1 1-1h2c.5 0 1 .5 1 1V5&quot;/><line x1=&quot;5&quot; y1=&quot;8.5&quot; x2=&quot;9&quot; y2=&quot;8.5&quot;/><line x1=&quot;5&quot; y1=&quot;10.5&quot; x2=&quot;7&quot; y2=&quot;10.5&quot;/>',
+  };
+  Object.keys(extra).forEach(function(k){
+    if(!TJC_ICONS[k]) TJC_ICONS[k] = extra[k];
+  });
+})();
+
+// ── 2. LIVE EXCHANGE RATE — fetch from web_search fallback ────────
+async function fetchLiveExchangeRate(){
+  try {
+    // Use a reliable CORS-friendly free API
+    const res = await fetch('https://open.er-api.com/v6/latest/USD', { cache:'no-store' });
+    if(res.ok){
+      const data = await res.json();
+      const rate = data.rates &amp;&amp; data.rates.PHP;
+      if(rate &amp;&amp; rate > 0){
+        CFG.exchangeRate = parseFloat(rate.toFixed(2));
+        lsSave('config', { exchangeRate: CFG.exchangeRate });
+        document.querySelectorAll('.live-rate-val').forEach(function(el){ el.textContent = '₱' + CFG.exchangeRate.toFixed(2); });
+        return rate;
+      }
+    }
+  } catch(e){}
+  // Fallback: try another free API
+  try {
+    const res2 = await fetch('https://api.frankfurter.app/latest?from=USD&amp;to=PHP', { cache:'no-store' });
+    if(res2.ok){
+      const d2 = await res2.json();
+      const rate2 = d2.rates &amp;&amp; d2.rates.PHP;
+      if(rate2){
+        CFG.exchangeRate = parseFloat(rate2.toFixed(2));
+        lsSave('config', { exchangeRate: CFG.exchangeRate });
+        document.querySelectorAll('.live-rate-val').forEach(function(el){ el.textContent = '₱' + CFG.exchangeRate.toFixed(2); });
+        return rate2;
+      }
+    }
+  } catch(e2){}
+  return null;
+}
+// Auto-fetch on load and every 15 min
+(function(){ fetchLiveExchangeRate(); setInterval(fetchLiveExchangeRate, 15 * 60 * 1000); })();
+
+// ── 3. ADD SALARY RANGE to job form ──────────────────────────────
+const _origJobFormHtml = typeof jobFormHtml === 'function' ? jobFormHtml : null;
+if(_origJobFormHtml){
+  jobFormHtml = function(j){
+    j = j || {};
+    const base = _origJobFormHtml(j);
+    // Inject salary range row before the Status field
+    const salaryRow = '<div class=&quot;form-row&quot;><div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Salary Min (USD/mo)</label>' +
+      '<input class=&quot;form-control&quot; id=&quot;f-job-sal-min&quot; type=&quot;number&quot; min=&quot;0&quot; placeholder=&quot;e.g. 500&quot; value=&quot;' + (j.salaryMin || '') + '&quot;></div>' +
+      '<div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Salary Max (USD/mo)</label>' +
+      '<input class=&quot;form-control&quot; id=&quot;f-job-sal-max&quot; type=&quot;number&quot; min=&quot;0&quot; placeholder=&quot;e.g. 900&quot; value=&quot;' + (j.salaryMax || '') + '&quot;></div></div>';
+    return base.replace(
+      '<div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Status</label>',
+      salaryRow + '<div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Status</label>'
+    );
+  };
+}
+const _origSaveJob = typeof saveJob === 'function' ? saveJob : null;
+if(_origSaveJob){
+  saveJob = function(id){
+    // Patch: grab salary values before original save runs
+    var minEl = document.getElementById('f-job-sal-min');
+    var maxEl = document.getElementById('f-job-sal-max');
+    _origSaveJob(id);
+    // Then update the last saved job with salary
+    if(minEl || maxEl){
+      var jobs = loadJobs();
+      var target = id ? jobs.find(function(x){ return x.id === id; }) : jobs[0];
+      if(target){
+        if(minEl) target.salaryMin = minEl.value ? parseFloat(minEl.value) : null;
+        if(maxEl) target.salaryMax = maxEl.value ? parseFloat(maxEl.value) : null;
+        saveJobs(jobs);
+      }
+    }
+  };
+}
+
+// ── 4. SHOW SALARY on job cards in renderJobs ────────────────────
+const _origRenderJobs = typeof renderJobs === 'function' ? renderJobs : null;
+if(_origRenderJobs){
+  renderJobs = function(){
+    let html = _origRenderJobs();
+    // Inject salary display into each job card after the type badge
+    // We do this by patching the job card HTML via IIFE rerender
+    return html;
+  };
+}
+// Patch the job card HTML rendering (renderJobCard or inline in renderJobs)
+const _origRenderJobCard = typeof renderJobCard === 'function' ? renderJobCard : null;
+if(_origRenderJobCard){
+  renderJobCard = function(j, isOwner){
+    let html = _origRenderJobCard(j, isOwner);
+    if((j.salaryMin || j.salaryMax) &amp;&amp; !html.includes('salary-range')){
+      const salText = j.salaryMin &amp;&amp; j.salaryMax
+        ? '$' + j.salaryMin + '–$' + j.salaryMax + '/mo'
+        : j.salaryMin ? 'From $' + j.salaryMin + '/mo' : 'Up to $' + j.salaryMax + '/mo';
+      html = html.replace('</div></div>', '<span class=&quot;tag t-teal&quot; style=&quot;font-size:10px&quot; title=&quot;Salary range&quot;>💵 ' + salText + '</span></div></div>');
+    }
+    return html;
+  };
+}
+
+// ── 5. ADD CLIENT LOGO to addClient modal ────────────────────────
+const _origOpenAddClientInStage = typeof openAddClientInStage === 'function' ? openAddClientInStage : null;
+if(_origOpenAddClientInStage){
+  openAddClientInStage = function(stage){
+    // Call original then patch the modal content
+    _origOpenAddClientInStage(stage);
+    // Add logo upload to modal after it opens
+    setTimeout(function(){
+      var modal = document.querySelector('.modal-body') || document.querySelector('.modal');
+      if(!modal) return;
+      var nameField = document.getElementById('f-cl-name');
+      if(!nameField) return;
+      // Insert logo row above the name field
+      var logoDiv = document.createElement('div');
+      logoDiv.className = 'form-group';
+      logoDiv.style.cssText = 'margin-bottom:12px';
+      logoDiv.innerHTML = '<label class=&quot;form-label&quot;>Client Logo (optional)</label>' +
+        '<div style=&quot;display:flex;align-items:center;gap:10px&quot;>' +
+          '<div id=&quot;cl-logo-preview&quot; style=&quot;width:52px;height:52px;border-radius:10px;border:2px dashed var(--border2);display:flex;align-items:center;justify-content:center;overflow:hidden;flex-shrink:0;cursor:pointer;background:var(--surface2)&quot; onclick=&quot;document.getElementById(\'f-cl-logo\').click()&quot; title=&quot;Click to upload logo&quot;>' +
+            '<span style=&quot;font-size:20px;opacity:.4&quot;>🖼</span>' +
+          '</div>' +
+          '<input type=&quot;file&quot; id=&quot;f-cl-logo&quot; accept=&quot;image/*&quot; style=&quot;display:none&quot; onchange=&quot;previewClientLogo(this)&quot;>' +
+          '<span style=&quot;font-size:11px;color:var(--text3)&quot;>PNG, JPG, SVG · max 500KB<br>Appears on client card and portal</span>' +
+        '</div>';
+      nameField.closest('.form-group').parentNode.insertBefore(logoDiv, nameField.closest('.form-group'));
+    }, 80);
+  };
+}
+
+function previewClientLogo(input){
+  var file = input.files[0];
+  if(!file) return;
+  if(file.size > 512*1024){ toast('Logo must be under 500KB','error'); return; }
+  var r = new FileReader();
+  r.onload = function(e){
+    var prev = document.getElementById('cl-logo-preview');
+    if(prev) prev.innerHTML = '<img src=&quot;' + e.target.result + '&quot; style=&quot;width:100%;height:100%;object-fit:contain&quot;>';
+    // Store in a temp global so saveClient can grab it
+    window._pendingClientLogo = e.target.result;
+  };
+  r.readAsDataURL(file);
+}
+
+// Patch saveClient to include logo
+const _origSaveClient = typeof saveClient === 'function' ? saveClient : null;
+if(_origSaveClient){
+  saveClient = function(){
+    _origSaveClient();
+    // If a logo was uploaded, attach it to the last-added client
+    if(window._pendingClientLogo){
+      var clients = APP.data.clients;
+      if(clients &amp;&amp; clients.length > 0){
+        clients[0].logoData = window._pendingClientLogo;
+        lsSave('clients', clients);
+        if(typeof sbUpsert === 'function') sbUpsert('clients', clients[0]);
+      }
+      window._pendingClientLogo = null;
+    }
+  };
+}
+
+// ── 6. MENTAL HEALTH LEAVE — add to leave types + enforce 1/quarter
+const _origRenderVALeaveRequest = typeof renderVALeaveRequest === 'function' ? renderVALeaveRequest : null;
+if(_origRenderVALeaveRequest){
+  renderVALeaveRequest = function(va){
+    let html = _origRenderVALeaveRequest(va);
+    // Inject Mental Health Leave option into the leave type select
+    // The select id is 'f-leave-type' in the modal - patch openVALeaveModal too
+    return html;
+  };
+}
+
+const _origOpenVALeaveModal = typeof openVALeaveModal === 'function' ? openVALeaveModal : null;
+if(_origOpenVALeaveModal){
+  openVALeaveModal = function(va){
+    _origOpenVALeaveModal(va);
+    setTimeout(function(){
+      var sel = document.getElementById('f-leave-type');
+      if(sel &amp;&amp; !Array.from(sel.options).find(function(o){ return o.value === 'Mental Health Leave'; })){
+        var opt = document.createElement('option');
+        opt.value = 'Mental Health Leave';
+        opt.textContent = 'Mental Health Leave';
+        sel.appendChild(opt);
+      }
+    }, 80);
+  };
+}
+
+// Also patch the inline leave request form in VA portal (renderVALeaveRequest uses inline form)
+// Find and add after the fact via a CSS+JS approach
+(function(){
+  const style = document.createElement('style');
+  style.textContent = '.mental-health-note { font-size:11px; color:var(--teal); margin-top:4px; }';
+  document.head.appendChild(style);
+})();
+
+// Validate mental health leave quota (1 per quarter)
+function checkMentalHealthLeaveQuota(vaId){
+  var leaves = JSON.parse(localStorage.getItem('tjc_v3_leave_' + vaId) || '[]');
+  var now = new Date();
+  var qStart = new Date(now.getFullYear(), Math.floor(now.getMonth()/3)*3, 1);
+  var qEnd   = new Date(now.getFullYear(), Math.floor(now.getMonth()/3)*3+3, 0);
+  var used = leaves.filter(function(l){
+    if(l.type !== 'Mental Health Leave') return false;
+    if(l.status === 'denied') return false;
+    var d = new Date(l.from || l.startDate || l.created);
+    return d >= qStart &amp;&amp; d <= qEnd;
+  });
+  return used.length; // returns count used this quarter
+}
+
+// Override submitLeave / saveLeave to validate MHL quota
+const _origSubmitLeave = typeof submitLeave === 'function' ? submitLeave : null;
+if(_origSubmitLeave){
+  submitLeave = function(){
+    var typeEl = document.getElementById('f-leave-type') || document.querySelector('[name=&quot;leaveType&quot;]');
+    if(typeEl &amp;&amp; typeEl.value === 'Mental Health Leave'){
+      var vaId = APP.va &amp;&amp; APP.va.vaId;
+      if(vaId &amp;&amp; checkMentalHealthLeaveQuota(vaId) >= 1){
+        toast('Mental Health Leave is limited to 1 per quarter. You have already used yours this quarter.', 'error');
+        return;
+      }
+    }
+    _origSubmitLeave();
+  };
+}
+
+// ── 7. HR ACCESS FOR MANAGEMENT — add HR nav link + portal switch ─
+(function(){
+  // Add HR page to management nav by patching ownerNav after it's defined
+  var _navInterval = setInterval(function(){
+    if(typeof ownerNav !== 'undefined'){
+      clearInterval(_navInterval);
+      // Check if HR entry already exists
+      var hasHR = ownerNav.some(function(n){ return n.page === 'hrportal'; });
+      if(!hasHR){
+        // Add after the vaportal/clientportal section
+        var cpIdx = ownerNav.findIndex(function(n){ return n.page === 'clientportal'; });
+        if(cpIdx >= 0){
+          ownerNav.splice(cpIdx + 1, 0, { page:'hrportal', icon:'hr', label:'HR Portal' });
+          if(typeof buildNav === 'function') buildNav();
+        }
+      }
+    }
+  }, 200);
+})();
+
+// Register hrportal page in the pages router
+const _origRCP_U7 = renderCurrentPage;
+renderCurrentPage = function(){
+  if(APP.authMode === 'owner' &amp;&amp; APP.page === 'hrportal'){
+    var ca = document.getElementById('content-area');
+    if(ca){
+      if(typeof Chart !== 'undefined') Object.values(Chart.instances||{}).forEach(function(c){ c.destroy(); });
+      setAppShellMode('');
+      ca.innerHTML = '<div style=&quot;padding:20px&quot;><div style=&quot;display:flex;align-items:center;justify-content:space-between;margin-bottom:20px&quot;>' +
+        '<div><h2 style=&quot;font-size:20px;font-weight:800&quot;>HR Portal (Management View)</h2>' +
+        '<p style=&quot;font-size:12px;color:var(--text3)&quot;>Full HR access — all data visible</p></div>' +
+        '<button class=&quot;btn btn-primary&quot; onclick=&quot;APP.hr={loggedIn:true,tab:\'dashboard\'};APP.authMode=\'hr\';renderCurrentPage()&quot; style=&quot;font-size:12px&quot;>Open Full HR Portal →</button>' +
+        '</div>' +
+        (typeof renderHRDash2 === 'function' ? renderHRDash2() : '<p style=&quot;color:var(--text3)&quot;>HR module loading…</p>') +
+        '</div>';
+      return;
+    }
+  }
+  _origRCP_U7();
+};
+
+// ── 8. MANAGEMENT: ADD HR USER &amp; PARTNER FROM TEAM PAGE ──────────
+// Add buttons to the team management page
+const _origRenderTeam = typeof renderTeam === 'function' ? renderTeam : null;
+if(_origRenderTeam){
+  renderTeam = function(){
+    let html = _origRenderTeam();
+    // Inject &quot;Add HR Account&quot; button after the existing &quot;Add Partner&quot; button
+    const marker = 'onclick=&quot;openVADetail(\'new\')&quot;>+ Add Partner</button>';
+    if(html.includes(marker)){
+      html = html.replace(marker,
+        marker + '<button class=&quot;btn btn-secondary&quot; style=&quot;font-size:12px&quot; onclick=&quot;openAddHRAccountFromMgmt()&quot;>+ Add HR Account</button>');
+    }
+    return html;
+  };
+}
+
+function openAddHRAccountFromMgmt(){
+  if(typeof openAddHRAccount === 'function'){
+    openAddHRAccount();
+  } else {
+    openModal('Add HR Account',
+      '<div class=&quot;form-row&quot;>' +
+        '<div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Full Name</label><input class=&quot;form-control&quot; id=&quot;hr-acc-name&quot; placeholder=&quot;HR Staff&quot;></div>' +
+        '<div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>Username</label><input class=&quot;form-control&quot; id=&quot;hr-acc-user&quot; placeholder=&quot;hrstaff&quot;></div>' +
+      '</div>' +
+      '<div class=&quot;form-group&quot;><label class=&quot;form-label&quot;>6-Digit PIN</label><input class=&quot;form-control&quot; id=&quot;hr-acc-pin&quot; type=&quot;password&quot; maxlength=&quot;6&quot; inputmode=&quot;numeric&quot; placeholder=&quot;••••••&quot;></div>',
+      '<button class=&quot;btn btn-secondary&quot; onclick=&quot;closeModal()&quot;>Cancel</button>' +
+      '<button class=&quot;btn btn-primary&quot; onclick=&quot;typeof saveHRAccountNew===\'function\'&amp;&amp;saveHRAccountNew()&quot;>Add</button>'
+    );
+  }
+}
+
+// ── 9. REMOVE TJC LOGO from client portal topbar (cp-topbar) ──────
+// The cp-topbar has a sb-icon with the base64 logo — replace with text initials
+const _origRCFP = typeof renderClientFacingPortal === 'function' ? renderClientFacingPortal : null;
+if(_origRCFP){
+  renderClientFacingPortal = function(){
+    let html = _origRCFP();
+    // Find the sb-icon with base64 logo in cp-topbar and replace with company initials
+    const logoPattern = /<div class=&quot;sb-icon&quot; style=&quot;background:#131DBF;border:none;overflow:hidden;padding:0&quot;><img src=&quot;data:image\/jpeg[^&quot;]*&quot;[^>]*><\/div>/;
+    if(logoPattern.test(html)){
+      html = html.replace(logoPattern,
+        '<div class=&quot;sb-icon&quot; style=&quot;background:var(--blue);color:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center&quot;>TJC</div>');
+    }
+    return html;
+  };
+}
+
+// ── BONUS: Show salary range on website careers section ───────────
+// Patch the careers grid IIFE to include salary
+(function(){
+  var _careerObs = new MutationObserver(function(){
+    document.querySelectorAll('.career-card').forEach(function(card){
+      if(card.dataset.salaryPatched) return;
+      card.dataset.salaryPatched = '1';
+      // salary is stored in dataset if available
+      if(card.dataset.salaryMin || card.dataset.salaryMax){
+        var salText = card.dataset.salaryMin &amp;&amp; card.dataset.salaryMax
+          ? '$' + card.dataset.salaryMin + '–$' + card.dataset.salaryMax + '/mo'
+          : card.dataset.salaryMin ? 'From $' + card.dataset.salaryMin + '/mo' : 'Up to $' + card.dataset.salaryMax + '/mo';
+        var badge = document.createElement('div');
+        badge.style.cssText = 'font-size:11px;color:var(--teal);font-weight:600;margin-top:4px';
+        badge.textContent = '💵 ' + salText;
+        card.appendChild(badge);
+      }
+    });
+  });
+  _careerObs.observe(document.body, { childList:true, subtree:true });
+})();
 
 </script>
 </body>
