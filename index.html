@@ -12937,6 +12937,642 @@ renderAuthChooser = function(){
   document.head.appendChild(style);
 })();
 
+// ═══════════════════════════════════════════════════════════════════
+//  TJC UPDATE 5 — FLUID / RESPONSIVE LAYOUT (mobile · tablet · laptop)
+// ═══════════════════════════════════════════════════════════════════
+(function(){
+  const style = document.createElement('style');
+  style.id = 'tjc-responsive-css';
+  style.textContent = `
+/* ════════ GLOBAL FLUID RULES ════════ */
+html, body { -webkit-text-size-adjust:100%; }
+img, svg, canvas, video { max-width:100%; height:auto; }
+.card { min-width:0; }
+table { min-width:0; }
+
+/* Fluid type scale */
+@media (max-width:1024px){
+  .auth-title { font-size:19px !important; }
+}
+
+/* ════════ AUTH SCREENS ════════ */
+@media (max-width:560px){
+  .auth-wrap { padding:14px !important; align-items:flex-start !important; padding-top:32px !important; }
+  .auth-card { padding:28px 20px !important; max-width:100% !important; border-radius:16px !important; }
+  .pin-pad { max-width:240px !important; gap:8px !important; }
+  .pin-key { padding:14px !important; font-size:18px !important; }
+}
+@media (max-width:380px){
+  .auth-card { padding:24px 14px !important; }
+  .pin-pad { max-width:210px !important; }
+  .pin-key { padding:12px !important; }
+}
+
+/* ════════ HR PORTAL — FLUID SHELL ════════ */
+/* Tablet: narrower sidebar */
+@media (max-width:1024px){
+  .hr-sidebar { width:160px !important; }
+  .hr-content { padding:18px !important; }
+}
+/* Mobile: sidebar becomes horizontal scrolling tab bar */
+@media (max-width:768px){
+  .hr-portal-body { flex-direction:column !important; }
+  .hr-sidebar {
+    width:100% !important; display:flex !important; flex-direction:row !important;
+    overflow-x:auto !important; overflow-y:hidden !important;
+    padding:6px 8px !important; border-right:none !important;
+    border-bottom:1px solid var(--border) !important;
+    -webkit-overflow-scrolling:touch; scrollbar-width:none;
+  }
+  .hr-sidebar::-webkit-scrollbar { display:none; }
+  .hr-nav-item {
+    flex-shrink:0 !important; margin:0 2px !important;
+    padding:8px 12px !important; border-radius:20px !important;
+    white-space:nowrap !important; font-size:12px !important;
+  }
+  .hr-content { padding:14px !important; }
+}
+
+/* HR dashboard KPI grids collapse */
+@media (max-width:1024px){
+  .hr-content div[style*=&quot;repeat(4,1fr)&quot;] { grid-template-columns:repeat(2,1fr) !important; }
+  .hr-content div[style*=&quot;grid-template-columns:1fr 1fr 1fr&quot;] { grid-template-columns:1fr !important; }
+}
+@media (max-width:560px){
+  .hr-content div[style*=&quot;repeat(4,1fr)&quot;] { grid-template-columns:1fr 1fr !important; }
+  .hr-content div[style*=&quot;repeat(3,1fr)&quot;] { grid-template-columns:1fr !important; }
+  .hr-content div[style*=&quot;grid-template-columns:1fr 1fr&quot;] { grid-template-columns:1fr !important; }
+}
+
+/* HR Kanban: horizontal scroll on smaller screens */
+@media (max-width:1100px){
+  .hr-content div[style*=&quot;repeat(6,1fr)&quot;] {
+    display:flex !important; overflow-x:auto !important; gap:10px !important;
+    -webkit-overflow-scrolling:touch; padding-bottom:8px;
+  }
+  .hr-content div[style*=&quot;repeat(6,1fr)&quot;] > div { min-width:170px !important; flex-shrink:0; }
+}
+
+/* HR Messages: stack panes on mobile */
+@media (max-width:680px){
+  .hr-content div[style*=&quot;height:520px&quot;] { flex-direction:column !important; height:auto !important; }
+  .hr-content div[style*=&quot;height:520px&quot;] > div:first-child {
+    width:100% !important; max-height:140px !important; display:flex !important;
+    flex-direction:row !important; overflow-x:auto !important;
+  }
+  .hr-content div[style*=&quot;height:520px&quot;] > div:first-child > div {
+    flex-shrink:0; border-bottom:none !important; border-right:1px solid var(--border);
+  }
+  .hr-content div[style*=&quot;height:520px&quot;] > div:last-child { min-height:380px; }
+}
+
+/* ════════ TABLES — scroll wrap everywhere ════════ */
+@media (max-width:768px){
+  .hr-content table { font-size:11px !important; }
+  .hr-content th, .hr-content td { padding:6px 8px !important; }
+  /* allow horizontal scroll on table parents */
+  .hr-content div[style*=&quot;overflow-x:auto&quot;] { -webkit-overflow-scrolling:touch; }
+}
+
+/* ════════ PARTNER (VA) PORTAL ════════ */
+/* Tab bar: horizontal scroll (it has ~20 tabs now) */
+.portal-tabs, .va-tabs, .cp-portal-tabs { -webkit-overflow-scrolling:touch; }
+@media (max-width:768px){
+  /* Tab strip scrolls horizontally */
+  div[class*=&quot;portal-tabs&quot;]{
+    overflow-x:auto !important; scrollbar-width:thin;
+  }
+  /* VA dashboard stat grids collapse */
+  .kpi-grid { grid-template-columns:repeat(2,1fr) !important; }
+}
+@media (max-width:480px){
+  .kpi-grid { grid-template-columns:1fr 1fr !important; gap:8px !important; }
+}
+
+/* ════════ CLIENT PORTAL ════════ */
+@media (max-width:768px){
+  .cp-portal-tabs {
+    width:100% !important; flex-direction:row !important;
+    overflow-x:auto !important; border-right:none !important;
+    border-bottom:1px solid var(--border) !important; padding:6px !important;
+  }
+  .cp-portal-tabs > * { flex-shrink:0; white-space:nowrap; }
+  .cp-stat-grid { grid-template-columns:repeat(2,1fr) !important; }
+  .cp-welcome { padding:18px 20px !important; }
+}
+/* Client portal body wrapper stacks */
+@media (max-width:768px){
+  div[style*=&quot;display:flex&quot;][style*=&quot;height:100&quot;] { min-width:0; }
+}
+
+/* ════════ MODALS ════════ */
+@media (max-width:560px){
+  .modal, .modal-box, [class*=&quot;modal&quot;] { max-width:94vw !important; }
+  .form-row { grid-template-columns:1fr !important; }
+}
+
+/* ════════ MGMT DASHBOARD extra ════════ */
+@media (max-width:900px){
+  .content-area > div { max-width:100% !important; }
+}
+
+/* ════════ TOUCH TARGETS ════════ */
+@media (pointer:coarse){
+  .btn { min-height:38px; }
+  .hr-nav-item { min-height:38px; }
+  .pin-key { min-height:48px; }
+  input.form-control, select.form-control { min-height:40px; font-size:16px !important; } /* 16px prevents iOS zoom */
+}
+`;
+  const old = document.getElementById('tjc-responsive-css');
+  if(old) old.remove();
+  document.head.appendChild(style);
+})();
+
+// ── Viewport safety: ensure portal iframe gets proper viewport behaviour ──
+(function(){
+  // Add dynamic resize handling — re-render charts on orientation change
+  let rT;
+  window.addEventListener('resize', function(){
+    clearTimeout(rT);
+    rT = setTimeout(function(){
+      // Only re-render if charts exist (they need size recalc)
+      if(typeof Chart !== 'undefined' &amp;&amp; Object.keys(Chart.instances||{}).length){
+        try{ renderCurrentPage(); }catch(e){}
+      }
+    }, 250);
+  });
+})();
+
+// ═══════════════════════════════════════════════════════════════════
+//  TJC UPDATE 6 — Partner label, Day Rating, VA portal centering
+// ═══════════════════════════════════════════════════════════════════
+
+// ── 1. FIX RATINGS array — restore emoji characters ──────────────
+// Reassign (not redeclare — already declared earlier as const, but arrays are mutable via splice)
+RATINGS.length = 0;
+RATINGS.push(
+  ['😔','1','Rough'],
+  ['😐','2','Okay'],
+  ['🙂','3','Good'],
+  ['😊','4','Great'],
+  ['🤩','5','Excellent']
+);
+
+// Rebuild the widget cleanly
+function renderDayRatingWidget(vaId){
+  const cur = getDayRating(vaId);
+  const found = RATINGS.find(r => r[1] === cur);
+  const subtitle = cur ? ('Rated: ' + (found ? found[0] + ' ' + found[2] : cur)) : 'How is your day going?';
+  const dots = RATINGS.map(function(r){
+    const em = r[0], val = r[1], lbl = r[2];
+    const active = cur === val ? ' active' : '';
+    return '<div class=&quot;day-rating-opt' + active + '&quot; title=&quot;' + lbl + '&quot; onclick=&quot;setDayRating(\'' + vaId + '\',\'' + val + '\')&quot; style=&quot;font-size:28px;cursor:pointer;transition:transform .15s,opacity .15s;opacity:' + (active ? '1' : '.45') + ';user-select:none;line-height:1;padding:4px 6px;border-radius:8px' + (active ? ';background:var(--teal-pale);transform:scale(1.18)' : '') + '&quot;>' + em + '</div>';
+  }).join('');
+  return '<div class=&quot;card card-pad&quot; style=&quot;margin-bottom:12px&quot;>' +
+    '<div style=&quot;display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px&quot;>' +
+      '<div>' +
+        '<div style=&quot;font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em&quot;>Today\'s Check-In</div>' +
+        '<div style=&quot;font-size:12px;color:var(--text2);margin-top:2px&quot;>' + subtitle + '</div>' +
+      '</div>' +
+      '<div style=&quot;display:flex;gap:4px;align-items:center&quot;>' + dots + '</div>' +
+    '</div>' +
+  '</div>';
+}
+
+// ── 2. FIX setDayRating — use same RATINGS override ───────────────
+function setDayRating(vaId, val){
+  localStorage.setItem('tjc-rating-' + vaId + '-' + today(), val);
+  const r = RATINGS.find(function(x){ return x[1] === val; });
+  toast('Day rated ' + (r ? r[0] + ' ' + r[2] : '') + '! Keep going.', 'success');
+  renderCurrentPage();
+}
+
+// ── 3. FIX portal-body: center all content ────────────────────────
+(function(){
+  const style = document.createElement('style');
+  style.id = 'tjc-portal-center';
+  style.textContent = `
+    /* Center all partner portal content */
+    .portal-body {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px 18px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .portal-body > * {
+      width: 100%;
+      max-width: 860px;
+    }
+    /* Tabs that return a single root div with max-width — ensure margin auto */
+    .portal-body > div[style*=&quot;max-width&quot;] {
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+    /* The dashboard tab returns multiple sibling elements — wrap them */
+    /* We handle this via JS below */
+
+    /* New tab wrappers from update2 — ensure centred */
+    .portal-body > div[style*=&quot;max-width:760px&quot;] {
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+    .portal-body > div[style*=&quot;max-width:700px&quot;] {
+      margin-left: auto !important;
+      margin-right: auto !important;
+    }
+
+    @media (max-width: 900px) {
+      .portal-body > * { max-width: 100%; }
+    }
+  `;
+  const old = document.getElementById('tjc-portal-center');
+  if(old) old.remove();
+  document.head.appendChild(style);
+})();
+
+// ── 4. Patch renderVADashboard to wrap tab content in a centred div
+const _origRVAD6 = typeof renderVADashboard === 'function' ? renderVADashboard : null;
+if(_origRVAD6){
+  renderVADashboard = function(){
+    const raw = _origRVAD6();
+    // The shell is: <div style=&quot;display:flex;flex-direction:column;height:100vh&quot;>
+    //   topbar + tabbar + <div class=&quot;portal-body&quot;>TAB_CONTENT</div>
+    // We need to wrap portal-body's content in a centring div.
+    // Insert a wrapper div right after class=&quot;portal-body&quot;>
+    const marker = 'class=&quot;portal-body&quot;>';
+    if(raw.indexOf(marker) >= 0){
+      return raw.replace(marker, marker + '<div style=&quot;width:100%;max-width:860px;margin:0 auto&quot;>').replace(
+        // Close it before the </div></div></div> at the very end
+        /<\/div>(\s*<\/div>\s*<\/div>\s*)$/,
+        '</div>$1'
+      );
+    }
+    return raw;
+  };
+}
+
+// ── 5. REMOVE &quot;/ Staff&quot; from auth chooser ─────────────────────────
+// The final renderAuthChooser (update4) has 'Partner / Staff' — patch it
+const _origRACH6 = typeof renderAuthChooser === 'function' ? renderAuthChooser : null;
+if(_origRACH6){
+  renderAuthChooser = function(){
+    const html = _origRACH6();
+    // Replace both occurrences of 'Partner / Staff' with 'Partner'
+    return html.split('Partner / Staff').join('Partner');
+  };
+}
+
+// ═══════════════════════════════════════════════════════════════════
+//  TJC SUPABASE DATA LAYER
+//  Replaces localStorage persistence with Supabase.
+//  localStorage is kept as an instant cache — Supabase is the
+//  source of truth. All writes go to both; reads prefer the DB.
+// ═══════════════════════════════════════════════════════════════════
+
+const TJC_SUPABASE_URL  = 'https://btungxqqchyhnohtzhgj.supabase.co';
+const TJC_SUPABASE_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0dW5neHFxY2h5aG5vaHR6aGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NjIzMzAsImV4cCI6MjA5NjUzODMzMH0.m0Bq5pMtiKTK4NDPX7lNfc3Nd1cFqQZNE8QjFHE-u4w';
+
+// ── Load Supabase JS client from CDN (already in head via update, or load here)
+let _sbReady = false;
+let _sb = null;
+
+function _initSB(){
+  if(_sbReady) return Promise.resolve(_sb);
+  return new Promise(function(resolve){
+    if(window.supabase &amp;&amp; window.supabase.createClient){
+      _sb = window.supabase.createClient(TJC_SUPABASE_URL, TJC_SUPABASE_KEY, {
+        auth:{ persistSession:false }
+      });
+      _sbReady = true;
+      return resolve(_sb);
+    }
+    const script = document.createElement('script');
+    script.src = 'https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js';
+    script.onload = function(){
+      _sb = window.supabase.createClient(TJC_SUPABASE_URL, TJC_SUPABASE_KEY, {
+        auth:{ persistSession:false }
+      });
+      _sbReady = true;
+      resolve(_sb);
+    };
+    script.onerror = function(){ resolve(null); }; // graceful fallback
+    document.head.appendChild(script);
+  });
+}
+
+// ── Collection → table name map ───────────────────────────────────
+const SB_TABLE = {
+  tasks:         'tasks',
+  clients:       'clients',
+  timelogs:      'timelogs',
+  content:       'content',
+  invoices:      'invoices',
+  goals:         'goals',
+  team:          'team',
+  events:        'events',
+  activities:    'activities',
+  conversations: 'conversations',
+  sops:          'sops',
+};
+
+// HR-specific tables (stored under tjc_hr_* in localStorage)
+const SB_HR_TABLE = {
+  applications:       'applications',
+  leaves:             'leaves',
+  attendance:         'attendance',
+  messages:           'hr_messages',
+  notices:            'notices',
+  reports:            'reports',
+  payslips:           'payslips',
+  expenses:           'expenses',
+  performance:        'performance_reviews',
+  onboarding:         'onboarding',
+  schedules:          'schedules',
+  ittickets:          'it_tickets',
+  recognition:        'recognition',
+  feedback:           'feedback',
+  milestones:         'milestones',
+};
+
+// ── camelCase ↔ snake_case helpers ───────────────────────────────
+function _toSnake(obj){
+  if(!obj || typeof obj !== 'object' || Array.isArray(obj)) return obj;
+  const out = {};
+  for(const k in obj){
+    const sk = k.replace(/([A-Z])/g, '_$1').toLowerCase();
+    out[sk] = obj[k];
+  }
+  return out;
+}
+function _toCamel(obj){
+  if(!obj || typeof obj !== 'object' || Array.isArray(obj)) return obj;
+  const out = {};
+  for(const k in obj){
+    const ck = k.replace(/_([a-z])/g, function(_, c){ return c.toUpperCase(); });
+    out[ck] = obj[k];
+  }
+  return out;
+}
+
+// ── Core DB helpers ───────────────────────────────────────────────
+async function sbGet(table){
+  try{
+    const sb = await _initSB(); if(!sb) return null;
+    const { data, error } = await sb.from(table).select('*');
+    if(error){ console.warn('[TJC SB] get', table, error.message); return null; }
+    return (data||[]).map(_toCamel);
+  }catch(e){ console.warn('[TJC SB] get exception', e); return null; }
+}
+
+async function sbUpsert(table, rows){
+  try{
+    const sb = await _initSB(); if(!sb) return false;
+    const payload = (Array.isArray(rows)?rows:[rows]).map(_toSnake);
+    const { error } = await sb.from(table).upsert(payload, { onConflict:'id' });
+    if(error){ console.warn('[TJC SB] upsert', table, error.message); return false; }
+    return true;
+  }catch(e){ console.warn('[TJC SB] upsert exception', e); return false; }
+}
+
+async function sbDelete(table, id){
+  try{
+    const sb = await _initSB(); if(!sb) return false;
+    const { error } = await sb.from(table).delete().eq('id', id);
+    if(error){ console.warn('[TJC SB] delete', table, error.message); return false; }
+    return true;
+  }catch(e){ return false; }
+}
+
+// ── Override lsSave to also push to Supabase ──────────────────────
+const _origLsSave = lsSave;
+lsSave = function(col, data){
+  _origLsSave(col, data);
+  const table = SB_TABLE[col];
+  if(table &amp;&amp; Array.isArray(data) &amp;&amp; data.length > 0){
+    sbUpsert(table, data).catch(function(){});
+  }
+};
+
+// ── Override loadAllData to pull from Supabase first ─────────────
+const _origLoadAllData = typeof loadAllData === 'function' ? loadAllData : null;
+loadAllData = async function(){
+  // First run the original (sets up localStorage seeds)
+  if(_origLoadAllData) _origLoadAllData();
+
+  // Then hydrate from Supabase in background
+  const cols = Object.keys(SB_TABLE);
+  let updated = false;
+  for(const col of cols){
+    const table = SB_TABLE[col];
+    const remote = await sbGet(table);
+    if(remote &amp;&amp; remote.length > 0){
+      APP.data[col] = remote;
+      _origLsSave(col, remote);
+      updated = true;
+    }
+  }
+  if(updated &amp;&amp; typeof renderCurrentPage === 'function'){
+    renderCurrentPage();
+  }
+};
+
+// ── Override addDoc to sync to Supabase ──────────────────────────
+const _origAddDoc = typeof addDoc === 'function' ? addDoc : null;
+if(_origAddDoc){
+  addDoc = async function(col, data){
+    const result = _origAddDoc(col, data);
+    const table = SB_TABLE[col];
+    if(table){
+      const rec = APP.data[col] &amp;&amp; APP.data[col][0];
+      if(rec) sbUpsert(table, rec).catch(function(){});
+    }
+    return result;
+  };
+}
+
+// ── Override updateDoc to sync to Supabase ───────────────────────
+const _origUpdateDoc2 = typeof updateDoc === 'function' ? updateDoc : null;
+if(_origUpdateDoc2){
+  updateDoc = async function(col, id, data){
+    const result = await _origUpdateDoc2(col, id, data);
+    const table = SB_TABLE[col];
+    if(table){
+      const rec = (APP.data[col]||[]).find(function(x){ return x.id === id; });
+      if(rec) sbUpsert(table, rec).catch(function(){});
+    }
+    return result;
+  };
+}
+
+// ── HR data helpers — sync HR localStorage to Supabase ───────────
+const _origHrSave = typeof hrSave2 === 'function' ? hrSave2 : (typeof hrSave === 'function' ? hrSave : null);
+if(_origHrSave){
+  const _patchHrSave = function(saveRef){
+    return function(key, val){
+      saveRef(key, val);
+      const table = SB_HR_TABLE[key];
+      if(table &amp;&amp; Array.isArray(val) &amp;&amp; val.length > 0){
+        sbUpsert(table, val).catch(function(){});
+      }
+    };
+  };
+  if(typeof hrSave2 === 'function') hrSave2 = _patchHrSave(hrSave2);
+  if(typeof hrSave  === 'function') hrSave  = _patchHrSave(hrSave);
+}
+
+// ── Auth: validate Management login against Supabase ─────────────
+const _origOwnerUsernameSubmit = typeof ownerUsernameSubmit === 'function' ? ownerUsernameSubmit : null;
+if(_origOwnerUsernameSubmit){
+  ownerUsernameSubmit = async function(){
+    const input = document.getElementById('owner-uname-input');
+    const val = (input ? input.value : '').trim();
+    if(!val){ toast('Enter your username','error'); return; }
+
+    // Try Supabase first
+    try{
+      const sb = await _initSB();
+      if(sb){
+        const { data, error } = await sb.from('mgmt_users').select('*').ilike('username', val).single();
+        if(!error &amp;&amp; data){
+          APP.ownerAuth.username = val;
+          APP.ownerAuth.step = 'pin';
+          APP.ownerAuth.pinEntry = '';
+          APP.ownerAuth._sbAccount = _toCamel(data);
+          renderCurrentPage();
+          return;
+        }
+      }
+    }catch(e){}
+
+    // Fallback to localStorage
+    _origOwnerUsernameSubmit();
+  };
+}
+
+const _origOwnerPinSubmit2 = typeof ownerPinSubmit2 === 'function' ? ownerPinSubmit2 : null;
+if(_origOwnerPinSubmit2){
+  ownerPinSubmit2 = async function(){
+    const sbAcct = APP.ownerAuth &amp;&amp; APP.ownerAuth._sbAccount;
+    if(sbAcct){
+      if(APP.ownerAuth.pinEntry === sbAcct.pin){
+        APP.user.uid = sbAcct.id;
+        APP.profile = sbAcct;
+        APP.authMode = 'owner';
+        APP.authStep = 'choose';
+        APP.ownerAuth.pinEntry = '';
+        if(typeof buildNav === 'function') buildNav();
+        if(typeof buildTopbarActions === 'function') buildTopbarActions();
+        if(typeof buildBottomNav === 'function') buildBottomNav();
+        if(typeof updateUserInfo === 'function') updateUserInfo();
+        navigate('home');
+        toast('Welcome back, ' + sbAcct.displayName + '!', 'success');
+      } else {
+        APP.ownerAuth.pinEntry = '';
+        toast('Incorrect PIN','error');
+        renderCurrentPage();
+      }
+      return;
+    }
+    _origOwnerPinSubmit2();
+  };
+}
+
+// ── Auth: validate HR login against Supabase ─────────────────────
+const _origHrUsernameSubmit = typeof hrUsernameSubmit === 'function' ? hrUsernameSubmit : null;
+if(_origHrUsernameSubmit){
+  hrUsernameSubmit = async function(){
+    const input = document.getElementById('hr-uname-input');
+    const val = (input ? input.value : '').trim();
+    if(!val){ toast('Enter your username','error'); return; }
+
+    try{
+      const sb = await _initSB();
+      if(sb){
+        const { data, error } = await sb.from('hr_users').select('*').ilike('username', val).single();
+        if(!error &amp;&amp; data){
+          APP.hrAuth.username = val;
+          APP.hrAuth.step = 'pin';
+          APP.hrAuth.pinEntry = '';
+          APP.hrAuth._sbAccount = _toCamel(data);
+          renderCurrentPage();
+          return;
+        }
+      }
+    }catch(e){}
+
+    _origHrUsernameSubmit();
+  };
+}
+
+const _origHrPinSubmit2 = typeof hrPinSubmit2 === 'function' ? hrPinSubmit2 : null;
+if(_origHrPinSubmit2){
+  hrPinSubmit2 = async function(){
+    const sbAcct = APP.hrAuth &amp;&amp; APP.hrAuth._sbAccount;
+    if(sbAcct){
+      if((APP.hrAuth.pinEntry||'') === sbAcct.pin){
+        if(!APP.hr) APP.hr = {};
+        APP.hr.loggedIn = true;
+        APP.hr.accountId = sbAcct.id;
+        APP.hr.displayName = sbAcct.displayName;
+        APP.hrAuth.pinEntry = '';
+        APP.authMode = 'hr';
+        APP.authStep = 'choose';
+        renderCurrentPage();
+        toast('Welcome, ' + sbAcct.displayName + '!', 'success');
+      } else {
+        APP.hrAuth.pinEntry = '';
+        toast('Incorrect PIN','error');
+        renderCurrentPage();
+      }
+      return;
+    }
+    _origHrPinSubmit2();
+  };
+}
+
+// ── Supabase Realtime — live updates across sessions ──────────────
+async function _startRealtime(){
+  try{
+    const sb = await _initSB(); if(!sb) return;
+    const liveChannels = ['tasks','clients','team','activities','notices','hr_messages'];
+    liveChannels.forEach(function(table){
+      sb.channel('rt-' + table)
+        .on('postgres_changes', { event:'*', schema:'public', table:table }, function(payload){
+          const col = Object.keys(SB_TABLE).find(function(k){ return SB_TABLE[k] === table; });
+          if(col &amp;&amp; payload.new){
+            const rec = _toCamel(payload.new);
+            if(!APP.data[col]) APP.data[col] = [];
+            const idx = APP.data[col].findIndex(function(x){ return x.id === rec.id; });
+            if(payload.eventType === 'DELETE'){
+              if(idx >= 0) APP.data[col].splice(idx, 1);
+            } else {
+              if(idx >= 0) APP.data[col][idx] = rec;
+              else APP.data[col].unshift(rec);
+            }
+            // Debounced render
+            clearTimeout(window._rtRender);
+            window._rtRender = setTimeout(function(){
+              if(typeof renderCurrentPage === 'function') renderCurrentPage();
+            }, 200);
+          }
+        })
+        .subscribe();
+    });
+  }catch(e){ console.warn('[TJC SB] realtime failed', e); }
+}
+
+// Start everything when DOM is ready
+if(document.readyState === 'loading'){
+  document.addEventListener('DOMContentLoaded', function(){
+    loadAllData().then(function(){ _startRealtime(); });
+  });
+} else {
+  loadAllData().then(function(){ _startRealtime(); });
+}
+
 </script>
 </body>
 </html>
