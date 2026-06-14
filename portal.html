@@ -12240,6 +12240,392 @@ if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
   console.log('[TJC SB] Production mode — REST sync active');
 })();
 
+
+// ═══════════════════════════════════════════════════════════════════
+//  ALVIN VALDEZ — DIRECTOR OF OPERATIONS DASHBOARD
+// ═══════════════════════════════════════════════════════════════════
+
+function renderAlvinOpsDashboard() {
+  var team    = (typeof APP !== 'undefined' && APP.data && APP.data.team)     || [];
+  var clients = (typeof APP !== 'undefined' && APP.data && APP.data.clients)  || [];
+  var tasks   = (typeof APP !== 'undefined' && APP.data && APP.data.tasks)    || [];
+  var invoices= (typeof APP !== 'undefined' && APP.data && APP.data.invoices) || [];
+
+  var activeVAs     = team.filter(function(v){ return v.status === 'Active'; }).length;
+  var activeClients = clients.filter(function(c){ return c.status === 'Active'; }).length;
+  var overdueInv    = invoices.filter(function(i){ return i.status === 'Overdue'; }).length;
+  var totalMRR      = clients.reduce(function(a,c){ return a + (parseFloat(c.rateUsd)||0); }, 0);
+
+  // ── Chart IDs (unique per render) ─────────────────────────────
+  var uid = Date.now();
+  var cPayroll  = 'c-payroll-'  + uid;
+  var cAging    = 'c-aging-'    + uid;
+  var cCSAT     = 'c-csat-'     + uid;
+  var cPulse    = 'c-pulse-'    + uid;
+
+  // ── Mock data (realistic for a boutique VA agency) ────────────
+  var kpis = [
+    { label:'Net Profit Margin',      val:'28.4%',    delta:'+2.1% MoM',  up:true,  icon:'M3 3h18v4H3zM3 9h18v9H3z',        color:'#131DBF' },
+    { label:'Burn Rate / Month',      val:'$4,280',   delta:'↓ $310 MoM', up:true,  icon:'M12 2a10 10 0 1 0 0 20',           color:'#10B981' },
+    { label:'Cash Runway',            val:'7.2 mo',   delta:'Stable',     up:true,  icon:'M12 8v4l3 3',                       color:'#F59E0B' },
+    { label:'SLA Fulfillment Rate',   val:'97.3%',    delta:'+0.4% MoM',  up:true,  icon:'M5 13l4 4L19 7',                   color:'#131DBF' },
+    { label:'Client Churn Rate',      val:'4.2%',     delta:'-1.1% MoM',  up:true,  icon:'M18.36 6.64A9 9 0 1 1 5.64 19.36',color:'#EF4444' },
+    { label:'VA Retention Rate',      val:'91.6%',    delta:'+3.2% MoM',  up:true,  icon:'M17 21v-2a4 4 0 0 0-4-4H5',       color:'#10B981' },
+    { label:'Avg Time-to-Fill',       val:'11.4 days',delta:'-2.1d MoM',  up:true,  icon:'M12 2a10 10 0 1 0 0 20',           color:'#8B5CF6' },
+    { label:'Ticket Resolution Rate', val:'94.8%',    delta:'+1.3% MoM',  up:true,  icon:'M9 12l2 2 4-4',                    color:'#14D3C4' },
+  ];
+
+  var bench = [
+    { skill:'Executive Assistance',  count:4, ready:3, color:'#131DBF' },
+    { skill:'Social Media Mgmt',     count:6, ready:5, color:'#14D3C4' },
+    { skill:'Email & CRM Ops',       count:5, ready:4, color:'#F59E0B' },
+    { skill:'Data Entry & Research', count:8, ready:7, color:'#10B981' },
+    { skill:'Content & Copywriting', count:3, ready:2, color:'#8B5CF6' },
+    { skill:'Video & Design',        count:2, ready:2, color:'#EF4444' },
+  ];
+
+  var compliance = [
+    { doc:'Client MSA / SLA Status',        focus:'Renewal deadlines, scope drift, SLA breach clauses', risk:'High',   riskClass:'bg-red-100 text-red-700',    count:activeClients },
+    { doc:'VA Contractor Agreements',       focus:'90-day reviews, IP clauses, termination triggers',   risk:'Medium', riskClass:'bg-amber-100 text-amber-700', count:activeVAs    },
+    { doc:'Regulatory & Tax Compliance',    focus:'BIR filings, contractor 1099 equivalents, VAT',      risk:'High',   riskClass:'bg-red-100 text-red-700',    count:3            },
+    { doc:'NDA & Confidentiality Tracking', focus:'Client data handling, breach notification windows',  risk:'Medium', riskClass:'bg-amber-100 text-amber-700', count:activeClients },
+    { doc:'Platform Terms of Service',      focus:'Tool subscriptions, API usage limits, ToS changes',  risk:'Low',    riskClass:'bg-green-100 text-green-700', count:7            },
+  ];
+
+  var escalations = [
+    { id:'ESC-041', client:'BrandX Co.',      issue:'Deliverable missed — social calendar Q2',    status:'Open',     time:'2h ago',    priority:'#EF4444' },
+    { id:'ESC-040', client:'TechStart Manila', issue:'VA communication lag exceeding 24h SLA',   status:'In Review',time:'Yesterday',  priority:'#F59E0B' },
+    { id:'ESC-039', client:'SunriseWellness',  issue:'Scope creep — tasks outside contract',    status:'Resolved', time:'3 days ago', priority:'#10B981' },
+    { id:'ESC-038', client:'BloomBeauty',      issue:'Invoice dispute — partial payment hold',  status:'Open',     time:'4 days ago', priority:'#EF4444' },
+  ];
+
+  var appPipeline = [
+    { stage:'Applications Received', val:47, color:'#566AE7' },
+    { stage:'Initial Screening',     val:31, color:'#131DBF' },
+    { stage:'Skills Assessment',     val:18, color:'#14D3C4' },
+    { stage:'Panel Interview',       val:9,  color:'#F59E0B' },
+    { stage:'Offer / Onboarding',    val:4,  color:'#10B981' },
+  ];
+
+  // ── HTML OUTPUT ───────────────────────────────────────────────
+  var html =
+  '<div style="max-width:1200px;margin:0 auto;font-family:inherit">' +
+
+  // Header
+  '<div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:24px">' +
+    '<div>' +
+      '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.1em;margin-bottom:4px">Operations Command</div>' +
+      '<h1 style="font-size:24px;font-weight:900;letter-spacing:-.02em;margin-bottom:2px">Director of Operations</h1>' +
+      '<p style="font-size:12px;color:var(--text3)">' + new Date().toLocaleDateString('en-US',{weekday:'long',month:'long',day:'numeric',year:'numeric'}) + ' · Alvin Valdez</p>' +
+    '</div>' +
+    '<div style="display:flex;gap:8px">' +
+      '<div style="padding:6px 14px;background:var(--surface2);border-radius:20px;font-size:11px;font-weight:700;color:#10B981;border:1px solid #10B98130">● All Systems Nominal</div>' +
+      '<div style="padding:6px 14px;background:#EF444415;border-radius:20px;font-size:11px;font-weight:700;color:#EF4444;border:1px solid #EF444430">' + escalations.filter(function(e){return e.status==='Open';}).length + ' Open Escalations</div>' +
+    '</div>' +
+  '</div>' +
+
+  // ── SECTION 1: KPI Grid ──────────────────────────────────────
+  '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">' +
+  kpis.map(function(k){
+    return '<div class="card" style="padding:16px 18px;border-top:3px solid ' + k.color + '">' +
+      '<div style="font-size:10px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">' + k.label + '</div>' +
+      '<div style="font-size:22px;font-weight:900;color:' + k.color + ';line-height:1;margin-bottom:6px">' + k.val + '</div>' +
+      '<div style="font-size:10px;font-weight:600;color:' + (k.up?'#10B981':'#EF4444') + '">' + k.delta + '</div>' +
+    '</div>';
+  }).join('') +
+  '</div>' +
+
+  // ── SECTION 2: Financial Charts + Capacity ───────────────────
+  '<div style="display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:16px;margin-bottom:20px">' +
+
+    // Payroll donut
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:13px;margin-bottom:2px">Payroll Allocation</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:12px">Deployed VAs vs. Internal Core</div>' +
+      '<div style="position:relative;height:160px;display:flex;align-items:center;justify-content:center">' +
+        '<canvas id="' + cPayroll + '" style="max-height:160px"></canvas>' +
+        '<div style="position:absolute;text-align:center;pointer-events:none">' +
+          '<div style="font-size:18px;font-weight:900;color:var(--blue)">$' + Math.round(totalMRR||8400) + '</div>' +
+          '<div style="font-size:9px;color:var(--text3)">total/mo</div>' +
+        '</div>' +
+      '</div>' +
+      '<div style="display:flex;gap:14px;justify-content:center;margin-top:10px">' +
+        '<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600"><div style="width:8px;height:8px;border-radius:50%;background:#131DBF"></div>VA Payroll 68%</div>' +
+        '<div style="display:flex;align-items:center;gap:5px;font-size:10px;font-weight:600"><div style="width:8px;height:8px;border-radius:50%;background:#14D3C4"></div>Core Team 32%</div>' +
+      '</div>' +
+    '</div>' +
+
+    // A/R Aging bar chart
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:13px;margin-bottom:2px">A/R Aging</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:12px">Outstanding invoice buckets</div>' +
+      '<canvas id="' + cAging + '" style="max-height:170px"></canvas>' +
+    '</div>' +
+
+    // Capacity utilization
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:13px;margin-bottom:2px">Capacity Utilization</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Billable VAs vs. total bench</div>' +
+      '<div style="margin-bottom:8px">' +
+        '<div style="display:flex;justify-content:space-between;margin-bottom:5px">' +
+          '<span style="font-size:12px;font-weight:700">Billable (Active)</span>' +
+          '<span style="font-size:13px;font-weight:900;color:#131DBF">' + activeVAs + ' / ' + Math.max(activeVAs+4, team.length||12) + '</span>' +
+        '</div>' +
+        '<div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden">' +
+          '<div style="height:100%;width:' + Math.round(activeVAs/Math.max(activeVAs+4,team.length||12)*100) + '%;background:linear-gradient(90deg,#131DBF,#14D3C4);border-radius:4px"></div>' +
+        '</div>' +
+      '</div>' +
+      [
+        {label:'Fully Deployed', val:activeVAs, color:'#131DBF'},
+        {label:'On Bench (Ready)', val:Math.max(3,Math.round(activeVAs*0.3)), color:'#10B981'},
+        {label:'In Onboarding', val:2, color:'#F59E0B'},
+        {label:'On Leave', val:1, color:'#EF4444'},
+      ].map(function(r){
+        return '<div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:12px">' +
+          '<div style="display:flex;align-items:center;gap:7px"><div style="width:6px;height:6px;border-radius:50%;background:' + r.color + '"></div>' + r.label + '</div>' +
+          '<span style="font-weight:700;color:' + r.color + '">' + r.val + '</span>' +
+        '</div>';
+      }).join('') +
+      '<div style="margin-top:12px;padding:10px;background:#131DBF0D;border-radius:8px;font-size:11px;color:var(--text3)">' +
+        '<b style="color:var(--blue)">Operational Note:</b> Max client load per VA = 1 FT or 2 PT. Current utilization within safe limits.' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+
+  // ── SECTION 3: Talent Pipeline + Bench Strength ───────────────
+  '<div style="display:grid;grid-template-columns:1fr 1.3fr;gap:16px;margin-bottom:20px">' +
+
+    // Applicant Pipeline
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:13px;margin-bottom:2px">Talent Acquisition Pipeline</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Active applicants by stage · last 30 days</div>' +
+      appPipeline.map(function(s,i){
+        var pct = Math.round(s.val / appPipeline[0].val * 100);
+        return '<div style="margin-bottom:12px">' +
+          '<div style="display:flex;justify-content:space-between;margin-bottom:4px">' +
+            '<span style="font-size:12px;font-weight:600">' + s.stage + '</span>' +
+            '<div style="display:flex;align-items:center;gap:8px">' +
+              '<span style="font-size:12px;font-weight:800;color:' + s.color + '">' + s.val + '</span>' +
+              '<span style="font-size:10px;color:var(--text3)">' + pct + '%</span>' +
+            '</div>' +
+          '</div>' +
+          '<div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden">' +
+            '<div style="height:100%;width:' + pct + '%;background:' + s.color + ';border-radius:3px;transition:width .5s"></div>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:14px">' +
+        '<div style="padding:10px;background:var(--surface2);border-radius:8px;text-align:center">' +
+          '<div style="font-size:18px;font-weight:900;color:#131DBF">11.4d</div>' +
+          '<div style="font-size:10px;color:var(--text3);margin-top:2px">Avg Time-to-Fill</div>' +
+        '</div>' +
+        '<div style="padding:10px;background:var(--surface2);border-radius:8px;text-align:center">' +
+          '<div style="font-size:18px;font-weight:900;color:#10B981">91.6%</div>' +
+          '<div style="font-size:10px;color:var(--text3);margin-top:2px">Retention Rate</div>' +
+        '</div>' +
+      '</div>' +
+    '</div>' +
+
+    // Bench Strength Grid
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:13px;margin-bottom:2px">Vetted Bench Strength</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Interview-ready VAs by skill category</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px">' +
+      bench.map(function(b){
+        var pct = Math.round(b.ready/b.count*100);
+        return '<div style="padding:12px 14px;background:var(--surface2);border-radius:10px;border-left:3px solid ' + b.color + '">' +
+          '<div style="font-size:11px;font-weight:700;margin-bottom:8px">' + b.skill + '</div>' +
+          '<div style="display:flex;align-items:flex-end;justify-content:space-between">' +
+            '<div>' +
+              '<div style="font-size:20px;font-weight:900;color:' + b.color + ';line-height:1">' + b.ready + '</div>' +
+              '<div style="font-size:9px;color:var(--text3)">ready / ' + b.count + ' total</div>' +
+            '</div>' +
+            '<div style="font-size:11px;font-weight:700;color:' + b.color + ';background:' + b.color + '18;padding:2px 8px;border-radius:20px">' + pct + '%</div>' +
+          '</div>' +
+          '<div style="height:3px;background:var(--border);border-radius:2px;margin-top:8px;overflow:hidden">' +
+            '<div style="height:100%;width:' + pct + '%;background:' + b.color + ';border-radius:2px"></div>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+
+  // ── SECTION 4: Compliance Table ───────────────────────────────
+  '<div class="card" style="padding:0;overflow:hidden;margin-bottom:20px">' +
+    '<div style="padding:16px 18px;border-bottom:1px solid var(--border);display:flex;align-items:center;justify-content:space-between">' +
+      '<div>' +
+        '<div style="font-weight:800;font-size:13px">Compliance & Contract Lifecycle</div>' +
+        '<div style="font-size:11px;color:var(--text3);margin-top:2px">Active tracking across all legal and regulatory obligations</div>' +
+      '</div>' +
+      '<button class="btn btn-secondary" style="font-size:11px" onclick="navigate(\'sops\')">View SOPs →</button>' +
+    '</div>' +
+    '<div style="overflow-x:auto">' +
+    '<table style="width:100%;border-collapse:collapse;font-size:12px">' +
+      '<thead><tr style="background:var(--surface2)">' +
+        '<th style="padding:10px 16px;text-align:left;font-weight:700;font-size:11px;color:var(--text3);white-space:nowrap">#</th>' +
+        '<th style="padding:10px 16px;text-align:left;font-weight:700;font-size:11px;color:var(--text3)">Document Type</th>' +
+        '<th style="padding:10px 16px;text-align:left;font-weight:700;font-size:11px;color:var(--text3)">Tracking Focus</th>' +
+        '<th style="padding:10px 16px;text-align:left;font-weight:700;font-size:11px;color:var(--text3)">Active Records</th>' +
+        '<th style="padding:10px 16px;text-align:left;font-weight:700;font-size:11px;color:var(--text3)">Risk Level</th>' +
+        '<th style="padding:10px 16px;text-align:left;font-weight:700;font-size:11px;color:var(--text3)">Action</th>' +
+      '</tr></thead><tbody>' +
+      compliance.map(function(c, i){
+        var riskColor = c.risk === 'High' ? '#EF4444' : c.risk === 'Medium' ? '#F59E0B' : '#10B981';
+        var riskBg    = c.risk === 'High' ? '#EF444415' : c.risk === 'Medium' ? '#F59E0B15' : '#10B98115';
+        return '<tr style="border-bottom:1px solid var(--border)">' +
+          '<td style="padding:12px 16px;color:var(--text3);font-size:11px">' + String(i+1).padStart(2,'0') + '</td>' +
+          '<td style="padding:12px 16px;font-weight:700">' + c.doc + '</td>' +
+          '<td style="padding:12px 16px;color:var(--text3);max-width:280px">' + c.focus + '</td>' +
+          '<td style="padding:12px 16px;font-weight:700;color:var(--blue)">' + c.count + '</td>' +
+          '<td style="padding:12px 16px">' +
+            '<span style="padding:3px 10px;border-radius:20px;font-size:10px;font-weight:700;color:' + riskColor + ';background:' + riskBg + ';border:1px solid ' + riskColor + '30">' + c.risk + '</span>' +
+          '</td>' +
+          '<td style="padding:12px 16px">' +
+            '<button style="font-size:10px;padding:3px 10px;border:1px solid var(--border2);border-radius:6px;background:var(--surface2);cursor:pointer;color:var(--text2)">Review</button>' +
+          '</td>' +
+        '</tr>';
+      }).join('') +
+      '</tbody></table>' +
+    '</div>' +
+  '</div>' +
+
+  // ── SECTION 5: QA + Pulse + Escalation Log ────────────────────
+  '<div style="display:grid;grid-template-columns:1fr 1fr 1.4fr;gap:16px;margin-bottom:20px">' +
+
+    // CSAT
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:13px;margin-bottom:2px">Client Satisfaction (CSAT)</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Aggregated from monthly check-ins</div>' +
+      '<div style="position:relative;height:140px">' +
+        '<canvas id="' + cCSAT + '"></canvas>' +
+      '</div>' +
+      '<div style="text-align:center;margin-top:10px">' +
+        '<div style="font-size:28px;font-weight:900;color:#131DBF">4.6 <span style="font-size:14px;color:var(--text3)">/5.0</span></div>' +
+        '<div style="font-size:11px;color:var(--text3)">Based on ' + activeClients + ' active client reviews</div>' +
+      '</div>' +
+    '</div>' +
+
+    // Internal Pulse
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:13px;margin-bottom:2px">Internal Core Team Pulse</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Operational friction & sentiment</div>' +
+      '<canvas id="' + cPulse + '" style="max-height:140px"></canvas>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-top:12px">' +
+      [
+        {label:'Workload Balance',  score:78, color:'#131DBF'},
+        {label:'Communication',     score:88, color:'#10B981'},
+        {label:'Tools & Systems',   score:72, color:'#F59E0B'},
+        {label:'Leadership Clarity',score:91, color:'#14D3C4'},
+      ].map(function(p){
+        return '<div style="padding:8px;background:var(--surface2);border-radius:8px">' +
+          '<div style="font-size:10px;color:var(--text3);margin-bottom:3px">' + p.label + '</div>' +
+          '<div style="display:flex;align-items:center;gap:6px">' +
+            '<div style="flex:1;height:4px;background:var(--border);border-radius:2px;overflow:hidden">' +
+              '<div style="height:100%;width:' + p.score + '%;background:' + p.color + ';border-radius:2px"></div>' +
+            '</div>' +
+            '<span style="font-size:11px;font-weight:700;color:' + p.color + '">' + p.score + '</span>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+      '</div>' +
+    '</div>' +
+
+    // Escalation Log
+    '<div class="card" style="padding:18px">' +
+      '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:2px">' +
+        '<div style="font-weight:800;font-size:13px">Escalation Log</div>' +
+        '<span style="font-size:10px;padding:2px 8px;background:#EF444415;color:#EF4444;border-radius:20px;font-weight:700;border:1px solid #EF444430">' + escalations.filter(function(e){return e.status==='Open';}).length + ' Open</span>' +
+      '</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:12px">Critical delivery disputes requiring manual intervention</div>' +
+      escalations.map(function(e){
+        var statusColor = e.status === 'Open' ? '#EF4444' : e.status === 'In Review' ? '#F59E0B' : '#10B981';
+        return '<div style="display:flex;gap:10px;padding:10px 0;border-bottom:1px solid var(--border)">' +
+          '<div style="width:3px;min-height:44px;border-radius:2px;background:' + e.priority + ';flex-shrink:0"></div>' +
+          '<div style="flex:1;min-width:0">' +
+            '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">' +
+              '<span style="font-size:10px;font-weight:700;color:var(--text3);font-family:monospace">' + e.id + '</span>' +
+              '<span style="font-size:11px;font-weight:700">' + e.client + '</span>' +
+            '</div>' +
+            '<div style="font-size:11px;color:var(--text2);margin-bottom:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">' + e.issue + '</div>' +
+            '<div style="display:flex;align-items:center;gap:8px">' +
+              '<span style="font-size:10px;padding:1px 7px;border-radius:20px;font-weight:700;color:' + statusColor + ';background:' + statusColor + '15;border:1px solid ' + statusColor + '30">' + e.status + '</span>' +
+              '<span style="font-size:10px;color:var(--text3)">' + e.time + '</span>' +
+            '</div>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+  '</div>' +
+
+  '</div>' + // end max-width wrapper
+
+  // ── Chart init script ─────────────────────────────────────────
+  '<scr'+'ipt>' +
+  '(function(){'  +
+  'var _ci = setInterval(function(){' +
+    'if(typeof Chart === "undefined") return;' +
+    'clearInterval(_ci);' +
+
+    // Payroll Donut
+    'new Chart(document.getElementById("' + cPayroll + '"),{' +
+      'type:"doughnut",' +
+      'data:{labels:["VA Payroll","Core Team"],' +
+        'datasets:[{data:[68,32],backgroundColor:["#131DBF","#14D3C4"],borderWidth:0,hoverOffset:6}]},' +
+      'options:{cutout:"72%",plugins:{legend:{display:false},tooltip:{callbacks:{label:function(c){return c.label+": "+c.parsed+"%";}}}}}' +
+    '});' +
+
+    // A/R Aging Bar
+    'new Chart(document.getElementById("' + cAging + '"),{' +
+      'type:"bar",' +
+      'data:{labels:["0–30 days","31–60 days","61+ days"],' +
+        'datasets:[{label:"USD Outstanding",data:[' + Math.round(totalMRR*0.4||3200) + ',' + Math.round(totalMRR*0.2||1600) + ',' + (overdueInv*700||1100) + '],' +
+          'backgroundColor:["#131DBF","#F59E0B","#EF4444"],borderRadius:5,borderWidth:0}]},' +
+      'options:{plugins:{legend:{display:false}},' +
+        'scales:{y:{ticks:{callback:function(v){return"$"+v.toLocaleString();}},grid:{color:"rgba(0,0,0,.05)"}},x:{grid:{display:false}}},' +
+        'responsive:true,maintainAspectRatio:false}' +
+    '});' +
+
+    // CSAT Doughnut
+    'new Chart(document.getElementById("' + cCSAT + '"),{' +
+      'type:"doughnut",' +
+      'data:{labels:["Score","Remaining"],' +
+        'datasets:[{data:[92,8],backgroundColor:["#131DBF","#E5E7EB"],borderWidth:0}]},' +
+      'options:{cutout:"78%",plugins:{legend:{display:false},tooltip:{enabled:false}},responsive:true,maintainAspectRatio:false}' +
+    '});' +
+
+    // Internal Pulse Radar
+    'new Chart(document.getElementById("' + cPulse + '"),{' +
+      'type:"radar",' +
+      'data:{labels:["Workload","Comms","Tools","Leadership","Morale"],' +
+        'datasets:[{data:[78,88,72,91,84],backgroundColor:"rgba(19,29,191,.12)",borderColor:"#131DBF",borderWidth:2,pointBackgroundColor:"#131DBF",pointRadius:3}]},' +
+      'options:{plugins:{legend:{display:false}},scales:{r:{ticks:{display:false,stepSize:25},grid:{color:"rgba(0,0,0,.07)"},pointLabels:{font:{size:9,weight:"600"},color:"#6B7280"},min:0,max:100}},responsive:true,maintainAspectRatio:false}' +
+    '});' +
+
+  '}, 100);' +
+  '})();' +
+  '<\/scr'+'ipt>';
+
+  return html;
+}
+
+// Register as Alvin's home page
+var _origRCP_Alvin = renderCurrentPage;
+renderCurrentPage = function() {
+  _origRCP_Alvin();
+  if (APP.authMode === 'owner' && APP.page === 'home') {
+    var acct = APP.ownerAuth && APP.ownerAuth._sbAccount
+      ? APP.ownerAuth._sbAccount
+      : (typeof mgmtAccounts === 'function'
+          ? mgmtAccounts().find(function(a) { return a.username && a.username.toLowerCase() === ((APP.ownerAuth && APP.ownerAuth.username) || '').toLowerCase(); })
+          : null);
+    if (acct && acct.founderRole === 'director_operations') {
+      var ca = document.getElementById('content-area');
+      if (ca) ca.innerHTML = renderAlvinOpsDashboard();
+    }
+  }
+};
+
 </script>
 </body>
 </html>
