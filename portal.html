@@ -13149,6 +13149,210 @@ renderCurrentPage = function() {
   document.head.appendChild(style);
 })();
 
+
+// ═══════════════════════════════════════════════════════════════════
+//  TJC UPDATE 13
+//  1. Job form: Core Responsibilities, Qualifications, Requirements
+//     as bulleted multi-line textareas
+//  2. Job cards: render bullets properly
+//  3. Apply Now → Gmail compose (mail.google.com)
+//  4. Careers page Apply Now → Gmail compose
+// ═══════════════════════════════════════════════════════════════════
+
+// ── Shared bullet render helpers ────────────────────────────────────
+function _toBulletHtml(text, style) {
+  if (!text) return '';
+  var lines = text.split('\n').map(function(l){ return l.replace(/^[\u2022\-\*]\s*/, '').trim(); }).filter(function(l){ return l.length > 0; });
+  if (!lines.length) return '';
+  style = style || 'margin:4px 0 0 0;padding-left:18px;font-size:12px;color:var(--text2);line-height:1.6';
+  return '<ul style="' + style + '">' + lines.map(function(l){ return '<li>' + l + '</li>'; }).join('') + '</ul>';
+}
+
+function _toBulletPublic(text) {
+  return _toBulletHtml(text, 'margin:6px 0;padding-left:16px;font-size:13px;color:rgba(255,255,255,.65);line-height:1.65');
+}
+
+// ── 1. REPLACE jobFormHtml ──────────────────────────────────────────
+var _origJobFormHtml13 = typeof jobFormHtml === 'function' ? jobFormHtml : null;
+jobFormHtml = function(j) {
+  j = j || {};
+  var bulletHint = '<div style="font-size:10px;color:var(--text3);margin-top:3px">One item per line — displayed as bullet points on the careers page</div>';
+  return (
+    '<div class="form-group">' +
+      '<label class="form-label">Job Title *</label>' +
+      '<input class="form-control" id="f-job-title" value="' + (j.title || '') + '" placeholder="e.g. Executive Virtual Assistant">' +
+    '</div>' +
+
+    '<div class="form-row">' +
+      '<div class="form-group"><label class="form-label">Employment Type</label>' +
+        '<select class="form-control" id="f-job-type">' +
+          ['Full-Time','Part-Time','Project-Based'].map(function(t){ return '<option' + (t === j.type ? ' selected' : '') + '>' + t + '</option>'; }).join('') +
+        '</select>' +
+      '</div>' +
+      '<div class="form-group"><label class="form-label">Work Setup</label>' +
+        '<input class="form-control" id="f-job-setup" value="' + (j.setup || 'Remote (PHT, US-aligned hours)') + '">' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="form-row">' +
+      '<div class="form-group"><label class="form-label">Salary Min (PHP/mo)</label>' +
+        '<input class="form-control" id="f-job-sal-min" type="number" min="0" placeholder="e.g. 25000" value="' + (j.salaryMin || '') + '">' +
+      '</div>' +
+      '<div class="form-group"><label class="form-label">Salary Max (PHP/mo)</label>' +
+        '<input class="form-control" id="f-job-sal-max" type="number" min="0" placeholder="e.g. 45000" value="' + (j.salaryMax || '') + '">' +
+      '</div>' +
+    '</div>' +
+
+    '<div class="form-group">' +
+      '<label class="form-label">Short Description *</label>' +
+      '<textarea class="form-control" id="f-job-desc" rows="3" placeholder="2–3 sentences summarising this role and its impact...">' + (j.description || '') + '</textarea>' +
+    '</div>' +
+
+    '<div class="form-group">' +
+      '<label class="form-label">Core Responsibilities</label>' +
+      '<textarea class="form-control" id="f-job-resp" rows="5" placeholder="Manage executive email inbox\nSchedule meetings across time zones\nPrepare weekly reports and decks\nCoordinate with vendors and suppliers">' + (j.responsibilities || '') + '</textarea>' +
+      bulletHint +
+    '</div>' +
+
+    '<div class="form-group">' +
+      '<label class="form-label">Qualifications</label>' +
+      '<textarea class="form-control" id="f-job-qual" rows="4" placeholder="2+ years VA or administrative experience\nExcellent written and spoken English\nProven ability to work US business hours (EST/PST)">' + (j.qualifications || '') + '</textarea>' +
+      bulletHint +
+    '</div>' +
+
+    '<div class="form-group">' +
+      '<label class="form-label">Requirements & Tools</label>' +
+      '<textarea class="form-control" id="f-job-req" rows="4" placeholder="Reliable internet connection (min. 25 Mbps)\nOwn laptop or desktop (Windows 10 / macOS)\nGoogle Workspace, Slack, Notion, Canva">' + (j.requirements || '') + '</textarea>' +
+      bulletHint +
+    '</div>' +
+
+    '<div class="form-group"><label class="form-label">Status</label>' +
+      '<select class="form-control" id="f-job-status">' +
+        ['Open','Closed'].map(function(s){ return '<option' + (s === (j.status || 'Open') ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
+      '</select>' +
+    '</div>'
+  );
+};
+
+// ── 2. REPLACE saveJob to save new fields ──────────────────────────
+var _origSaveJob13 = typeof saveJob === 'function' ? saveJob : null;
+if (_origSaveJob13) {
+  saveJob = function(id) {
+    var title = (document.getElementById('f-job-title') || {}).value;
+    if (!title || !title.trim()) { if (typeof toast === 'function') toast('Please enter a job title.', 'error'); return; }
+
+    var respEl  = document.getElementById('f-job-resp');
+    var qualEl  = document.getElementById('f-job-qual');
+    var reqEl   = document.getElementById('f-job-req');
+    var salMinEl= document.getElementById('f-job-sal-min');
+    var salMaxEl= document.getElementById('f-job-sal-max');
+
+    // Patch APP.data or the saveJob result after original runs
+    // We call the original but then update the saved job with new fields
+    _origSaveJob13(id);
+
+    // Find the job that was just saved and add the new fields
+    var jobs = typeof loadJobs === 'function' ? loadJobs() : [];
+    var target = id ? jobs.find(function(x){ return x.id === id; }) : jobs[0];
+    if (target) {
+      if (respEl)  target.responsibilities = respEl.value.trim();
+      if (qualEl)  target.qualifications   = qualEl.value.trim();
+      if (reqEl)   target.requirements     = reqEl.value.trim();
+      if (salMinEl && salMinEl.value) target.salaryMin = parseFloat(salMinEl.value);
+      if (salMaxEl && salMaxEl.value) target.salaryMax = parseFloat(salMaxEl.value);
+      if (typeof saveJobs === 'function') saveJobs(jobs);
+      if (typeof sbUpsert === 'function') sbUpsert('jobs', target).catch(function(){});
+    }
+  };
+}
+
+// ── 3. REPLACE renderJobs management card with bulleted sections ────
+var _origRenderJobs13 = typeof renderJobs === 'function' ? renderJobs : null;
+if (_origRenderJobs13) {
+  renderJobs = function() {
+    var jobs = typeof loadJobs === 'function' ? loadJobs() : [];
+    var open  = jobs.filter(function(j){ return j.status === 'Open'; }).length;
+
+    var header = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">' +
+      '<div style="font-size:13px;color:var(--text2)">' + jobs.length + ' job posting' + (jobs.length !== 1 ? 's' : '') + ' \xB7 ' + open + ' open</div>' +
+      '<button class="btn btn-sm btn-primary" onclick="openAddJob()">' + (typeof ic === 'function' ? ic('plus') : '+') + ' Post a Job</button>' +
+    '</div>';
+
+    if (!jobs.length) return header + (typeof emptyState === 'function' ? emptyState('No job postings yet. Click "Post a Job" to add your first opening.') : '');
+
+    return header + jobs.map(function(j) {
+      var sal = (j.salaryMin || j.salaryMax)
+        ? '\u20B1' + (j.salaryMin ? Number(j.salaryMin).toLocaleString() : '?') + '\u2013\u20B1' + (j.salaryMax ? Number(j.salaryMax).toLocaleString() : '?') + '/mo'
+        : '';
+
+      return '<div class="card card-pad job-card" style="margin-bottom:14px">' +
+        '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
+          '<div style="flex:1;min-width:200px">' +
+            '<div style="font-size:15px;font-weight:700;margin-bottom:3px">' + j.title + '</div>' +
+            '<div style="font-size:11px;color:var(--text3);margin-bottom:8px">' +
+              (j.type || 'Full-Time') + ' \xB7 ' + (j.setup || 'Remote') + (sal ? ' \xB7 ' + sal : '') + ' \xB7 Posted ' + (j.postedAt || '\u2014') +
+            '</div>' +
+            (j.description ? '<div style="font-size:12px;color:var(--text2);margin-bottom:8px">' + j.description + '</div>' : '') +
+            (j.responsibilities ? '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Responsibilities</div>' + _toBulletHtml(j.responsibilities) : '') +
+            (j.qualifications   ? '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Qualifications</div>'   + _toBulletHtml(j.qualifications) : '') +
+            (j.requirements     ? '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Requirements</div>'     + _toBulletHtml(j.requirements) : '') +
+          '</div>' +
+          '<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-shrink:0">' +
+            '<span class="tag ' + (j.status === 'Open' ? 't-green' : 't-gray') + '">' + j.status + '</span>' +
+            (sal ? '<span class="tag t-teal" style="font-size:10px">\u20B1 ' + sal + '</span>' : '') +
+            '<div style="display:flex;gap:5px;margin-top:4px">' +
+              '<button class="btn btn-xs btn-secondary" onclick="toggleJobStatus(\'' + j.id + '\')">' + (j.status === 'Open' ? 'Close Role' : 'Reopen') + '</button>' +
+              '<button class="btn btn-xs btn-secondary" onclick="openEditJob(\'' + j.id + '\')">' + (typeof ic === 'function' ? ic('edit') : '') + ' Edit</button>' +
+              '<button class="btn btn-xs btn-danger" onclick="deleteJob(\'' + j.id + '\')">' + (typeof ic === 'function' ? ic('trash') : '') + ' Delete</button>' +
+            '</div>' +
+          '</div>' +
+        '</div>' +
+      '</div>';
+    }).join('');
+  };
+}
+
+// ── 4. PATCH careers page Apply Now → Gmail compose ────────────────
+// Patch the public career card builder (runs in index.html via localStorage jobs)
+// We override the tcJobToggle window function AND inject a new card renderer
+// that uses Gmail compose URLs
+(function patchCareersGmail(){
+  // Override the careers grid renderer to use Gmail compose
+  // This runs AFTER the existing careers script and replaces the Apply links
+  var _interval = setInterval(function(){
+    var grid = document.getElementById('careersGrid');
+    if (!grid) return;
+    clearInterval(_interval);
+
+    // Fix any existing "Apply Now" mailto: links → Gmail compose links
+    grid.querySelectorAll('a.career-apply').forEach(function(a){
+      var mailto = a.href;
+      if (mailto.indexOf('mailto:') === 0) {
+        var to      = 'apply@jobcollectives.com';
+        var subject = mailto.replace(/^mailto:[^?]+\?subject=/, '');
+        a.href   = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + subject;
+        a.target = '_blank';
+        a.rel    = 'noopener noreferrer';
+      }
+    });
+  }, 500);
+})();
+
+// Patch Apply Now in portal job cards (partner portal job listings)
+(function patchPortalJobApply(){
+  var _origRenderVAJobs = typeof renderVAJobs === 'function' ? renderVAJobs : null;
+  if (!_origRenderVAJobs) return;
+  renderVAJobs = function() {
+    var html = _origRenderVAJobs();
+    // Replace mailto: in apply buttons with Gmail compose
+    return html.replace(/href="mailto:apply@jobcollectives\.com([^"]*)"/g, function(_, qs) {
+      var to = 'apply@jobcollectives.com';
+      var su = qs.replace(/^\?subject=/, '');
+      return 'href="https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + su + '" target="_blank" rel="noopener noreferrer"';
+    });
+  };
+})();
+
 </script>
 </body>
 </html>
