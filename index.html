@@ -2269,8 +2269,8 @@ body.light .theme-pill-moon { stroke: #fff; opacity: 1; transform: rotate(0deg) 
           <div style="font-size:12px;color:rgba(255,255,255,.4);">Access your dedicated workspace below.</div>
         </div>
         <div style="display:flex;gap:10px;">
-          <a href="https://justineinacay.github.io/TJCDashboard" target="_blank" style="background:var(--blue);color:var(--white);padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid rgba(86,106,231,.4);transition:all .2s;" onmouseover="this.style.background='#1a24d4'" onmouseout="this.style.background='var(--blue)'">Client Login →</a>
-          <a href="https://justineinacay.github.io/TJCDashboard" target="_blank" style="background:rgba(20,211,196,.12);color:var(--teal);padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid rgba(20,211,196,.25);transition:all .2s;" onmouseover="this.style.background='rgba(20,211,196,.2)'" onmouseout="this.style.background='rgba(20,211,196,.12)'">Partner Login →</a>
+          <a href="https://jobcollectives.github.io/jobcollectives/portal.html" target="_blank" style="background:var(--blue);color:var(--white);padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid rgba(86,106,231,.4);transition:all .2s;" onmouseover="this.style.background='#1a24d4'" onmouseout="this.style.background='var(--blue)'">Client Login →</a>
+          <a href="https://jobcollectives.github.io/jobcollectives/portal.html" target="_blank" style="background:rgba(20,211,196,.12);color:var(--teal);padding:10px 20px;border-radius:100px;font-size:13px;font-weight:700;text-decoration:none;border:1px solid rgba(20,211,196,.25);transition:all .2s;" onmouseover="this.style.background='rgba(20,211,196,.2)'" onmouseout="this.style.background='rgba(20,211,196,.12)'">Partner Login →</a>
         </div>
       </div>
     </div>
@@ -2293,13 +2293,16 @@ body.light .theme-pill-moon { stroke: #fff; opacity: 1; transform: rotate(0deg) 
 .careers-h{font-family:var(--font-body);font-size:clamp(1.8rem,3.5vw,2.8rem);font-weight:800;letter-spacing:-.02em;color:var(--white);margin-bottom:12px}
 .careers-sub{font-size:15px;color:rgba(255,255,255,.6);max-width:620px;margin-bottom:40px;line-height:1.6}
 .careers-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.career-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:24px;transition:all .25s;display:flex;flex-direction:column}
+.career-card{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:24px;transition:all .25s;display:flex;flex-direction:column;gap:0}
 .career-card:hover{transform:translateY(-3px);border-color:rgba(20,211,196,.45);background:rgba(255,255,255,.08)}
 .career-title{font-size:17px;font-weight:800;color:var(--white);margin-bottom:6px}
-.career-meta{font-size:11.5px;font-weight:600;color:var(--teal);margin-bottom:12px}
+.career-meta{font-size:11.5px;font-weight:600;color:var(--teal);margin-bottom:8px}
+.career-salary{display:inline-block;background:rgba(20,211,196,.18);color:var(--teal);font-size:12px;font-weight:700;padding:3px 10px;border-radius:20px;margin-bottom:10px}
 .career-desc{font-size:13px;color:rgba(255,255,255,.65);line-height:1.55;margin-bottom:10px;white-space:pre-wrap}
-.career-req{font-size:12px;color:rgba(255,255,255,.5);margin-bottom:16px}
-.career-apply{margin-top:auto;align-self:flex-start;background:var(--gold);color:var(--navy);padding:9px 20px;border-radius:100px;font-size:12.5px;font-weight:800;text-decoration:none;transition:all .2s}
+.career-toggle{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.65);font-size:12px;padding:7px 14px;border-radius:8px;cursor:pointer;margin:6px 0;transition:all .15s;width:100%;text-align:left}
+.career-toggle:hover{border-color:var(--teal);color:var(--teal)}
+.career-req-body{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6;padding:10px 0 4px;border-top:1px solid rgba(255,255,255,.1);margin-top:4px}
+.career-apply{margin-top:auto;padding-top:14px;align-self:flex-start;background:var(--gold);color:var(--navy);padding:9px 20px;border-radius:100px;font-size:12.5px;font-weight:800;text-decoration:none;transition:all .2s}
 .career-apply:hover{background:#e08e00}
 .careers-empty{background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.2);border-radius:16px;padding:34px;text-align:center;font-size:14px;color:rgba(255,255,255,.55)}
 body.light .careers-section{background:#F1F5F9;border-top:1px solid rgba(10,15,60,.08)}
@@ -2308,8 +2311,9 @@ body.light .careers-sub{color:rgba(10,15,60,.6)}
 body.light .career-card{background:#fff;border-color:rgba(10,15,60,.1);box-shadow:0 4px 18px rgba(10,15,60,.06)}
 body.light .career-title{color:#0A0F3C}
 body.light .career-desc{color:rgba(10,15,60,.65)}
-body.light .career-req{color:rgba(10,15,60,.5)}
 body.light .careers-empty{color:rgba(10,15,60,.5);border-color:rgba(10,15,60,.18)}
+body.light .career-toggle{border-color:rgba(10,15,60,.2);color:rgba(10,15,60,.6)}
+body.light .career-req-body{color:rgba(10,15,60,.6);border-color:rgba(10,15,60,.1)}
 </style>
 <section class="careers-section" id="careers">
   <div class="careers-inner">
@@ -2327,19 +2331,39 @@ body.light .careers-empty{color:rgba(10,15,60,.5);border-color:rgba(10,15,60,.18
   try{ jobs = JSON.parse(localStorage.getItem('tjc_v3_jobs') || '[]'); }catch(e){}
   var open = jobs.filter(function(j){ return j.status === 'Open'; });
   if(!open.length){
-    grid.innerHTML = '<div class="careers-empty">No open roles right now — check back soon, or send your r&eacute;sum&eacute; to <a href="mailto:hello@thejobcollectives.com" style="color:var(--teal);text-decoration:none;font-weight:700">hello@thejobcollectives.com</a>.</div>';
+    grid.innerHTML = '<div class="careers-empty">No open roles right now — check back soon, or send your CV to <a href="mailto:apply@jobcollectives.com" style="color:var(--teal);text-decoration:none;font-weight:700">apply@jobcollectives.com</a>.</div>';
     return;
   }
-  grid.innerHTML = open.map(function(j){
-    var subject = encodeURIComponent('Application: ' + j.title + ' — the job collectives');
+  grid.innerHTML = open.map(function(j, i){
+    var rid = 'crq-' + i;
+    var salMin = j.salaryMin || j.salaryPhpMin;
+    var salMax = j.salaryMax || j.salaryPhpMax;
+    var salTxt = '';
+    if(salMin && salMax) salTxt = '₱' + Number(salMin).toLocaleString() + ' – ₱' + Number(salMax).toLocaleString() + ' / mo';
+    else if(salMin) salTxt = 'From ₱' + Number(salMin).toLocaleString() + ' / mo';
+    else if(salMax) salTxt = 'Up to ₱' + Number(salMax).toLocaleString() + ' / mo';
+    var subject = encodeURIComponent('Application: ' + j.title + ' — The Job Collectives');
     return '<div class="career-card">' +
       '<div class="career-title">' + j.title + '</div>' +
-      '<div class="career-meta">' + (j.type || 'Full-Time') + ' &middot; ' + (j.setup || 'Remote') + '</div>' +
+      '<div class="career-meta">' + (j.type||'Full-Time') + ' · ' + (j.setup||'Remote, PHT') + '</div>' +
+      (salTxt ? '<div class="career-salary">' + salTxt + '</div>' : '') +
       (j.description ? '<div class="career-desc">' + j.description + '</div>' : '') +
-      (j.requirements ? '<div class="career-req"><strong>What we look for:</strong> ' + j.requirements + '</div>' : '') +
-      '<a class="career-apply" href="mailto:hello@thejobcollectives.com?subject=' + subject + '">Apply Now &rarr;</a>' +
+      (j.requirements ?
+        '<button class="career-toggle" id="ctb-'+i+'" onclick="tcJobToggle('+i+')">View qualifications &amp; requirements ▾</button>' +
+        '<div class="career-req-body" id="' + rid + '" style="display:none">' + j.requirements + '</div>'
+      : '') +
+      '<a class="career-apply" href="mailto:apply@jobcollectives.com?subject=' + subject + '">Apply Now →</a>' +
       '</div>';
   }).join('');
+
+  window.tcJobToggle = function(i){
+    var el  = document.getElementById('crq-' + i);
+    var btn = document.getElementById('ctb-' + i);
+    if(!el || !btn) return;
+    var opening = el.style.display === 'none';
+    el.style.display = opening ? 'block' : 'none';
+    btn.textContent = opening ? 'Hide qualifications ▴' : 'View qualifications & requirements ▾';
+  };
 })();
 </script>
 
