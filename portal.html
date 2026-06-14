@@ -10745,7 +10745,9 @@ const TJC_SUPABASE_URL = "https://btungxqqchyhnohtzhgj.supabase.co";
 const TJC_SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0dW5neHFxY2h5aG5vaHR6aGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NjIzMzAsImV4cCI6MjA5NjUzODMzMH0.m0Bq5pMtiKTK4NDPX7lNfc3Nd1cFqQZNE8QjFHE-u4w";
 let _sbReady = false;
 let _sb = null;
-function _initSB() {
+// TJC: SDK disabled — DataCloneError fix. REST client in supabase_final handles production sync.
+function _initSB() { return Promise.resolve(null); }
+function _INITSBDISABLED_ORIG() {
   if (_sbReady) return Promise.resolve(_sb);
   return new Promise(function(resolve) {
     if (window.supabase && window.supabase.createClient) {
@@ -11042,6 +11044,8 @@ if (_origHrPinSubmit2) {
   };
 }
 async function _startRealtime() {
+  // Disabled — DataCloneError fix.
+  return;
   try {
     const sb = await _initSB();
     if (!sb) return;
@@ -12630,54 +12634,51 @@ renderCurrentPage = function() {
 
 
 
+
 // ═══════════════════════════════════════════════════════════════════
-//  TJC VIEW SWITCH — FINAL
-//  Uses _TJC_NO_BANNER flag to suppress the old orphan-banner override.
-//  Direct DOM control. No renderCurrentPage chain dependency.
+//  TJC VIEW SWITCH — DEFINITIVE
+//  All globals on window.* so inline onclick= always resolves them.
+//  _TJC_NO_BANNER flag blocks the orphan-banner override.
 // ═══════════════════════════════════════════════════════════════════
 
 window._TJC_NO_BANNER = false;
 
-// ── Remove every element above content-area that is not topbar/bottom-nav
-function _killAllBanners() {
+// ── Kill every banner / orphan element above content-area ──────────
+window._killAllBanners = function() {
   var ca = document.getElementById('content-area');
   if (!ca || !ca.parentNode) return;
-  var toRemove = [];
+  var dead = [];
   var node = ca.parentNode.firstChild;
   while (node) {
     var next = node.nextSibling;
     if (node.nodeType === 1 && node !== ca) {
       var cls = (node.className || '') + ' ' + (node.id || '');
-      if (cls.indexOf('topbar') < 0 && cls.indexOf('bottom-nav') < 0) {
-        toRemove.push(node);
-      }
+      if (cls.indexOf('topbar') < 0 && cls.indexOf('bottom-nav') < 0) dead.push(node);
     }
     node = next;
   }
-  toRemove.forEach(function(el) {
-    if (el.parentNode) el.parentNode.removeChild(el);
-  });
-}
+  dead.forEach(function(el) { if (el.parentNode) el.parentNode.removeChild(el); });
+};
 
-// ── Show or hide nav items based on allowed page list (null = show all)
-function _navFilter(allowedPages) {
+// ── Show/hide nav items ────────────────────────────────────────────
+window._navFilter = function(allowed) {
   document.querySelectorAll('#sb-nav .sb-item').forEach(function(el) {
-    el.style.display = (!allowedPages || !el.dataset.page || allowedPages.indexOf(el.dataset.page) >= 0) ? '' : 'none';
+    el.style.display = (!allowed || !el.dataset.page || allowed.indexOf(el.dataset.page) >= 0) ? '' : 'none';
   });
-  document.querySelectorAll('#sb-nav .sb-sect').forEach(function(sect) {
-    if (!allowedPages) { sect.style.display = ''; return; }
-    var sib = sect.nextElementSibling;
+  document.querySelectorAll('#sb-nav .sb-sect').forEach(function(s) {
+    if (!allowed) { s.style.display = ''; return; }
+    var sib = s.nextElementSibling;
     var vis = false;
     while (sib && !sib.classList.contains('sb-sect')) {
       if (sib.style.display !== 'none') vis = true;
       sib = sib.nextElementSibling;
     }
-    sect.style.display = vis ? '' : 'none';
+    s.style.display = vis ? '' : 'none';
   });
-}
+};
 
-// ── Mark 'home' as active in both sidebar and bottom nav
-function _activateHome() {
+// ── Set home as the active nav page ───────────────────────────────
+window._activateHome = function() {
   APP.page = 'home';
   document.querySelectorAll('.sb-item').forEach(function(el) {
     el.classList.toggle('on', el.dataset.page === 'home');
@@ -12687,19 +12688,16 @@ function _activateHome() {
   });
   var pt = document.getElementById('page-title');
   if (pt) pt.textContent = 'Dashboard';
-}
+};
 
-// ── Destroy any live Chart.js instances
-function _destroyCharts() {
-  if (typeof Chart !== 'undefined') {
-    try {
-      Object.values(Chart.instances || {}).forEach(function(c) { c.destroy(); });
-    } catch(e) {}
-  }
-}
+// ── Destroy live Chart.js instances ───────────────────────────────
+window._destroyCharts = function() {
+  if (typeof Chart === 'undefined') return;
+  try { Object.values(Chart.instances || {}).forEach(function(c) { c.destroy(); }); } catch(e) {}
+};
 
-// ── Insert the single view-as banner above content-area
-function _insertBanner(def) {
+// ── Insert a single clean banner above content-area ────────────────
+window._insertBanner = function(def) {
   var ca = document.getElementById('content-area');
   if (!ca || !ca.parentNode) return;
   var b = document.createElement('div');
@@ -12709,40 +12707,33 @@ function _insertBanner(def) {
     'padding:10px 22px;font-size:12px;font-weight:700;color:' + def.color + ';' +
     'display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50';
   b.innerHTML =
-    '<span>' +
-      '<span style="opacity:.55;margin-right:6px">👁</span>' +
-      'Viewing as <strong>' + def.name + '</strong>' +
-      ' <span style="font-weight:400;opacity:.6">(' + def.label + ')</span>' +
-    '</span>' +
-    '<button id="exit-view-btn" onclick="exitFounderView()" style="' +
+    '<span><span style="opacity:.55;margin-right:6px">👁</span>' +
+    'Viewing as <strong>' + def.name + '</strong>' +
+    ' <span style="font-weight:400;opacity:.6">(' + def.label + ')</span></span>' +
+    '<button onclick="window.exitFounderView()" style="' +
       'background:' + def.color + ';color:#fff;border:none;border-radius:8px;' +
       'padding:6px 18px;font-size:11px;font-weight:800;cursor:pointer;letter-spacing:.02em' +
     '">← Exit View</button>';
   ca.parentNode.insertBefore(b, ca);
-}
+};
 
-// ── SWITCH INTO a founder's view ───────────────────────────────────
-switchFounderView = function(role) {
-  if (!role) { exitFounderView(); return; }
-
+// ── SWITCH VIEW ────────────────────────────────────────────────────
+window.switchFounderView = function(role) {
+  if (!role) { window.exitFounderView(); return; }
   var def = (typeof FOUNDER_ROLES !== 'undefined') ? FOUNDER_ROLES[role] : null;
   if (!def) return;
 
-  // Raise flag so old override doesn't fire its orphan banner
   window._TJC_NO_BANNER = true;
-
   APP.ownerViewAs = role;
 
-  _destroyCharts();
-  _killAllBanners();
-  _navFilter(def.nav || null);
-  _activateHome();
+  window._destroyCharts();
+  window._killAllBanners();
+  window._navFilter(def.nav || null);
+  window._activateHome();
 
-  // Remove founder-switcher (not visible while in view-as mode)
   var sw = document.getElementById('founder-switcher');
   if (sw && sw.parentNode) sw.parentNode.removeChild(sw);
 
-  // Render the correct dashboard directly
   var ca = document.getElementById('content-area');
   if (ca) {
     if (role === 'director_growth' && typeof renderArtGrowthDashboard === 'function') {
@@ -12752,77 +12743,66 @@ switchFounderView = function(role) {
     }
   }
 
-  // Add the single clean banner
-  _insertBanner(def);
-
-  // Lower flag after render settles
-  setTimeout(function() { window._TJC_NO_BANNER = false; }, 600);
+  window._insertBanner(def);
+  setTimeout(function() { window._TJC_NO_BANNER = false; }, 800);
 };
 
-// ── EXIT VIEW — return fully to Justine's portal ───────────────────
-exitFounderView = function() {
-  // Raise flag immediately — blocks any pending renderCurrentPage from adding orphan banner
-  window._TJC_NO_BANNER = true;
-
+// ── EXIT VIEW — return fully to the logged-in founder's portal ─────
+window.exitFounderView = function() {
+  window._TJC_NO_BANNER = true;   // suppress orphan-banner override immediately
   APP.ownerViewAs = null;
 
-  _destroyCharts();
-  _killAllBanners();
-  _navFilter(null);    // restore ALL nav items
-  _activateHome();
+  window._destroyCharts();
+  window._killAllBanners();
+  window._navFilter(null);        // restore all nav items
+  window._activateHome();
 
-  // Render Justine's full management home directly
+  // Render the logged-in founder's own home dashboard directly
   var ca = document.getElementById('content-area');
   if (ca && typeof renderHome === 'function') {
     ca.innerHTML = renderHome();
   }
 
-  // Rebuild the sidebar (re-adds founder switcher, badge counts, etc.)
+  // Rebuild sidebar (re-adds founder-switcher, badge counts)
   if (typeof updateSbBadges === 'function') updateSbBadges();
   if (typeof buildNav === 'function') buildNav();
 
-  // Keep flag raised for 600ms — covers any async renderCurrentPage calls
+  // Keep flag raised 800ms then do a final cleanup pass
   setTimeout(function() {
     window._TJC_NO_BANNER = false;
-    // One final cleanup pass in case anything slipped through
-    _killAllBanners();
-  }, 600);
+    window._killAllBanners();     // catch anything that slipped through
+  }, 800);
 };
 
-// ── renderCurrentPage override — handles navigation WITHIN a view-as session
-// (e.g. Justine clicks Clients while in Art's view)
-var _rcp_vs_base = renderCurrentPage;
+// ── renderCurrentPage override — handles page navigation while in view-as mode
+var _rcp_vs2_base = renderCurrentPage;
 renderCurrentPage = function() {
   if (APP.authMode !== 'owner') {
-    _rcp_vs_base();
+    _rcp_vs2_base();
     return;
   }
 
-  // Raise flag so old override can't add orphan banner during this call
-  var wasSet = window._TJC_NO_BANNER;
+  // Suppress orphan-banner override for the entire inner chain call
+  var prev = window._TJC_NO_BANNER;
   window._TJC_NO_BANNER = true;
-
-  _rcp_vs_base();     // run full chain — renders the page content
-
-  window._TJC_NO_BANNER = wasSet;  // restore previous flag state
+  _rcp_vs2_base();
+  window._TJC_NO_BANNER = prev;
 
   var role = APP.ownerViewAs;
   if (!role) {
-    // Normal Justine view — ensure nav is fully open and no banner
-    _killAllBanners();
-    _navFilter(null);
+    // Normal view — ensure all nav open, no banner
+    window._killAllBanners();
+    window._navFilter(null);
     return;
   }
 
-  // Justine is in view-as mode — apply role restrictions and re-add banner
   var def = (typeof FOUNDER_ROLES !== 'undefined') ? FOUNDER_ROLES[role] : null;
   if (!def) return;
 
-  _killAllBanners();
-  _navFilter(def.nav || null);
-  _insertBanner(def);
+  window._killAllBanners();
+  window._navFilter(def.nav || null);
+  window._insertBanner(def);
 
-  // If on home page, override content with the founder's dashboard
   if (APP.page === 'home') {
     var ca = document.getElementById('content-area');
     if (ca) {
