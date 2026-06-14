@@ -2302,6 +2302,10 @@ body.light .theme-pill-moon { stroke: #fff; opacity: 1; transform: rotate(0deg) 
 .career-toggle{background:none;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.65);font-size:12px;padding:7px 14px;border-radius:8px;cursor:pointer;margin:6px 0;transition:all .15s;width:100%;text-align:left}
 .career-toggle:hover{border-color:var(--teal);color:var(--teal)}
 .career-req-body{font-size:13px;color:rgba(255,255,255,.6);line-height:1.6;padding:10px 0 4px;border-top:1px solid rgba(255,255,255,.1);margin-top:4px}
+.career-section-label{font-size:10px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--teal);margin:10px 0 4px}
+.career-bullet-list{margin:0 0 4px 0;padding-left:18px}
+.career-bullet-list li{margin-bottom:3px}
+body.light .career-section-label{color:#131DBF}
 .career-apply{margin-top:auto;padding-top:14px;align-self:flex-start;background:var(--gold);color:var(--navy);padding:9px 20px;border-radius:100px;font-size:12.5px;font-weight:800;text-decoration:none;transition:all .2s}
 .career-apply:hover{background:#e08e00}
 .careers-empty{background:rgba(255,255,255,.05);border:1px dashed rgba(255,255,255,.2);border-radius:16px;padding:34px;text-align:center;font-size:14px;color:rgba(255,255,255,.55)}
@@ -2334,6 +2338,13 @@ body.light .career-req-body{color:rgba(10,15,60,.6);border-color:rgba(10,15,60,.
     grid.innerHTML = '<div class="careers-empty">No open roles right now — check back soon, or send your CV to <a href="mailto:apply@jobcollectives.com" style="color:var(--teal);text-decoration:none;font-weight:700">apply@jobcollectives.com</a>.</div>';
     return;
   }
+  function toBullets(text, cls) {
+    if(!text) return '';
+    var lines = text.split('\n').map(function(l){ return l.replace(/^[•\-\*]\s*/,'').trim(); }).filter(function(l){ return l; });
+    if(!lines.length) return '';
+    return '<ul class="'+(cls||'career-bullet-list')+'">' + lines.map(function(l){ return '<li>'+l+'</li>'; }).join('') + '</ul>';
+  }
+
   grid.innerHTML = open.map(function(j, i){
     var rid = 'crq-' + i;
     var salMin = j.salaryMin || j.salaryPhpMin;
@@ -2342,17 +2353,23 @@ body.light .career-req-body{color:rgba(10,15,60,.6);border-color:rgba(10,15,60,.
     if(salMin && salMax) salTxt = '₱' + Number(salMin).toLocaleString() + ' – ₱' + Number(salMax).toLocaleString() + ' / mo';
     else if(salMin) salTxt = 'From ₱' + Number(salMin).toLocaleString() + ' / mo';
     else if(salMax) salTxt = 'Up to ₱' + Number(salMax).toLocaleString() + ' / mo';
+    var hasExpand = j.responsibilities || j.qualifications || j.requirements;
     var subject = encodeURIComponent('Application: ' + j.title + ' — The Job Collectives');
+    var gmailUrl = 'https://mail.google.com/mail/?view=cm&fs=1&to=apply%40jobcollectives.com&su=' + subject;
+    var expandBody = '';
+    if(j.responsibilities) expandBody += '<div class="career-section-label">Core Responsibilities</div>' + toBullets(j.responsibilities);
+    if(j.qualifications)   expandBody += '<div class="career-section-label">Qualifications</div>'        + toBullets(j.qualifications);
+    if(j.requirements)     expandBody += '<div class="career-section-label">Requirements &amp; Tools</div>' + toBullets(j.requirements);
     return '<div class="career-card">' +
       '<div class="career-title">' + j.title + '</div>' +
       '<div class="career-meta">' + (j.type||'Full-Time') + ' · ' + (j.setup||'Remote, PHT') + '</div>' +
       (salTxt ? '<div class="career-salary">' + salTxt + '</div>' : '') +
       (j.description ? '<div class="career-desc">' + j.description + '</div>' : '') +
-      (j.requirements ?
+      (hasExpand ?
         '<button class="career-toggle" id="ctb-'+i+'" onclick="tcJobToggle('+i+')">View qualifications &amp; requirements ▾</button>' +
-        '<div class="career-req-body" id="' + rid + '" style="display:none">' + j.requirements + '</div>'
+        '<div class="career-req-body" id="' + rid + '" style="display:none">' + expandBody + '</div>'
       : '') +
-      '<a class="career-apply" href="mailto:apply@jobcollectives.com?subject=' + subject + '">Apply Now →</a>' +
+      '<a class="career-apply" href="' + gmailUrl + '" target="_blank" rel="noopener noreferrer">Apply Now →</a>' +
       '</div>';
   }).join('');
 
