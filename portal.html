@@ -12626,6 +12626,151 @@ renderCurrentPage = function() {
   }
 };
 
+
+// ═══════════════════════════════════════════════════════════════════
+//  TJC UPDATE — FIX FOUNDER VIEW SWITCHING
+//  Replaces the fragmented renderCurrentPage chain with one clean
+//  override that reads APP.ownerViewAs first, not acct.founderRole.
+// ═══════════════════════════════════════════════════════════════════
+
+// ── Helper: get effective role (ownerViewAs takes priority) ────────
+function getEffectiveFounderRole() {
+  if (APP.ownerViewAs) return APP.ownerViewAs;
+  var acct = _getLoggedInMgmtAcct();
+  return (acct && acct.founderRole) || 'managing_director';
+}
+
+function _getLoggedInMgmtAcct() {
+  if (APP.ownerAuth && APP.ownerAuth._sbAccount) return APP.ownerAuth._sbAccount;
+  if (typeof mgmtAccounts === 'function' && APP.ownerAuth && APP.ownerAuth.username) {
+    return mgmtAccounts().find(function(a) {
+      return a.username && a.username.toLowerCase() === APP.ownerAuth.username.toLowerCase();
+    }) || null;
+  }
+  return null;
+}
+
+// ── Clean exit ─────────────────────────────────────────────────────
+function exitFounderView() {
+  APP.ownerViewAs = null;
+  // Remove any lingering banner
+  var b = document.getElementById('founder-view-banner');
+  if (b) b.parentNode.removeChild(b);
+  // Remove switcher so it rebuilds fresh
+  var sw = document.getElementById('founder-switcher');
+  if (sw) sw.parentNode.removeChild(sw);
+  navigate('home');
+}
+
+// ── Switch into a founder's view ───────────────────────────────────
+switchFounderView = function(role) {
+  APP.ownerViewAs = role || null;
+  if (!role) { exitFounderView(); return; }
+  // Remove old banner + switcher so they rebuild correctly
+  var b = document.getElementById('founder-view-banner');
+  if (b) b.parentNode.removeChild(b);
+  var sw = document.getElementById('founder-switcher');
+  if (sw) sw.parentNode.removeChild(sw);
+  navigate('home');
+};
+
+// ── FINAL renderCurrentPage — single clean override ────────────────
+// Captures everything that was registered before this point
+var _baseRCP = renderCurrentPage;
+
+renderCurrentPage = function() {
+  // Always run the base chain first (renders the raw page)
+  _baseRCP();
+
+  // Only act when management is logged in
+  if (APP.authMode !== 'owner') return;
+
+  var effectiveRole = getEffectiveFounderRole();
+  var ca = document.getElementById('content-area');
+  if (!ca) return;
+
+  // Remove stale banner before re-adding
+  var oldBanner = document.getElementById('founder-view-banner');
+  if (oldBanner) oldBanner.parentNode.removeChild(oldBanner);
+
+  // ── If on home page, render the role-appropriate dashboard ────
+  if (APP.page === 'home') {
+    if (effectiveRole === 'director_growth' && typeof renderArtGrowthDashboard === 'function') {
+      ca.innerHTML = renderArtGrowthDashboard();
+    } else if (effectiveRole === 'director_operations' && typeof renderAlvinOpsDashboard === 'function') {
+      ca.innerHTML = renderAlvinOpsDashboard();
+    }
+    // managing_director → base chain already rendered the correct home
+  }
+
+  // ── If viewing AS another founder, filter nav + add banner ────
+  if (APP.ownerViewAs) {
+    var def = typeof FOUNDER_ROLES !== 'undefined' ? FOUNDER_ROLES[APP.ownerViewAs] : null;
+    if (def && def.nav) {
+      // Filter sidebar to role's allowed pages
+      document.querySelectorAll('#sb-nav .sb-item').forEach(function(el) {
+        el.style.display = (!el.dataset.page || def.nav.includes(el.dataset.page)) ? '' : 'none';
+      });
+      // Hide sections that would have no visible items
+      document.querySelectorAll('#sb-nav .sb-sect').forEach(function(sect) {
+        var next = sect.nextElementSibling;
+        var hasVisible = false;
+        while (next && !next.classList.contains('sb-sect')) {
+          if (next.style.display !== 'none') hasVisible = true;
+          next = next.nextElementSibling;
+        }
+        sect.style.display = hasVisible ? '' : 'none';
+      });
+    }
+
+    // Add view-as banner above content
+    var banner = document.createElement('div');
+    banner.id = 'founder-view-banner';
+    banner.style.cssText = [
+      'background:' + (def ? def.color : '#131DBF') + '18',
+      'border-bottom:2px solid ' + (def ? def.color : '#131DBF'),
+      'padding:9px 20px',
+      'font-size:12px',
+      'font-weight:700',
+      'color:' + (def ? def.color : '#131DBF'),
+      'display:flex',
+      'align-items:center',
+      'justify-content:space-between',
+      'flex-shrink:0',
+      'z-index:10'
+    ].join(';');
+    var founderName = def ? def.name : APP.ownerViewAs;
+    var founderLabel = def ? def.label : '';
+    banner.innerHTML =
+      '<span>👁 Viewing as <strong>' + founderName + '</strong>' +
+      (founderLabel ? ' <span style="font-weight:400;opacity:.7">(' + founderLabel + ')</span>' : '') + '</span>' +
+      '<button onclick="exitFounderView()" style="background:' + (def ? def.color : '#131DBF') +
+      ';color:#fff;border:none;border-radius:8px;padding:5px 14px;font-size:11px;font-weight:700;cursor:pointer">Exit View</button>';
+
+    // Insert before content-area
+    var parent = ca.parentNode;
+    if (parent) parent.insertBefore(banner, ca);
+  }
+
+  // ── Rebuild founder switcher (for MD) ─────────────────────────
+  if (!APP.ownerViewAs) {
+    // Ensure all nav items are visible again (in case we just exited a view)
+    document.querySelectorAll('#sb-nav .sb-item, #sb-nav .sb-sect').forEach(function(el) {
+      el.style.display = '';
+    });
+    // Re-apply the logged-in user's own role restrictions
+    var loggedRole = getEffectiveFounderRole();
+    if (loggedRole !== 'managing_director') {
+      var roleDef = typeof FOUNDER_ROLES !== 'undefined' ? FOUNDER_ROLES[loggedRole] : null;
+      if (roleDef && roleDef.nav) {
+        document.querySelectorAll('#sb-nav .sb-item').forEach(function(el) {
+          el.style.display = (!el.dataset.page || roleDef.nav.includes(el.dataset.page)) ? '' : 'none';
+        });
+      }
+    }
+  }
+};
+
 </script>
 </body>
 </html>
