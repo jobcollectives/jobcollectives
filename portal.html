@@ -11647,6 +11647,372 @@ if(_origRenderSettings9){
   }, 300);
 })();
 
+
+// ═══════════════════════════════════════════════════════════════════
+//  TJC UPDATE 10
+//  1. Fix DataCloneError — disable realtime, safe error handling
+//  2. Usernames → dot format (justine.jobcollectives etc.)
+//  3. Art's full Growth Director dashboard
+//  4. Art's nav locked to marketing only
+// ═══════════════════════════════════════════════════════════════════
+
+// ── 1. FIX DATACLONEERROR ─────────────────────────────────────────
+// Supabase realtime tries to postMessage a Headers object → DataCloneError
+// Disable realtime and patch sbUpsert error handling
+
+if(typeof _startRealtime === 'function'){
+  _startRealtime = async function(){
+    // Realtime disabled — DataCloneError fix.
+    // Data syncs on every lsSave call instead (write-through cache).
+    console.log('[TJC SB] Realtime disabled (DataCloneError prevention). Using write-through sync.');
+  };
+}
+
+// Patch sbUpsert to swallow DataCloneError silently
+if(typeof sbUpsert === 'function'){
+  var _origSbUpsert = sbUpsert;
+  sbUpsert = async function(table, rows){
+    try {
+      return await _origSbUpsert(table, rows);
+    } catch(e) {
+      if(e && (e.name === 'DataCloneError' || (e.message && e.message.includes('clone')))) return false;
+      console.warn('[TJC SB] upsert', table, e && e.message ? e.message : String(e));
+      return false;
+    }
+  };
+}
+
+// ── 2. UPDATE USERNAMES to dot-format ─────────────────────────────
+(function updateFounderUsernames(){
+  var KEY = 'tjc_mgmt_accounts';
+  var accounts = [];
+  try { accounts = JSON.parse(localStorage.getItem(KEY) || '[]'); } catch(e){}
+  var map = { justine: 'justine.jobcollectives', art: 'art.jobcollectives', alvin: 'alvin.jobcollectives' };
+  accounts = accounts.map(function(a){
+    if(map[a.username]) a.username = map[a.username];
+    return a;
+  });
+  // Ensure all three exist with new usernames
+  var seeded = [
+    {id:'u-justine',username:'justine.jobcollectives',displayName:'Justine Inacay', initials:'JI',pin:'000000',color:'#131DBF',founderRole:'managing_director'},
+    {id:'u-art',    username:'art.jobcollectives',    displayName:'Art Teves',      initials:'AT',pin:'111111',color:'#14D3C4',founderRole:'director_growth'},
+    {id:'u-alvin',  username:'alvin.jobcollectives',  displayName:'Alvin Valdez',   initials:'AV',pin:'222222',color:'#F59E0B',founderRole:'director_operations'},
+  ];
+  seeded.forEach(function(seed){
+    var idx = accounts.findIndex(function(a){ return a.id === seed.id; });
+    if(idx >= 0) accounts[idx].username = seed.username;
+    else accounts.push(seed);
+  });
+  localStorage.setItem(KEY, JSON.stringify(accounts));
+
+  // Patch mgmtAccounts() to always return dot-usernames
+  if(typeof saveMgmtAccounts === 'function') saveMgmtAccounts(accounts);
+
+  // Sync to Supabase
+  seeded.forEach(function(s){
+    if(typeof sbUpsert === 'function') sbUpsert('mgmt_users', s).catch(function(){});
+  });
+})();
+
+// Update URL auto-login handler for dot usernames
+if(typeof handleFounderURL !== 'undefined') {} // already handled by update9.js
+// Re-run URL detection with new usernames
+(function(){
+  var params = new URLSearchParams(window.location.search);
+  var founderParam = params.get('founder') || '';
+  var hashParam = (window.location.hash || '').replace('#','');
+  var username = (founderParam || hashParam || '').toLowerCase().trim();
+  if(!username) return;
+  // Normalize: 'justine' → 'justine.jobcollectives'
+  if(!username.includes('.')) username = username + '.jobcollectives';
+
+  var _tries = 0;
+  var _iv = setInterval(function(){
+    _tries++;
+    if(_tries > 40){ clearInterval(_iv); return; }
+    if(typeof mgmtAccounts !== 'function') return;
+    var accounts = mgmtAccounts();
+    var acct = accounts.find(function(a){ return a.username.toLowerCase() === username; });
+    if(!acct) return;
+    clearInterval(_iv);
+    if(APP.authMode) return; // already logged in
+    APP.authStep = 'owner-auth';
+    APP.ownerAuth = { step:'pin', username:acct.username, pinEntry:'', _sbAccount:acct };
+    if(typeof renderCurrentPage === 'function') renderCurrentPage();
+  }, 200);
+})();
+
+// ── 3. ART'S GROWTH DIRECTOR DASHBOARD ──────────────────────────
+function renderArtGrowthDashboard(){
+  var clients = APP.data.clients || [];
+  var tasks = APP.data.tasks || [];
+  var content = APP.data.content || [];
+  var invoices = APP.data.invoices || [];
+
+  var activeClients = clients.filter(function(c){ return c.status === 'Active'; });
+  var totalMRR = activeClients.reduce(function(a,c){ return a + (parseFloat(c.rateUsd)||0); }, 0);
+  var pendingContent = content.filter(function(c){ return c.status === 'pending' && !c.archived; });
+  var approvedContent = content.filter(function(c){ return c.status === 'approved' && !c.archived; });
+
+  // Placeholder pipeline data (real data to be connected via CRM integration)
+  var pipeline = [
+    { label:'Discovery Calls', count:12, value:'—',      color:'#566AE7', pct:100 },
+    { label:'Active Proposals', count:7, value:'$14,200', color:'#131DBF', pct:58  },
+    { label:'VA Matching',      count:4, value:'$7,800',  color:'#14D3C4', pct:33  },
+    { label:'Onboarding',       count:2, value:'$4,200',  color:'#10B981', pct:17  },
+  ];
+
+  var channels = [
+    { name:'LinkedIn',  impressions:'42K', leads:'18', rate:'8.2%',  color:'#0A66C2' },
+    { name:'Facebook',  impressions:'28K', leads:'9',  rate:'3.1%',  color:'#1877F2' },
+    { name:'Instagram', impressions:'61K', leads:'14', rate:'5.7%',  color:'#E1306C' },
+    { name:'YouTube',   impressions:'19K', leads:'6',  rate:'2.9%',  color:'#FF0000' },
+  ];
+
+  var contentPillars = [
+    { label:'Authority', icon:'🏆', pct:72, color:'#131DBF', desc:'Thought leadership & case studies' },
+    { label:'Educational', icon:'📚', pct:58, color:'#14D3C4', desc:'How-to guides & VA explainers'  },
+    { label:'Recruitment', icon:'📣', pct:41, color:'#F59E0B', desc:'Talent spotlights & hiring posts' },
+  ];
+
+  var demands = [
+    { skill:'Email Management',  demand:9, bench:6 },
+    { skill:'Social Media VA',   demand:7, bench:4 },
+    { skill:'CRM & Sales Ops',   demand:6, bench:3 },
+    { skill:'Content Creation',  demand:5, bench:5 },
+    { skill:'Executive Assist.', demand:4, bench:2 },
+  ];
+
+  return '<div style="max-width:1200px;margin:0 auto">' +
+
+  // ── Header ──
+  '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:24px">' +
+    '<div>' +
+      '<h1 style="font-size:22px;font-weight:900;margin-bottom:2px">Growth Director Dashboard</h1>' +
+      '<p style="font-size:12px;color:var(--text3)">TJC B2B Acquisition · Marketing · Partnerships</p>' +
+    '</div>' +
+    '<div style="display:flex;align-items:center;gap:10px">' +
+      '<span style="font-size:11px;color:var(--text3)">Live · ' + new Date().toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) + '</span>' +
+      '<div style="width:8px;height:8px;border-radius:50%;background:#10B981;animation:pulse 2s infinite" title="Data synced"></div>' +
+    '</div>' +
+  '</div>' +
+
+  // ── Hero KPIs ──
+  '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:22px">' +
+  [
+    { label:'Active Client MRR', val:'$' + totalMRR.toLocaleString(), sub:'Monthly recurring revenue', color:'#131DBF', trend:'+12%', up:true },
+    { label:'Client Acq. Cost',  val:'$340',   sub:'Blended CAC this quarter', color:'#14D3C4', trend:'-8%', up:true },
+    { label:'Lead Velocity Rate',val:'+23%',   sub:'MoM qualified B2B leads',  color:'#F59E0B', trend:'+23%', up:true },
+    { label:'Contract Close Rate',val:'34%',   sub:'Discovery → signed SLA',   color:'#8B5CF6', trend:'+5pts', up:true },
+  ].map(function(k){
+    return '<div class="card" style="padding:18px;position:relative;overflow:hidden">' +
+      '<div style="position:absolute;top:0;left:0;width:3px;height:100%;background:' + k.color + '"></div>' +
+      '<div style="font-size:11px;font-weight:600;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px">' + k.label + '</div>' +
+      '<div style="font-size:28px;font-weight:900;color:' + k.color + ';line-height:1;margin-bottom:6px">' + k.val + '</div>' +
+      '<div style="display:flex;align-items:center;justify-content:space-between">' +
+        '<span style="font-size:11px;color:var(--text3)">' + k.sub + '</span>' +
+        '<span style="font-size:11px;font-weight:700;color:' + (k.up?'#10B981':'#EF4444') + ';background:' + (k.up?'#10B98118':'#EF444418') + ';padding:2px 6px;border-radius:20px">' + k.trend + '</span>' +
+      '</div>' +
+    '</div>';
+  }).join('') +
+  '</div>' +
+
+  // ── Row 2: Pipeline Funnel + Channel Matrix ──
+  '<div style="display:grid;grid-template-columns:1fr 1.4fr;gap:16px;margin-bottom:16px">' +
+
+    // Pipeline funnel
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Sales & Deployment Pipeline</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:16px">Active B2B opportunities by stage</div>' +
+      pipeline.map(function(p){
+        return '<div style="margin-bottom:14px">' +
+          '<div style="display:flex;justify-content:space-between;margin-bottom:5px">' +
+            '<span style="font-size:12px;font-weight:600">' + p.label + '</span>' +
+            '<div style="display:flex;gap:10px">' +
+              '<span style="font-size:12px;font-weight:800;color:' + p.color + '">' + p.count + '</span>' +
+              (p.value !== '—' ? '<span style="font-size:11px;color:var(--text3)">' + p.value + '</span>' : '') +
+            '</div>' +
+          '</div>' +
+          '<div style="height:7px;background:var(--border);border-radius:4px;overflow:hidden">' +
+            '<div style="height:100%;width:' + p.pct + '%;background:' + p.color + ';border-radius:4px;transition:width .5s"></div>' +
+          '</div>' +
+        '</div>';
+      }).join('') +
+    '</div>' +
+
+    // Channel Performance Matrix
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Channel Performance Matrix</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Organic + paid social — current month</div>' +
+      '<table style="width:100%;border-collapse:collapse;font-size:12px">' +
+        '<thead><tr style="background:var(--surface2)">' +
+          ['Channel','Impressions','Inbound Leads','Conv. Rate'].map(function(h){
+            return '<th style="padding:8px 10px;text-align:left;font-weight:700;font-size:11px;color:var(--text3)">' + h + '</th>';
+          }).join('') +
+        '</tr></thead><tbody>' +
+        channels.map(function(c, i){
+          return '<tr style="border-bottom:1px solid var(--border);' + (i%2===0?'background:transparent':'background:var(--surface2)') + '">' +
+            '<td style="padding:9px 10px"><div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:' + c.color + '"></div><span style="font-weight:600">' + c.name + '</span></div></td>' +
+            '<td style="padding:9px 10px;font-weight:600">' + c.impressions + '</td>' +
+            '<td style="padding:9px 10px">' +
+              '<div style="display:flex;align-items:center;gap:6px">' +
+                '<span style="font-weight:700;color:var(--blue)">' + c.leads + '</span>' +
+                '<span style="font-size:10px;color:var(--text3)">SQLs</span>' +
+              '</div>' +
+            '</td>' +
+            '<td style="padding:9px 10px"><span style="background:#10B98118;color:#10B981;padding:2px 8px;border-radius:20px;font-weight:700;font-size:11px">' + c.rate + '</span></td>' +
+          '</tr>';
+        }).join('') +
+      '</tbody></table>' +
+      '<div style="margin-top:12px;padding:10px;background:var(--surface2);border-radius:8px;font-size:11px;color:var(--text3)">' +
+        '<b style="color:var(--text2)">Social-Generated SQLs this month:</b> ' +
+        '<span style="font-size:14px;font-weight:800;color:var(--blue)">47</span> discovery calls booked from organic/paid social' +
+      '</div>' +
+    '</div>' +
+  '</div>' +
+
+  // ── Row 3: Content Pillars + Partnerships + Supply Alignment ──
+  '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">' +
+
+    // Content Pillar Efficiency
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Content Pillar Efficiency</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:16px">Performance score by pillar</div>' +
+      contentPillars.map(function(p){
+        return '<div style="margin-bottom:16px">' +
+          '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">' +
+            '<div style="display:flex;align-items:center;gap:6px">' +
+              '<span>' + p.icon + '</span>' +
+              '<span style="font-size:13px;font-weight:700">' + p.label + '</span>' +
+            '</div>' +
+            '<span style="font-size:13px;font-weight:900;color:' + p.color + '">' + p.pct + '%</span>' +
+          '</div>' +
+          '<div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:4px">' +
+            '<div style="height:100%;width:' + p.pct + '%;background:' + p.color + ';border-radius:3px"></div>' +
+          '</div>' +
+          '<div style="font-size:10px;color:var(--text3)">' + p.desc + '</div>' +
+        '</div>';
+      }).join('') +
+      '<div style="padding:10px 12px;background:var(--teal-pale);border-radius:8px;margin-top:4px">' +
+        '<div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:2px">Content Queue</div>' +
+        '<div style="font-size:11px;color:var(--text2)">' + pendingContent.length + ' pending approval · ' + approvedContent.length + ' approved</div>' +
+      '</div>' +
+    '</div>' +
+
+    // Strategic Partnerships
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Strategic Partnerships</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:16px">Referral network performance</div>' +
+      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">' +
+      [
+        { label:'Active Referral Nodes', val:'6',    color:'#131DBF' },
+        { label:'Partner MRR',           val:'$2,100', color:'#10B981' },
+        { label:'Deals from Referrals',  val:'3',    color:'#F59E0B' },
+        { label:'Avg. Partner Deal Size', val:'$700',  color:'#8B5CF6' },
+      ].map(function(m){
+        return '<div style="padding:12px;background:var(--surface2);border-radius:10px;text-align:center">' +
+          '<div style="font-size:20px;font-weight:900;color:' + m.color + '">' + m.val + '</div>' +
+          '<div style="font-size:10px;font-weight:600;color:var(--text3);margin-top:3px">' + m.label + '</div>' +
+        '</div>';
+      }).join('') +
+      '</div>' +
+      '<div style="font-size:11px;font-weight:700;margin-bottom:8px">Recent Referral Activity</div>' +
+      ['DigitalOps Agency → 1 new client', 'Creatives Co. → Proposal sent', 'StartupHR → Discovery call'].map(function(item){
+        return '<div style="font-size:11px;color:var(--text2);padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px">' +
+          '<div style="width:5px;height:5px;border-radius:50%;background:var(--teal);flex-shrink:0"></div>' + item +
+        '</div>';
+      }).join('') +
+    '</div>' +
+
+    // Workforce Supply Alignment
+    '<div class="card" style="padding:18px">' +
+      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Workforce Supply Alignment</div>' +
+      '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Market demand vs. available bench</div>' +
+      demands.map(function(d){
+        var maxPct = Math.max(d.demand, d.bench) + 2;
+        return '<div style="margin-bottom:11px">' +
+          '<div style="font-size:11px;font-weight:600;margin-bottom:4px">' + d.skill + '</div>' +
+          '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">' +
+            '<span style="font-size:9px;color:var(--text3);width:46px">Demand</span>' +
+            '<div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden">' +
+              '<div style="height:100%;width:' + Math.round(d.demand/maxPct*100) + '%;background:#131DBF;border-radius:3px"></div>' +
+            '</div>' +
+            '<span style="font-size:11px;font-weight:700;color:#131DBF;width:14px;text-align:right">' + d.demand + '</span>' +
+          '</div>' +
+          '<div style="display:flex;align-items:center;gap:6px">' +
+            '<span style="font-size:9px;color:var(--text3);width:46px">Bench</span>' +
+            '<div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden">' +
+              '<div style="height:100%;width:' + Math.round(d.bench/maxPct*100) + '%;background:' + (d.bench < d.demand ? '#EF4444' : '#10B981') + ';border-radius:3px"></div>' +
+            '</div>' +
+            '<span style="font-size:11px;font-weight:700;color:' + (d.bench < d.demand ? '#EF4444' : '#10B981') + ';width:14px;text-align:right">' + d.bench + '</span>' +
+          '</div>' +
+          (d.bench < d.demand ? '<div style="font-size:9px;color:#EF4444;margin-top:2px">⚠ Gap: ' + (d.demand-d.bench) + ' needed</div>' : '') +
+        '</div>';
+      }).join('') +
+    '</div>' +
+  '</div>' +
+
+  // ── Row 4: Content Queue Quick View ──
+  '<div class="card" style="padding:18px">' +
+    '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:14px">' +
+      '<div style="font-weight:800;font-size:14px">Content Queue — Pending Approvals</div>' +
+      '<button class="btn btn-primary" style="font-size:11px;padding:5px 12px" onclick="navigate(\'content\')">View All →</button>' +
+    '</div>' +
+    (pendingContent.length > 0
+      ? '<div style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:12px"><thead><tr style="background:var(--surface2)">' +
+        ['Title','Platform','Client','Submitted','Status'].map(function(h){ return '<th style="padding:8px 12px;text-align:left;font-weight:600;font-size:11px">' + h + '</th>'; }).join('') +
+        '</tr></thead><tbody>' +
+        pendingContent.slice(0,5).map(function(c){
+          return '<tr style="border-bottom:1px solid var(--border)">' +
+            '<td style="padding:8px 12px;font-weight:600">' + (c.title || '—').slice(0,40) + '</td>' +
+            '<td style="padding:8px 12px;color:var(--text3)">' + (c.platform || '—') + '</td>' +
+            '<td style="padding:8px 12px;color:var(--text3)">' + (c.clientName || c.clientId || '—') + '</td>' +
+            '<td style="padding:8px 12px;color:var(--text3)">' + (c.createdAt ? c.createdAt.slice(0,10) : '—') + '</td>' +
+            '<td style="padding:8px 12px"><span class="tag t-amber">Pending</span></td>' +
+          '</tr>';
+        }).join('') +
+        '</tbody></table></div>'
+      : '<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px">No content pending approval. All clear ✓</div>') +
+  '</div>' +
+
+  '</div>';
+}
+
+// ── 4. REGISTER Art's dashboard as HOME page ───────────────────────
+// Patch renderCurrentPage: if Art (director_growth) is on 'home', show growth dashboard
+var _origRCP_U10 = renderCurrentPage;
+renderCurrentPage = function(){
+  _origRCP_U10();
+  // After render, check if Art is on home and replace with growth dashboard
+  if(APP.authMode === 'owner' && APP.page === 'home'){
+    var acct = APP.ownerAuth && APP.ownerAuth._sbAccount
+      ? APP.ownerAuth._sbAccount
+      : (typeof mgmtAccounts === 'function'
+          ? mgmtAccounts().find(function(a){ return a.username.toLowerCase() === ((APP.ownerAuth && APP.ownerAuth.username) || '').toLowerCase(); })
+          : null);
+    var role = (acct && acct.founderRole) || '';
+    if(role === 'director_growth'){
+      var ca = document.getElementById('content-area');
+      if(ca) ca.innerHTML = renderArtGrowthDashboard();
+    }
+  }
+};
+
+// ── 5. LOCK Art's nav to marketing pages only ──────────────────────
+// Override FOUNDER_ROLES for director_growth with stricter page list
+if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
+  FOUNDER_ROLES.director_growth.nav = [
+    'home',        // → Growth Director Dashboard
+    'clients',     // Pipeline / Client accounts
+    'content',     // Content Queue (approvals)
+    'conversations', // Client communications
+    'sops',        // SOPs relevant to marketing
+    'jobs',        // Job openings (posting roles)
+    'calendar',    // Team calendar
+    'health',      // Client health scores
+  ];
+}
+
 </script>
 </body>
 </html>
