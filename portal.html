@@ -12815,6 +12815,200 @@ renderCurrentPage = function() {
   }
 };
 
+
+// ═══════════════════════════════════════════════════════════════════
+//  TJC UPDATE 11
+//  1+2. Nav filtering for Art/Alvin direct logins
+//  3.   HR portal theme toggle
+//  4.   Client portal theme toggle
+//  5.   Client portal real logo restored
+//  6.   Light mode nav text fixes (partner + client portals)
+// ═══════════════════════════════════════════════════════════════════
+
+// ── 6. LIGHT MODE CSS FIXES — inject first ─────────────────────────
+(function injectLightModeCSS(){
+  var style = document.createElement('style');
+  style.id = 'tjc-light-mode-fixes';
+  style.textContent = [
+    // Partner (VA) portal — tab bar text
+    '[data-theme="light"] .ptab { color: #334155 !important; }',
+    '[data-theme="light"] .ptab.on { color: var(--blue) !important; border-bottom-color: var(--blue) !important; }',
+    // Client portal — tab bar text
+    '[data-theme="light"] .cp-tab { color: #334155 !important; }',
+    '[data-theme="light"] .cp-tab.on { color: var(--blue) !important; border-bottom-color: var(--blue) !important; }',
+    // HR portal sidebar nav items
+    '[data-theme="light"] .hr-nav-item { color: #1e293b !important; }',
+    '[data-theme="light"] .hr-nav-item.active { color: var(--blue) !important; background: rgba(19,29,191,.08) !important; }',
+    // Portals that use rgba white text on elements that turn light
+    '[data-theme="light"] .portal-tab-bar .ptab { color: #475569 !important; }',
+    '[data-theme="light"] .partner-tab .ptab { color: #475569 !important; }',
+    // Ensure topbar/sidebar that uses navy bg keeps white text in light mode
+    '.portal-topbar { background: var(--navy) !important; }',
+    '.portal-topbar * { color: inherit; }',
+    // CP topbar light mode
+    '[data-theme="light"] .cp-topbar { background: #fff !important; border-bottom: 1px solid #e2e8f0; }',
+    '[data-theme="light"] .cp-topbar .client-name { color: #0f172a !important; }',
+    // Theme toggle button in dark topbars
+    '.topbar-theme-toggle { background: rgba(255,255,255,.12) !important; border: 1px solid rgba(255,255,255,.2) !important; color: rgba(255,255,255,.85) !important; border-radius: 8px; padding: 5px 9px; cursor: pointer; font-size: 13px; line-height: 1; }',
+    '[data-theme="light"] .topbar-theme-toggle { background: rgba(0,0,0,.06) !important; border-color: rgba(0,0,0,.15) !important; color: #334155 !important; }',
+  ].join('\n');
+  var old = document.getElementById('tjc-light-mode-fixes');
+  if (old) old.remove();
+  document.head.appendChild(style);
+})();
+
+// ── HELPER: moon/sun SVG icon ──────────────────────────────────────
+function _themeToggleBtnHtml(extraStyle) {
+  extraStyle = extraStyle || '';
+  return '<button class="topbar-theme-toggle" onclick="toggleTheme()" title="Toggle light/dark mode" style="' + extraStyle + '">' +
+    '<svg class="icon-moon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:var(--moon-display,block)">' +
+      '<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/>' +
+    '</svg>' +
+    '<svg class="icon-sun" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="display:var(--sun-display,none)">' +
+      '<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/>' +
+      '<line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/>' +
+      '<line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/>' +
+      '<line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>' +
+    '</svg>' +
+  '</button>';
+}
+
+// ── 3. HR PORTAL THEME TOGGLE ──────────────────────────────────────
+var _origRenderHRPortal = typeof renderHRPortal === 'function' ? renderHRPortal : null;
+if (_origRenderHRPortal) {
+  renderHRPortal = function() {
+    var html = _origRenderHRPortal();
+    // Inject theme toggle before Sign Out in the HR topbar
+    html = html.replace(
+      '<button onclick="hrLogout()" class="btn btn-ghost"',
+      _themeToggleBtnHtml('margin-right:6px') +
+      '<button onclick="hrLogout()" class="btn btn-ghost"'
+    );
+    return html;
+  };
+}
+
+// ── 4+5. CLIENT PORTAL — THEME TOGGLE + REAL LOGO ─────────────────
+// Capture the real base64 logo from the auth screen DOM
+var _tjcB64Logo = '';
+(function captureLogo() {
+  function _grab() {
+    var imgs = document.querySelectorAll('img[src^="data:image/jpeg"]');
+    if (imgs.length) { _tjcB64Logo = imgs[0].src; return true; }
+    return false;
+  }
+  if (!_grab()) {
+    document.addEventListener('DOMContentLoaded', _grab);
+    var _t = setInterval(function(){ if (_grab()) clearInterval(_t); }, 300);
+  }
+})();
+
+var _origRCFP11 = typeof renderClientFacingPortal === 'function' ? renderClientFacingPortal : null;
+if (_origRCFP11) {
+  renderClientFacingPortal = function() {
+    var html = _origRCFP11();
+
+    // ─ 5. Restore real logo (replacing "TJC" text initials if present)
+    if (_tjcB64Logo) {
+      html = html.replace(
+        '<div class="sb-icon" style="background:var(--blue);color:#fff;font-weight:800;font-size:11px;display:flex;align-items:center;justify-content:center">TJC</div>',
+        '<div class="sb-icon" style="background:#131DBF;border:none;overflow:hidden;padding:0;width:36px;height:36px;border-radius:8px">' +
+          '<img src="' + _tjcB64Logo + '" style="width:100%;height:100%;object-fit:contain">' +
+        '</div>'
+      );
+    }
+
+    // ─ 4. Add theme toggle to client portal topbar (before logout button)
+    html = html.replace(
+      'onclick="clientPortalLogout()"',
+      'onclick="clientPortalLogout()" id="cp-logout-btn"'
+    );
+    html = html.replace(
+      'id="cp-logout-btn"',
+      'id="cp-logout-btn" style="position:relative"'
+    );
+    // Inject after the client name / before logout
+    var logoutIdx = html.indexOf('clientPortalLogout()');
+    if (logoutIdx > 0) {
+      // Find the button tag start
+      var btnStart = html.lastIndexOf('<button', logoutIdx);
+      html = html.slice(0, btnStart) +
+        _themeToggleBtnHtml('margin-right:8px') +
+        html.slice(btnStart);
+    }
+
+    return html;
+  };
+}
+
+// ── 1+2. NAV FILTERING FOR ART/ALVIN DIRECT LOGINS ────────────────
+// Override buildNav to apply role-based filtering after it renders
+var _origBuildNav11 = typeof buildNav === 'function' ? buildNav : null;
+if (_origBuildNav11) {
+  buildNav = function() {
+    _origBuildNav11();   // builds full nav + adds switcher/hr items
+
+    // Determine effective role
+    var role = (typeof APP !== 'undefined' && APP.ownerViewAs) || '';
+    if (!role && typeof APP !== 'undefined' && APP.authMode === 'owner') {
+      // Logged-in user's own role
+      var acct = (APP.ownerAuth && APP.ownerAuth._sbAccount) || null;
+      if (!acct && typeof mgmtAccounts === 'function' && APP.ownerAuth && APP.ownerAuth.username) {
+        var un = APP.ownerAuth.username.toLowerCase();
+        acct = mgmtAccounts().find(function(a) {
+          return a.username && a.username.toLowerCase() === un;
+        }) || null;
+      }
+      if (acct) role = acct.founderRole || '';
+    }
+
+    // Apply filtering for non-MD roles
+    if (role && role !== 'managing_director' && typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES[role]) {
+      var def = FOUNDER_ROLES[role];
+      if (def.nav) {
+        if (typeof window._navFilter === 'function') {
+          window._navFilter(def.nav);
+        } else {
+          document.querySelectorAll('#sb-nav .sb-item').forEach(function(el) {
+            el.style.display = (!el.dataset.page || def.nav.indexOf(el.dataset.page) >= 0) ? '' : 'none';
+          });
+        }
+      }
+    }
+  };
+}
+
+// Also apply filtering in renderCurrentPage for initial login render
+var _origRCP11 = renderCurrentPage;
+renderCurrentPage = function() {
+  _origRCP11();
+
+  if (typeof APP === 'undefined' || APP.authMode !== 'owner' || APP.ownerViewAs) return;
+
+  // Direct login as Art or Alvin — apply their nav restriction
+  var acct = (APP.ownerAuth && APP.ownerAuth._sbAccount) || null;
+  if (!acct && typeof mgmtAccounts === 'function' && APP.ownerAuth && APP.ownerAuth.username) {
+    var un = APP.ownerAuth.username.toLowerCase();
+    acct = mgmtAccounts().find(function(a) {
+      return a.username && a.username.toLowerCase() === un;
+    }) || null;
+  }
+
+  var role = (acct && acct.founderRole) || 'managing_director';
+  if (role !== 'managing_director' && typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES[role]) {
+    var def = FOUNDER_ROLES[role];
+    if (def.nav) {
+      if (typeof window._navFilter === 'function') {
+        window._navFilter(def.nav);
+      } else {
+        document.querySelectorAll('#sb-nav .sb-item').forEach(function(el) {
+          el.style.display = (!el.dataset.page || def.nav.indexOf(el.dataset.page) >= 0) ? '' : 'none';
+        });
+      }
+    }
+  }
+};
+
 </script>
 </body>
 </html>
