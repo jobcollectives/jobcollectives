@@ -11476,7 +11476,7 @@ function switchFounderView(role) {
 const _origRCP_U8 = renderCurrentPage;
 renderCurrentPage = function() {
   _origRCP_U8();
-  if (APP.authMode === "owner" && APP.ownerViewAs) {
+  if (APP.authMode === "owner" && APP.ownerViewAs && !window._TJC_NO_BANNER) {
     const def = FOUNDER_ROLES[APP.ownerViewAs];
     if (def && def.nav) {
       document.querySelectorAll("#sb-nav .sb-item").forEach(function(el) {
@@ -12629,116 +12629,120 @@ renderCurrentPage = function() {
 
 
 
+
 // ═══════════════════════════════════════════════════════════════════
-//  TJC — VIEW SWITCH v3 (Direct DOM, no override chain)
-//  Bypasses renderCurrentPage entirely for switch/exit.
-//  Direct DOM manipulation — immune to chain ordering issues.
+//  TJC VIEW SWITCH — FINAL
+//  Uses _TJC_NO_BANNER flag to suppress the old orphan-banner override.
+//  Direct DOM control. No renderCurrentPage chain dependency.
 // ═══════════════════════════════════════════════════════════════════
 
-// ── Find and kill every orphan banner above content-area ───────────
-function _killBanners() {
-  // By ID (our own)
-  var b = document.getElementById('founder-view-banner');
-  if (b) b.parentNode && b.parentNode.removeChild(b);
+window._TJC_NO_BANNER = false;
 
-  // Orphans inserted by old overrides (no ID): scan content-area's
-  // siblings and remove anything that looks like a view-banner
-  // (has a coloured border-bottom, which all old banners had)
+// ── Remove every element above content-area that is not topbar/bottom-nav
+function _killAllBanners() {
   var ca = document.getElementById('content-area');
   if (!ca || !ca.parentNode) return;
-  var siblings = Array.prototype.slice.call(ca.parentNode.children);
-  siblings.forEach(function(el) {
-    if (el === ca) return;
-    var id = el.id || '';
-    var cls = el.className || '';
-    // Keep: topbar, bottom-nav, content-area itself
-    if (id === 'content-area') return;
-    if (cls.indexOf('topbar') >= 0) return;
-    if (cls.indexOf('bottom-nav') >= 0) return;
-    if (id === 'topbar' || id === 'bottom-nav') return;
-    // Everything else above/beside content-area is a banner — kill it
-    el.parentNode && el.parentNode.removeChild(el);
+  var toRemove = [];
+  var node = ca.parentNode.firstChild;
+  while (node) {
+    var next = node.nextSibling;
+    if (node.nodeType === 1 && node !== ca) {
+      var cls = (node.className || '') + ' ' + (node.id || '');
+      if (cls.indexOf('topbar') < 0 && cls.indexOf('bottom-nav') < 0) {
+        toRemove.push(node);
+      }
+    }
+    node = next;
+  }
+  toRemove.forEach(function(el) {
+    if (el.parentNode) el.parentNode.removeChild(el);
   });
 }
 
-// ── Show/hide nav items for a given page list ──────────────────────
-function _applyNavFilter(allowedPages) {
+// ── Show or hide nav items based on allowed page list (null = show all)
+function _navFilter(allowedPages) {
   document.querySelectorAll('#sb-nav .sb-item').forEach(function(el) {
-    if (!allowedPages) {
-      el.style.display = '';
-    } else {
-      el.style.display = (!el.dataset.page || allowedPages.indexOf(el.dataset.page) >= 0) ? '' : 'none';
-    }
+    el.style.display = (!allowedPages || !el.dataset.page || allowedPages.indexOf(el.dataset.page) >= 0) ? '' : 'none';
   });
-  // Show/hide section headers
   document.querySelectorAll('#sb-nav .sb-sect').forEach(function(sect) {
     if (!allowedPages) { sect.style.display = ''; return; }
     var sib = sect.nextElementSibling;
-    var anyVisible = false;
+    var vis = false;
     while (sib && !sib.classList.contains('sb-sect')) {
-      if (sib.style.display !== 'none') anyVisible = true;
+      if (sib.style.display !== 'none') vis = true;
       sib = sib.nextElementSibling;
     }
-    sect.style.display = anyVisible ? '' : 'none';
+    sect.style.display = vis ? '' : 'none';
   });
 }
 
-// ── Add a single clean banner ──────────────────────────────────────
-function _addBanner(def) {
-  var ca = document.getElementById('content-area');
-  if (!ca || !ca.parentNode) return;
-  var banner = document.createElement('div');
-  banner.id = 'founder-view-banner';
-  banner.style.cssText =
-    'background:' + def.color + '14;' +
-    'border-bottom:2px solid ' + def.color + ';' +
-    'padding:10px 22px;font-size:12px;font-weight:700;' +
-    'color:' + def.color + ';display:flex;align-items:center;' +
-    'justify-content:space-between;flex-shrink:0';
-  banner.innerHTML =
-    '<span><span style="opacity:.6;margin-right:6px">👁</span>' +
-    'Viewing as <strong>' + def.name + '</strong>' +
-    ' <span style="font-weight:400;opacity:.6">(' + def.label + ')</span></span>' +
-    '<button onclick="exitFounderView()" style="' +
-      'background:' + def.color + ';color:#fff;border:none;border-radius:8px;' +
-      'padding:6px 16px;font-size:11px;font-weight:700;cursor:pointer' +
-    '">← Exit View</button>';
-  ca.parentNode.insertBefore(banner, ca);
-}
-
-// ── SWITCH VIEW — direct DOM, no renderCurrentPage ─────────────────
-switchFounderView = function(role) {
-  if (!role) { exitFounderView(); return; }
-
-  var def = typeof FOUNDER_ROLES !== 'undefined' ? FOUNDER_ROLES[role] : null;
-  if (!def) return;
-
-  APP.ownerViewAs = role;
+// ── Mark 'home' as active in both sidebar and bottom nav
+function _activateHome() {
   APP.page = 'home';
-
-  _killBanners();
-
-  // Filter nav to role's allowed pages
-  _applyNavFilter(def.nav || null);
-
-  // Highlight 'home' in nav
   document.querySelectorAll('.sb-item').forEach(function(el) {
     el.classList.toggle('on', el.dataset.page === 'home');
   });
   document.querySelectorAll('.bn-item').forEach(function(el) {
     el.classList.toggle('on', el.dataset.page === 'home');
   });
-
-  // Update page title
   var pt = document.getElementById('page-title');
   if (pt) pt.textContent = 'Dashboard';
+}
 
-  // Destroy any existing charts
+// ── Destroy any live Chart.js instances
+function _destroyCharts() {
   if (typeof Chart !== 'undefined') {
-    try { Object.values(Chart.instances || {}).forEach(function(c){ c.destroy(); }); } catch(e){}
+    try {
+      Object.values(Chart.instances || {}).forEach(function(c) { c.destroy(); });
+    } catch(e) {}
   }
+}
 
-  // Render the correct dashboard directly into content-area
+// ── Insert the single view-as banner above content-area
+function _insertBanner(def) {
+  var ca = document.getElementById('content-area');
+  if (!ca || !ca.parentNode) return;
+  var b = document.createElement('div');
+  b.id = 'founder-view-banner';
+  b.style.cssText =
+    'background:' + def.color + '14;border-bottom:2px solid ' + def.color + ';' +
+    'padding:10px 22px;font-size:12px;font-weight:700;color:' + def.color + ';' +
+    'display:flex;align-items:center;justify-content:space-between;flex-shrink:0;z-index:50';
+  b.innerHTML =
+    '<span>' +
+      '<span style="opacity:.55;margin-right:6px">👁</span>' +
+      'Viewing as <strong>' + def.name + '</strong>' +
+      ' <span style="font-weight:400;opacity:.6">(' + def.label + ')</span>' +
+    '</span>' +
+    '<button id="exit-view-btn" onclick="exitFounderView()" style="' +
+      'background:' + def.color + ';color:#fff;border:none;border-radius:8px;' +
+      'padding:6px 18px;font-size:11px;font-weight:800;cursor:pointer;letter-spacing:.02em' +
+    '">← Exit View</button>';
+  ca.parentNode.insertBefore(b, ca);
+}
+
+// ── SWITCH INTO a founder's view ───────────────────────────────────
+switchFounderView = function(role) {
+  if (!role) { exitFounderView(); return; }
+
+  var def = (typeof FOUNDER_ROLES !== 'undefined') ? FOUNDER_ROLES[role] : null;
+  if (!def) return;
+
+  // Raise flag so old override doesn't fire its orphan banner
+  window._TJC_NO_BANNER = true;
+
+  APP.ownerViewAs = role;
+
+  _destroyCharts();
+  _killAllBanners();
+  _navFilter(def.nav || null);
+  _activateHome();
+
+  // Remove founder-switcher (not visible while in view-as mode)
+  var sw = document.getElementById('founder-switcher');
+  if (sw && sw.parentNode) sw.parentNode.removeChild(sw);
+
+  // Render the correct dashboard directly
   var ca = document.getElementById('content-area');
   if (ca) {
     if (role === 'director_growth' && typeof renderArtGrowthDashboard === 'function') {
@@ -12748,90 +12752,83 @@ switchFounderView = function(role) {
     }
   }
 
-  // Add the single banner
-  _addBanner(def);
+  // Add the single clean banner
+  _insertBanner(def);
 
-  // Remove founder-switcher (not shown while in view-as mode)
-  var sw = document.getElementById('founder-switcher');
-  if (sw) sw.parentNode && sw.parentNode.removeChild(sw);
+  // Lower flag after render settles
+  setTimeout(function() { window._TJC_NO_BANNER = false; }, 600);
 };
 
-// ── EXIT VIEW — direct DOM, return to Justine's portal ────────────
+// ── EXIT VIEW — return fully to Justine's portal ───────────────────
 exitFounderView = function() {
+  // Raise flag immediately — blocks any pending renderCurrentPage from adding orphan banner
+  window._TJC_NO_BANNER = true;
+
   APP.ownerViewAs = null;
-  APP.page = 'home';
 
-  _killBanners();
+  _destroyCharts();
+  _killAllBanners();
+  _navFilter(null);    // restore ALL nav items
+  _activateHome();
 
-  // Restore all nav items
-  _applyNavFilter(null);
-
-  // Destroy charts
-  if (typeof Chart !== 'undefined') {
-    try { Object.values(Chart.instances || {}).forEach(function(c){ c.destroy(); }); } catch(e){}
-  }
-
-  // Render Justine's management home directly
+  // Render Justine's full management home directly
   var ca = document.getElementById('content-area');
   if (ca && typeof renderHome === 'function') {
     ca.innerHTML = renderHome();
   }
 
-  // Update nav active state
-  document.querySelectorAll('.sb-item').forEach(function(el) {
-    el.classList.toggle('on', el.dataset.page === 'home');
-  });
-  document.querySelectorAll('.bn-item').forEach(function(el) {
-    el.classList.toggle('on', el.dataset.page === 'home');
-  });
+  // Rebuild the sidebar (re-adds founder switcher, badge counts, etc.)
+  if (typeof updateSbBadges === 'function') updateSbBadges();
+  if (typeof buildNav === 'function') buildNav();
 
-  // Update page title
-  var pt = document.getElementById('page-title');
-  if (pt) pt.textContent = 'Dashboard';
-
-  // Force sidebar badge rebuild (which also re-adds founder switcher via buildNav override)
-  if (typeof updateSbBadges === 'function') {
-    setTimeout(function(){ updateSbBadges(); }, 50);
-  }
+  // Keep flag raised for 600ms — covers any async renderCurrentPage calls
+  setTimeout(function() {
+    window._TJC_NO_BANNER = false;
+    // One final cleanup pass in case anything slipped through
+    _killAllBanners();
+  }, 600);
 };
 
-// ── renderCurrentPage — still needed for page navigation WITHIN a view
-// (e.g. Justine in Art's view clicks Clients) ─────────────────────
-var _rcp_v3_base = renderCurrentPage;
+// ── renderCurrentPage override — handles navigation WITHIN a view-as session
+// (e.g. Justine clicks Clients while in Art's view)
+var _rcp_vs_base = renderCurrentPage;
 renderCurrentPage = function() {
-  // For non-owner or non-viewAs: call chain normally
-  if (APP.authMode !== 'owner' || !APP.ownerViewAs) {
-    _rcp_v3_base();
-    // After exit-via-navigate: ensure nav is fully restored
-    if (APP.authMode === 'owner' && !APP.ownerViewAs) {
-      _killBanners();
-      _applyNavFilter(null);
-    }
+  if (APP.authMode !== 'owner') {
+    _rcp_vs_base();
     return;
   }
 
-  // Justine is viewing AS Art or Alvin and navigated to a page
-  var def = typeof FOUNDER_ROLES !== 'undefined' ? FOUNDER_ROLES[APP.ownerViewAs] : null;
-  if (!def) { _rcp_v3_base(); return; }
+  // Raise flag so old override can't add orphan banner during this call
+  var wasSet = window._TJC_NO_BANNER;
+  window._TJC_NO_BANNER = true;
 
-  // Temporarily suppress ownerViewAs so the old chain doesn't add its banner
-  var vAs = APP.ownerViewAs;
-  APP.ownerViewAs = null;
-  _rcp_v3_base();           // render the page content
-  APP.ownerViewAs = vAs;    // restore
+  _rcp_vs_base();     // run full chain — renders the page content
 
-  // Filter nav and re-add banner
-  _killBanners();
-  _applyNavFilter(def.nav || null);
-  _addBanner(def);
+  window._TJC_NO_BANNER = wasSet;  // restore previous flag state
 
-  // If home, replace content with the correct founder dashboard
+  var role = APP.ownerViewAs;
+  if (!role) {
+    // Normal Justine view — ensure nav is fully open and no banner
+    _killAllBanners();
+    _navFilter(null);
+    return;
+  }
+
+  // Justine is in view-as mode — apply role restrictions and re-add banner
+  var def = (typeof FOUNDER_ROLES !== 'undefined') ? FOUNDER_ROLES[role] : null;
+  if (!def) return;
+
+  _killAllBanners();
+  _navFilter(def.nav || null);
+  _insertBanner(def);
+
+  // If on home page, override content with the founder's dashboard
   if (APP.page === 'home') {
     var ca = document.getElementById('content-area');
     if (ca) {
-      if (vAs === 'director_growth' && typeof renderArtGrowthDashboard === 'function') {
+      if (role === 'director_growth' && typeof renderArtGrowthDashboard === 'function') {
         ca.innerHTML = renderArtGrowthDashboard();
-      } else if (vAs === 'director_operations' && typeof renderAlvinOpsDashboard === 'function') {
+      } else if (role === 'director_operations' && typeof renderAlvinOpsDashboard === 'function') {
         ca.innerHTML = renderAlvinOpsDashboard();
       }
     }
