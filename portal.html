@@ -13009,6 +13009,146 @@ renderCurrentPage = function() {
   }
 };
 
+
+// ═══════════════════════════════════════════════════════════════════
+//  TJC UPDATE 12 — Client Portal Light Mode Fix
+//  Replaces the update11 CSS injection with a corrected version
+// ═══════════════════════════════════════════════════════════════════
+(function applyPortalLightModeCSS(){
+  var existing = document.getElementById('tjc-light-mode-fixes');
+  if (existing) existing.remove();
+
+  var style = document.createElement('style');
+  style.id = 'tjc-light-mode-fixes';
+  style.textContent = `
+    /* ─── TOPBAR: Keep dark in both modes — text is hardcoded white ─── */
+    .cp-topbar { background: var(--navy) !important; }
+
+    /* ─── TASK ROWS ──────────────────────────────────────────────────── */
+    [data-theme="light"] .task-row:hover {
+      background: #EEF2FF !important;
+    }
+    [data-theme="light"] .task-row.overdue-row {
+      background: rgba(239,68,68,.06) !important;
+    }
+    [data-theme="light"] .task-row.overdue-row:hover {
+      background: rgba(239,68,68,.11) !important;
+    }
+
+    /* ─── CLIENT PORTAL TABS (ptab) ─────────────────────────────────── */
+    [data-theme="light"] .ptab {
+      color: #475569 !important;
+    }
+    [data-theme="light"] .ptab.on {
+      background: rgba(19,29,191,.07) !important;
+      color: #131DBF !important;
+      border-left-color: #131DBF !important;
+      box-shadow: none !important;
+    }
+    [data-theme="light"] .ptab:hover:not(.on) {
+      background: #F1F5F9 !important;
+      color: #1e293b !important;
+    }
+
+    /* ─── CLIENT PORTAL SIDEBAR ─────────────────────────────────────── */
+    [data-theme="light"] .cp-portal-tabs {
+      background: #F8FAFC !important;
+      border-right-color: #E2E8F0 !important;
+    }
+
+    /* ─── CLIENT PORTAL BODY CARDS ───────────────────────────────────── */
+    [data-theme="light"] .cp-portal-body .card {
+      background: #fff !important;
+      border-color: #E2E8F0 !important;
+    }
+    [data-theme="light"] .cp-portal-body {
+      background: #F8FAFC !important;
+    }
+    [data-theme="light"] .cp-stat {
+      background: #fff !important;
+      border: 1px solid #E2E8F0 !important;
+    }
+    [data-theme="light"] .cp-stat-val {
+      color: #0A0F3C !important;
+    }
+    [data-theme="light"] .cp-stat-lbl {
+      color: #7B83A8 !important;
+    }
+
+    /* ─── SECTION HEADERS ────────────────────────────────────────────── */
+    [data-theme="light"] .sec-title {
+      color: #44496E !important;
+    }
+    [data-theme="light"] .sec-head .btn {
+      border-color: #CBD5E1 !important;
+      color: #44496E !important;
+    }
+
+    /* ─── TASK NAME / META ───────────────────────────────────────────── */
+    [data-theme="light"] .task-name {
+      color: #0A0F3C !important;
+    }
+    [data-theme="light"] .task-meta {
+      color: #7B83A8 !important;
+    }
+    [data-theme="light"] .task-row {
+      border-bottom-color: #E2E8F0 !important;
+    }
+
+    /* ─── HR PORTAL SIDEBAR ──────────────────────────────────────────── */
+    [data-theme="light"] .hr-nav-item {
+      color: #334155 !important;
+    }
+    [data-theme="light"] .hr-nav-item.active {
+      color: #131DBF !important;
+      background: rgba(19,29,191,.07) !important;
+    }
+
+    /* ─── PARTNER PORTAL TABS ────────────────────────────────────────── */
+    [data-theme="light"] .ptab {
+      color: #475569 !important;
+    }
+
+    /* ─── THEME TOGGLE BUTTON ────────────────────────────────────────── */
+    .topbar-theme-toggle {
+      background: rgba(255,255,255,.12) !important;
+      border: 1px solid rgba(255,255,255,.2) !important;
+      color: rgba(255,255,255,.85) !important;
+      border-radius: 8px;
+      padding: 5px 9px;
+      cursor: pointer;
+      font-size: 13px;
+      line-height: 1;
+      display: inline-flex;
+      align-items: center;
+      transition: background .15s;
+    }
+    /* Exception: cp-topbar stays dark so toggle stays light-styled */
+    .cp-topbar .topbar-theme-toggle {
+      background: rgba(255,255,255,.12) !important;
+      border-color: rgba(255,255,255,.2) !important;
+      color: rgba(255,255,255,.85) !important;
+    }
+    [data-theme="light"] .topbar-theme-toggle:not(.cp-topbar *) {
+      background: rgba(0,0,0,.06) !important;
+      border-color: rgba(0,0,0,.15) !important;
+      color: #334155 !important;
+    }
+
+    /* ─── EMPTY STATE TEXT ───────────────────────────────────────────── */
+    [data-theme="light"] .empty-text {
+      color: #94A3B8 !important;
+    }
+
+    /* ─── TAG / BADGE CONTRAST ───────────────────────────────────────── */
+    [data-theme="light"] .tag.t-navy {
+      background: #EEF2FF !important;
+      color: #131DBF !important;
+    }
+  `;
+  document.head.appendChild(style);
+})();
+
 </script>
 </body>
 </html>
