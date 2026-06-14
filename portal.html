@@ -11668,7 +11668,7 @@ if(typeof _startRealtime === 'function'){
   _startRealtime = async function(){
     // Realtime disabled — DataCloneError fix.
     // Data syncs on every lsSave call instead (write-through cache).
-    console.log('[TJC SB] Realtime disabled (DataCloneError prevention). Using write-through sync.');
+    // [TJC SB] Realtime disabled.
   };
 }
 
@@ -12046,7 +12046,7 @@ if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
   );
 
   if (!IS_PRODUCTION || IS_SANDBOX) {
-    console.log('[TJC SB] Skipped — not on production host (' + (host || 'sandboxed') + '). Using localStorage only.');
+    // [TJC SB] Sandbox mode — Supabase skipped, localStorage active.
     return;
   }
 
@@ -12241,7 +12241,7 @@ if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
     };
   }
 
-  console.log('[TJC SB] Production mode — REST sync active');
+  // [TJC SB] Production REST sync active.
 })();
 
 
