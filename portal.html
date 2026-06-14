@@ -12014,224 +12014,231 @@ if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
 }
 
 
-// ═══════════════════════════════════════════════════════════════════
-//  TJC SUPABASE REST CLIENT — No SDK, no postMessage, no DataCloneError
-//  Replaces the Supabase JS SDK with direct REST API calls via fetch.
-//  Supabase REST API is plain HTTP — no Workers, no BroadcastChannel.
-// ═══════════════════════════════════════════════════════════════════
 
 // ═══════════════════════════════════════════════════════════════════
-//  TJC SUPABASE REST CLIENT — No SDK, no postMessage, no DataCloneError
-//  Replaces the Supabase JS SDK with direct REST API calls via fetch.
-//  Supabase REST API is plain HTTP — no Workers, no BroadcastChannel.
+//  TJC SUPABASE — ENVIRONMENT-AWARE DATA SYNC
+//  Runs ONLY on GitHub Pages / production.
+//  Auto-skips in Claude.ai preview, local file://, or any sandbox.
+//  Falls back to localStorage silently everywhere else.
 // ═══════════════════════════════════════════════════════════════════
 
-var TJC_SB_URL = 'https://btungxqqchyhnohtzhgj.supabase.co';
-var TJC_SB_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0dW5neHFxY2h5aG5vaHR6aGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NjIzMzAsImV4cCI6MjA5NjUzODMzMH0.m0Bq5pMtiKTK4NDPX7lNfc3Nd1cFqQZNE8QjFHE-u4w';
+(function() {
+  'use strict';
 
-var TJC_SB_HEADERS = {
-  'apikey': TJC_SB_KEY,
-  'Authorization': 'Bearer ' + TJC_SB_KEY,
-  'Content-Type': 'application/json',
-  'Accept': 'application/json'
-};
+  // ── Environment detection ────────────────────────────────────────
+  var host = window.location.hostname || '';
+  var proto = window.location.protocol || '';
+  var IS_PRODUCTION = (
+    host.includes('github.io') ||
+    host.includes('jobcollectives.com') ||
+    host.includes('jobcollectives.io')
+  );
+  var IS_SANDBOX = (
+    proto === 'blob:' ||
+    host === '' ||
+    host.includes('claude') ||
+    host.includes('anthropic') ||
+    proto === 'file:'
+  );
 
-// ── Core REST helpers ─────────────────────────────────────────────
-
-function sbRest(method, table, body, extra) {
-  var url = TJC_SB_URL + '/rest/v1/' + table;
-  var headers = Object.assign({}, TJC_SB_HEADERS);
-  if (extra) Object.assign(headers, extra);
-  var opts = { method: method, headers: headers };
-  if (body !== undefined && body !== null) opts.body = JSON.stringify(body);
-  return fetch(url, opts).then(function(res) {
-    if (!res.ok) return res.text().then(function(t) { throw new Error(res.status + ': ' + t); });
-    var ct = res.headers.get('content-type') || '';
-    if (ct.indexOf('json') >= 0) return res.json();
-    return null;
-  });
-}
-
-// GET all rows from a table
-function sbGet(table) {
-  return sbRest('GET', table + '?select=*', null).then(function(rows) {
-    return (rows || []).map(toCamel);
-  }).catch(function(e) {
-    console.warn('[TJC SB] get', table, e.message);
-    return null;
-  });
-}
-
-// UPSERT (insert or update by id)
-function sbUpsert(table, rows) {
-  var payload = (Array.isArray(rows) ? rows : [rows]).map(toSnake);
-  return sbRest('POST', table, payload, {
-    'Prefer': 'resolution=merge-duplicates,return=minimal'
-  }).then(function() {
-    return true;
-  }).catch(function(e) {
-    console.warn('[TJC SB] upsert', table, e.message);
-    return false;
-  });
-}
-
-// DELETE a row by id
-function sbDelete(table, id) {
-  return sbRest('DELETE', table + '?id=eq.' + encodeURIComponent(id), null).then(function() {
-    return true;
-  }).catch(function(e) {
-    console.warn('[TJC SB] delete', table, e.message);
-    return false;
-  });
-}
-
-// ── camelCase ↔ snake_case ────────────────────────────────────────
-
-function toSnake(obj) {
-  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return obj;
-  var out = {};
-  Object.keys(obj).forEach(function(k) {
-    var sk = k.replace(/([A-Z])/g, function(_, c) { return '_' + c.toLowerCase(); });
-    out[sk] = obj[k];
-  });
-  return out;
-}
-
-function toCamel(obj) {
-  if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return obj;
-  var out = {};
-  Object.keys(obj).forEach(function(k) {
-    var ck = k.replace(/_([a-z])/g, function(_, c) { return c.toUpperCase(); });
-    out[ck] = obj[k];
-  });
-  return out;
-}
-
-// ── Collection → table map ────────────────────────────────────────
-
-var SB_REST_TABLE = {
-  tasks:'tasks', clients:'clients', timelogs:'timelogs',
-  content:'content', invoices:'invoices', goals:'goals',
-  team:'team', events:'events', activities:'activities',
-  conversations:'conversations', sops:'sops'
-};
-
-var SB_HR_REST_TABLE = {
-  applications:'applications', leaves:'leaves', attendance:'attendance',
-  messages:'hr_messages', notices:'notices', reports:'reports',
-  payslips:'payslips', expenses:'expenses', performance:'performance_reviews',
-  onboarding:'onboarding', schedules:'schedules', ittickets:'it_tickets',
-  recognition:'recognition', feedback:'feedback', milestones:'milestones'
-};
-
-// ── Override lsSave to push to Supabase ───────────────────────────
-var _origLS = typeof lsSave === 'function' ? lsSave : null;
-if (_origLS) {
-  lsSave = function(col, data) {
-    _origLS(col, data);
-    var table = SB_REST_TABLE[col];
-    if (table && Array.isArray(data) && data.length > 0) {
-      sbUpsert(table, data);
-    }
-  };
-}
-
-// ── Override HR save functions ────────────────────────────────────
-function _patchHrSaveFn(fn) {
-  return function(key, val) {
-    fn(key, val);
-    var table = SB_HR_REST_TABLE[key];
-    if (table && Array.isArray(val) && val.length > 0) {
-      sbUpsert(table, val);
-    }
-  };
-}
-if (typeof hrSave2 === 'function')  hrSave2 = _patchHrSaveFn(hrSave2);
-if (typeof hrSave  === 'function')  hrSave  = _patchHrSaveFn(hrSave);
-
-// ── Pull from Supabase on load ────────────────────────────────────
-var _origLoad = typeof loadAllData === 'function' ? loadAllData : null;
-loadAllData = function() {
-  if (_origLoad) _origLoad();
-  // Hydrate from Supabase in background — update APP.data if remote has data
-  var cols = Object.keys(SB_TABLE);
-  var idx = 0;
-  function next() {
-    if (idx >= cols.length) { renderCurrentPage(); return; }
-    var col = cols[idx++];
-    var table = SB_REST_TABLE[col];
-    sbGet(table).then(function(rows) {
-      if (rows && rows.length > 0) {
-        APP.data[col] = rows;
-        if (_origLS) _origLS(col, rows);
-      }
-      next();
-    }).catch(next);
+  if (!IS_PRODUCTION || IS_SANDBOX) {
+    console.log('[TJC SB] Skipped — not on production host (' + (host || 'sandboxed') + '). Using localStorage only.');
+    return;
   }
-  next();
-};
 
-// ── Auth: validate Management login via REST ──────────────────────
-var _origOwnerUser = typeof ownerUsernameSubmit === 'function' ? ownerUsernameSubmit : null;
-if (_origOwnerUser) {
-  ownerUsernameSubmit = function() {
-    var input = document.getElementById('owner-uname-input');
-    var val = (input ? input.value : '').trim();
-    if (!val) { toast('Enter your username', 'error'); return; }
-
-    sbGet('mgmt_users').then(function(accounts) {
-      if (!accounts) throw new Error('no data');
-      var found = accounts.find(function(a) {
-        return a.username && a.username.toLowerCase() === val.toLowerCase();
-      });
-      if (!found) throw new Error('not found');
-      APP.ownerAuth.username = val;
-      APP.ownerAuth.step = 'pin';
-      APP.ownerAuth.pinEntry = '';
-      APP.ownerAuth._sbAccount = found;
-      renderCurrentPage();
-    }).catch(function() {
-      _origOwnerUser();
-    });
+  // ── Constants ────────────────────────────────────────────────────
+  var BASE_URL = 'https://btungxqqchyhnohtzhgj.supabase.co/rest/v1';
+  var API_KEY  = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ0dW5neHFxY2h5aG5vaHR6aGdqIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODA5NjIzMzAsImV4cCI6MjA5NjUzODMzMH0.m0Bq5pMtiKTK4NDPX7lNfc3Nd1cFqQZNE8QjFHE-u4w';
+  var HEADERS  = {
+    'apikey': API_KEY,
+    'Authorization': 'Bearer ' + API_KEY,
+    'Content-Type': 'application/json',
+    'Accept': 'application/json'
   };
-}
 
-// HR username via REST
-var _origHrUser = typeof hrUsernameSubmit === 'function' ? hrUsernameSubmit : null;
-if (_origHrUser) {
-  hrUsernameSubmit = function() {
-    var input = document.getElementById('hr-uname-input');
-    var val = (input ? input.value : '').trim();
-    if (!val) { toast('Enter your username', 'error'); return; }
-
-    sbGet('hr_users').then(function(accounts) {
-      if (!accounts) throw new Error('no data');
-      var found = accounts.find(function(a) {
-        return a.username && a.username.toLowerCase() === val.toLowerCase();
-      });
-      if (!found) throw new Error('not found');
-      APP.hrAuth.username = val;
-      APP.hrAuth.step = 'pin';
-      APP.hrAuth.pinEntry = '';
-      APP.hrAuth._sbAccount = found;
-      renderCurrentPage();
-    }).catch(function() {
-      _origHrUser();
+  // ── camelCase ↔ snake_case ────────────────────────────────────────
+  function toSnake(obj) {
+    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return obj;
+    var out = {};
+    Object.keys(obj).forEach(function(k) {
+      out[k.replace(/([A-Z])/g, function(_, c) { return '_' + c.toLowerCase(); })] = obj[k];
     });
+    return out;
+  }
+  function toCamel(obj) {
+    if (!obj || typeof obj !== 'object' || Array.isArray(obj)) return obj;
+    var out = {};
+    Object.keys(obj).forEach(function(k) {
+      out[k.replace(/_([a-z])/g, function(_, c) { return c.toUpperCase(); })] = obj[k];
+    });
+    return out;
+  }
+
+  // ── Core REST — always returns a resolved Promise ─────────────────
+  function rest(method, path, body, extraHeaders) {
+    return new Promise(function(resolve) {
+      try {
+        var hdrs = Object.assign({}, HEADERS, extraHeaders || {});
+        var opts = { method: method, headers: hdrs };
+        if (body != null) opts.body = JSON.stringify(body);
+        fetch(BASE_URL + path, opts)
+          .then(function(res) {
+            if (!res.ok) {
+              res.text().then(function(t) {
+                console.warn('[TJC SB]', method, path, res.status);
+                resolve(null);
+              }).catch(function() { resolve(null); });
+              return;
+            }
+            var ct = res.headers.get('content-type') || '';
+            if (ct.indexOf('json') >= 0) {
+              res.json().then(function(d) { resolve(d); }).catch(function() { resolve(null); });
+            } else {
+              resolve(true);
+            }
+          })
+          .catch(function() { resolve(null); });
+      } catch(e) { resolve(null); }
+    });
+  }
+
+  // ── Public helpers ────────────────────────────────────────────────
+  function sbGet(table) {
+    return rest('GET', '/' + table + '?select=*').then(function(rows) {
+      return Array.isArray(rows) ? rows.map(toCamel) : null;
+    });
+  }
+  function sbUpsert(table, rows) {
+    var payload = (Array.isArray(rows) ? rows : [rows]).map(toSnake);
+    return rest('POST', '/' + table, payload, {
+      'Prefer': 'resolution=merge-duplicates,return=minimal'
+    }).then(function(r) { return r !== null; });
+  }
+  function sbDel(table, id) {
+    return rest('DELETE', '/' + table + '?id=eq.' + encodeURIComponent(id))
+      .then(function(r) { return r !== null; });
+  }
+
+  // Expose globally for auth functions
+  window.sbGet    = sbGet;
+  window.sbUpsert = sbUpsert;
+  window.sbDel    = sbDel;
+
+  // ── Table maps ───────────────────────────────────────────────────
+  var APP_TABLES = {
+    tasks:'tasks', clients:'clients', timelogs:'timelogs',
+    content:'content', invoices:'invoices', goals:'goals',
+    team:'team', events:'events', activities:'activities',
+    conversations:'conversations', sops:'sops'
   };
-}
+  var HR_TABLES = {
+    applications:'applications', leaves:'leaves', attendance:'attendance',
+    messages:'hr_messages', notices:'notices', reports:'reports',
+    payslips:'payslips', expenses:'expenses', performance:'performance_reviews',
+    onboarding:'onboarding', schedules:'schedules', ittickets:'it_tickets',
+    recognition:'recognition', feedback:'feedback', milestones:'milestones'
+  };
 
-// ── Kill the old SDK-based functions ─────────────────────────────
-// Replace _initSB with a no-op so old code that calls it gets null
-if (typeof _initSB !== 'undefined') {
-  _initSB = function() { return Promise.resolve(null); };
-}
-// Kill realtime
-if (typeof _startRealtime !== 'undefined') {
-  _startRealtime = function() { return Promise.resolve(); };
-}
+  // ── Patch lsSave to push to Supabase in background ───────────────
+  var _ls = typeof lsSave === 'function' ? lsSave : null;
+  if (_ls) {
+    lsSave = function(col, data) {
+      _ls(col, data);
+      var t = APP_TABLES[col];
+      if (t && Array.isArray(data) && data.length) sbUpsert(t, data);
+    };
+  }
 
-console.log('[TJC SB] REST client active — no SDK, no postMessage');
+  // ── Patch HR save ─────────────────────────────────────────────────
+  function patchHR(fn) {
+    return function(key, val) {
+      fn(key, val);
+      var t = HR_TABLES[key];
+      if (t && Array.isArray(val) && val.length) sbUpsert(t, val);
+    };
+  }
+  if (typeof hrSave2 === 'function') hrSave2 = patchHR(hrSave2);
+  if (typeof hrSave  === 'function') hrSave  = patchHR(hrSave);
+
+  // ── Hydrate from Supabase on first load (background, non-blocking) ─
+  var _origLoad = typeof loadAllData === 'function' ? loadAllData : null;
+  loadAllData = function() {
+    // Run original synchronously first (seeds localStorage, renders immediately)
+    if (_origLoad) _origLoad();
+
+    // Then hydrate from Supabase in background — one table at a time
+    var cols = Object.keys(APP_TABLES);
+    var i = 0;
+    var updated = false;
+    function next() {
+      if (i >= cols.length) {
+        if (updated) {
+          // Re-render once after all tables loaded
+          try { renderCurrentPage(); } catch(e) {}
+        }
+        return;
+      }
+      var col = cols[i++];
+      sbGet(APP_TABLES[col]).then(function(rows) {
+        if (rows && rows.length) {
+          if (typeof APP !== 'undefined' && APP.data) {
+            APP.data[col] = rows;
+            if (_ls) _ls(col, rows);
+            updated = true;
+          }
+        }
+        next();
+      });
+    }
+    next();
+  };
+
+  // ── Management login via Supabase ─────────────────────────────────
+  var _origOwner = typeof ownerUsernameSubmit === 'function' ? ownerUsernameSubmit : null;
+  if (_origOwner) {
+    ownerUsernameSubmit = function() {
+      var input = document.getElementById('owner-uname-input');
+      var val = ((input && input.value) || '').trim();
+      if (!val) { if (typeof toast === 'function') toast('Enter your username', 'error'); return; }
+      sbGet('mgmt_users').then(function(accounts) {
+        if (!accounts || !accounts.length) { _origOwner(); return; }
+        var found = accounts.find(function(a) {
+          return a.username && a.username.toLowerCase() === val.toLowerCase();
+        });
+        if (!found) { _origOwner(); return; }
+        APP.ownerAuth.username = val;
+        APP.ownerAuth.step = 'pin';
+        APP.ownerAuth.pinEntry = '';
+        APP.ownerAuth._sbAccount = found;
+        renderCurrentPage();
+      }).catch(function() { _origOwner(); });
+    };
+  }
+
+  // ── HR login via Supabase ─────────────────────────────────────────
+  var _origHR = typeof hrUsernameSubmit === 'function' ? hrUsernameSubmit : null;
+  if (_origHR) {
+    hrUsernameSubmit = function() {
+      var input = document.getElementById('hr-uname-input');
+      var val = ((input && input.value) || '').trim();
+      if (!val) { if (typeof toast === 'function') toast('Enter your username', 'error'); return; }
+      sbGet('hr_users').then(function(accounts) {
+        if (!accounts || !accounts.length) { _origHR(); return; }
+        var found = accounts.find(function(a) {
+          return a.username && a.username.toLowerCase() === val.toLowerCase();
+        });
+        if (!found) { _origHR(); return; }
+        APP.hrAuth.username = val;
+        APP.hrAuth.step = 'pin';
+        APP.hrAuth.pinEntry = '';
+        APP.hrAuth._sbAccount = found;
+        renderCurrentPage();
+      }).catch(function() { _origHR(); });
+    };
+  }
+
+  console.log('[TJC SB] Production mode — REST sync active');
+})();
 
 </script>
 </body>
