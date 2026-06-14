@@ -2565,13 +2565,11 @@ function openPortal() {
   ov.classList.add('active');
   document.body.style.overflow = 'hidden';
 }
-function window.location.href='index.html' {
-  const ov = document.getElementById('portalOverlay');
-  ov.classList.remove('active');
-  document.body.style.overflow = '';
+function closePortal() {
+  window.location.href = 'portal.html';
 }
 document.addEventListener('keydown', function(e) {
-  if (e.key === 'Escape') window.location.href='index.html';
+  if (e.key === 'Escape') closePortal();
 });
 
 
