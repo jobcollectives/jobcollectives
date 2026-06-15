@@ -8,7 +8,8 @@
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Plus+Jakarta+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Playfair+Display:ital@0;1&display=swap" rel="stylesheet">
 
-<style>
+<style>html { scroll-padding-top: 90px; }
+
 /* ══════════════════════════════════════════════════════
    THE JOB COLLECTIVES™ — COBALT FUSION BRAND SYSTEM
    Brand Guidelines 2025 · Strictly applied
@@ -178,19 +179,28 @@ body {
    NAVBAR
 ═══════════════════════════════════════════════════ */
 .nav {
-  position: fixed; top:0; left:0; right:0; z-index:200;
-  padding: 0 2.5rem;
-  height: 68px;
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 200;
+  width: calc(100% - 40px);
+  max-width: 1120px;
+  padding: 0 clamp(14px, 2.5vw, 28px);
+  height: 58px;
   display: flex; align-items: center; justify-content: space-between;
-  background: transparent;
-  transition: background .4s var(--ease), border-bottom-color .4s var(--ease);
-  border-bottom: 1px solid transparent;
+  background: rgba(10,15,60,0.55);
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+  border-radius: 100px;
+  border: 1px solid rgba(255,255,255,.1);
+  box-shadow: 0 4px 28px rgba(0,0,0,.35), 0 1px 0 rgba(255,255,255,.06) inset;
+  transition: background .4s var(--ease), box-shadow .4s var(--ease), border-color .4s var(--ease);
 }
 .nav.scrolled {
-  background: rgba(10,15,60,0.92);
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  border-bottom-color: rgba(255,255,255,.07);
+  background: rgba(10,15,60,0.88);
+  border-color: rgba(255,255,255,.14);
+  box-shadow: 0 8px 40px rgba(0,0,0,.45), 0 1px 0 rgba(255,255,255,.08) inset;
 }
 
 /* TJC Logo — per guidelines: horizontal lockup, lowercase, trademark */
@@ -251,7 +261,7 @@ body {
   align-items: center;
   justify-content: center;
   overflow: hidden;
-  padding: 120px 2rem 80px;
+  padding: clamp(80px,12vh,140px) clamp(1rem,3.5vw,2.5rem) clamp(60px,8vh,100px);
 }
 
 /* Vertical stripe background (like AirLume's curtain effect) */
@@ -595,8 +605,8 @@ body {
 /* ═══════════════════════════════════════════════════
    SECTION BASE
 ═══════════════════════════════════════════════════ */
-section { padding:100px 2rem; }
-.container { max-width:1100px; margin:0 auto; }
+section { padding:clamp(56px,7vw,100px) clamp(1rem,3.5vw,2.5rem); }
+.container { max-width:1160px; margin:0 auto; width:100%; }
 
 .section-eyebrow {
   display:inline-flex; align-items:center; gap:8px;
@@ -1013,7 +1023,7 @@ body.light .feat-card.featured .feat-more-text { color:rgba(255,255,255,.82); }
 ═══════════════════════════════════════════════════ */
 .final-section {
   background:var(--blue);
-  padding:100px 2rem; text-align:center;
+  padding:clamp(56px,7vw,100px) clamp(1rem,3.5vw,2.5rem); text-align:center;
   position:relative; overflow:hidden;
 }
 .final-section::before {
@@ -1226,8 +1236,8 @@ body.light { background:#F2F4FF; color:#0A0F3C; }
 body.light { background:#F2F4FF; color:#0A0F3C; }
 
 /* ── 2. Nav ── */
-body.light .nav { background:rgba(242,244,255,.5); border-bottom-color:rgba(19,29,191,.07); }
-body.light .nav.scrolled { background:rgba(242,244,255,.95); box-shadow:0 1px 0 rgba(19,29,191,.08),0 4px 20px rgba(10,15,60,.06); }
+body.light .nav { background:rgba(255,255,255,.65); border-color:rgba(19,29,191,.12); box-shadow:0 4px 28px rgba(10,15,60,.12), 0 1px 0 rgba(255,255,255,.8) inset; }
+body.light .nav.scrolled { background:rgba(255,255,255,.92); border-color:rgba(19,29,191,.18); box-shadow:0 8px 40px rgba(10,15,60,.18), 0 1px 0 rgba(255,255,255,.9) inset; }
 body.light .nav-logo-text { color:#0A0F3C !important; }
 body.light .nav-links a   { color:rgba(10,15,60,.55) !important; }
 body.light .nav-links a:hover { color:#131DBF !important; }
@@ -1451,7 +1461,38 @@ body.light .theme-pill-thumb {
 body.light .theme-pill-sun { opacity: 0; transform: rotate(30deg) scale(0.7); }
 body.light .theme-pill-moon { stroke: #fff; opacity: 1; transform: rotate(0deg) scale(1); }
 
-</style>
+
+
+/* ── Light mode text contrast fixes ──────────────────────────────── */
+body.light .section-eyebrow { color:#131DBF !important; }
+body.light .section-eyebrow .eyebrow-dot { background:#131DBF; }
+body.light .gold { color:#B45309 !important; }
+body.light .teal-accent, body.light .hero-badge-dot { background:#0B8B83; }
+body.light .hero-kicker { color:#0B8B83 !important; }
+body.light .hero-sub { color:rgba(10,15,60,.65) !important; }
+body.light .feat-card { background:#fff; border-color:rgba(19,29,191,.09); }
+body.light .feat-card p { color:rgba(10,15,60,.62); }
+body.light .step-num { color:rgba(19,29,191,.15) !important; }
+body.light .process-label { color:#131DBF; }
+body.light .values-grid .val-card p { color:rgba(10,15,60,.6); }
+body.light .contact-meta-icon { color:#131DBF; border-color:rgba(19,29,191,.15); background:rgba(19,29,191,.06); }
+body.light .meta-label { color:rgba(10,15,60,.5); }
+body.light .meta-val { color:#0A0F3C; }
+body.light .form-label { color:rgba(10,15,60,.7) !important; }
+body.light .form-input { background:#fff; border-color:rgba(19,29,191,.18); color:#0A0F3C; }
+body.light .form-input::placeholder { color:rgba(10,15,60,.35); }
+body.light .form-input:focus { border-color:#131DBF; }
+body.light .footer-grid a { color:rgba(10,15,60,.55); }
+body.light .footer-grid a:hover { color:#131DBF; }
+body.light .footer-legal { color:rgba(10,15,60,.4); }
+body.light .hero-badge { background:rgba(19,29,191,.08); border-color:rgba(19,29,191,.15); color:#131DBF; }
+body.light .hero-badge-text { color:#131DBF; }
+body.light .stat-num { color:#0A0F3C; }
+body.light .stat-label { color:rgba(10,15,60,.55); }
+body.light .nav-links a { color:rgba(10,15,60,.6) !important; }
+body.light .nav-links a:hover { color:#131DBF !important; }
+body.light .contact-section { background:#F2F4FF; }
+body.light .contact-section h2 { color:#0A0F3C; }</style>
 </head>
 <body>
 
@@ -2397,7 +2438,7 @@ body.light .career-req-body{color:rgba(10,15,60,.6);border-color:rgba(10,15,60,.
         </div>
         <div class="contact-meta-item reveal rd3">
           <div class="contact-meta-icon"><svg viewBox="0 0 18 18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="14" height="10" rx="1.5"/><path d="M2 7l7 5 7-5"/></svg></div>
-          <div><div class="meta-label">Email</div><div class="meta-val">hello@thejobcollectives.com</div></div>
+          <div><div class="meta-label">Email</div><div class="meta-val">connect@jobcollectives.com</div></div>
         </div>
         <div class="contact-meta-item reveal rd4">
           <div class="contact-meta-icon"><svg viewBox="0 0 18 18" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"><path d="M3 5a2 2 0 012-2h.5a1 1 0 011 .85l.5 3a1 1 0 01-.29.9L6 9a11 11 0 005 5l1.25-1.7a1 1 0 01.9-.3l3 .5a1 1 0 01.85 1v.5a2 2 0 01-2 2C6 16 2 12 2 7l1-2z"/></svg></div>
@@ -2510,7 +2551,7 @@ body.light .career-req-body{color:rgba(10,15,60,.6);border-color:rgba(10,15,60,.
         <li><a href="https://www.linkedin.com/company/jobcollectives" target="_blank" rel="noopener">LinkedIn</a></li>
         <li><a href="https://www.instagram.com/jobcollectives" target="_blank" rel="noopener">Instagram</a></li>
         <li><a href="https://www.facebook.com/jobcollectives" target="_blank" rel="noopener">Facebook</a></li>
-        <li><a href="mailto:hello@thejobcollectives.com">Email Us</a></li>
+        <li><a href="mailto:connect@jobcollectives.com">Email Us</a></li>
       </ul>
     </div>
   </div>
