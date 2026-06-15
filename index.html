@@ -1096,11 +1096,18 @@ body.light .feat-card.featured .feat-more-text { color:rgba(255,255,255,.82); }
 @media (max-width:768px) {
   .nav-links { display:none; }
   .nav-mob-btn { display:flex; }
+  .nav-cta { display:none; }
+  /* Portal login: compact on small screens */
+  .nav-login { font-size:12px; padding:6px 12px; }
   .nav-links.open {
     display:flex; flex-direction:column; gap:14px;
-    position:absolute; top:68px; left:0; right:0;
-    background:rgba(10,15,60,.97); backdrop-filter:blur(20px);
-    padding:20px 2rem; border-bottom:1px solid rgba(255,255,255,.07);
+    position:absolute; top:calc(100% + 10px); left:0; right:0;
+    background:rgba(10,15,60,.96); backdrop-filter:blur(24px);
+    -webkit-backdrop-filter:blur(24px);
+    padding:18px 22px;
+    border-radius:20px;
+    border:1px solid rgba(255,255,255,.1);
+    box-shadow:0 12px 40px rgba(0,0,0,.45);
   }
   .problem-grid  { grid-template-columns:1fr; }
   .features-grid { grid-template-columns:1fr 1fr; }
@@ -1119,6 +1126,7 @@ body.light .feat-card.featured .feat-more-text { color:rgba(255,255,255,.82); }
   .features-grid { grid-template-columns:1fr; }
   .how-grid      { grid-template-columns:1fr; }
   .hero-cta-group { flex-direction:column; align-items:center; }
+  .nav-login { display:none; }
 }
 /* ─── Mobile hero structural fix ─────────────────────────── */
 @media (max-width:768px) {
@@ -1127,6 +1135,8 @@ body.light .feat-card.featured .feat-more-text { color:rgba(255,255,255,.82); }
     padding-top: 100px;
     padding-bottom: 60px;
   }
+  .hero-inner { padding: 0 1rem; }
+  .hero-cards { margin-top: 40px; }
 }
 @media (max-width:480px) {
   .hero {
@@ -1492,7 +1502,15 @@ body.light .stat-label { color:rgba(10,15,60,.55); }
 body.light .nav-links a { color:rgba(10,15,60,.6) !important; }
 body.light .nav-links a:hover { color:#131DBF !important; }
 body.light .contact-section { background:#F2F4FF; }
-body.light .contact-section h2 { color:#0A0F3C; }</style>
+body.light .contact-section h2 { color:#0A0F3C; }
+/* Light mode mobile dropdown */
+body.light .nav-links.open {
+  background: rgba(255,255,255,.96) !important;
+  border-color: rgba(19,29,191,.12) !important;
+  box-shadow: 0 12px 40px rgba(10,15,60,.18) !important;
+}
+body.light .nav-links.open a { color: rgba(10,15,60,.7) !important; }
+body.light .nav-links.open a:hover { color: #131DBF !important; }</style>
 </head>
 <body>
 
