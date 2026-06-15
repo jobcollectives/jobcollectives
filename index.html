@@ -1510,7 +1510,99 @@ body.light .nav-links.open {
   box-shadow: 0 12px 40px rgba(10,15,60,.18) !important;
 }
 body.light .nav-links.open a { color: rgba(10,15,60,.7) !important; }
-body.light .nav-links.open a:hover { color: #131DBF !important; }</style>
+body.light .nav-links.open a:hover { color: #131DBF !important; }
+
+/* ═══ PORTAL PREVIEW — MOBILE FIX ═══════════════════════════════
+   All selectors use !important to override the inline styles
+   on the portal HTML mockup elements.
+═══════════════════════════════════════════════════════════════ */
+@media (max-width:700px) {
+
+  /* Outer frame: clip overflow, shrink radius */
+  #portalClient > div,
+  #portalPartner > div {
+    border-radius: 16px !important;
+    overflow: hidden !important;
+    box-shadow: 0 10px 40px rgba(10,15,60,.5) !important;
+  }
+
+  /* Browser chrome topbar: compact */
+  #portalClient > div > div:first-child,
+  #portalPartner > div > div:first-child {
+    padding: 10px 14px !important;
+    gap: 8px !important;
+  }
+  #portalClient > div > div:first-child span,
+  #portalPartner > div > div:first-child span {
+    font-size: 9px !important;
+  }
+
+  /* Portal body: drop 200px sidebar → full-width content */
+  #portalClient > div > div:nth-child(2),
+  #portalPartner > div > div:nth-child(2) {
+    display: block !important;     /* override grid */
+    min-height: auto !important;
+  }
+
+  /* Hide the sidebar column entirely */
+  #portalClient > div > div:nth-child(2) > div:first-child,
+  #portalPartner > div > div:nth-child(2) > div:first-child {
+    display: none !important;
+  }
+
+  /* Main content area: tighter padding */
+  #portalClient > div > div:nth-child(2) > div:last-child,
+  #portalPartner > div > div:nth-child(2) > div:last-child {
+    padding: 14px !important;
+  }
+}
+
+@media (max-width:540px) {
+
+  /* Stats row: 2 × 2 instead of 4 × 1 */
+  #portalClient > div > div:nth-child(2) > div:last-child > div:nth-child(2),
+  #portalPartner > div > div:nth-child(2) > div:last-child > div:nth-child(2) {
+    grid-template-columns: 1fr 1fr !important;
+  }
+
+  /* Two-col content grid (tasks + deliverables) → single col */
+  #portalClient > div > div:nth-child(2) > div:last-child > div:nth-child(3),
+  #portalPartner > div > div:nth-child(2) > div:last-child > div:nth-child(3) {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+}
+
+/* Role tab buttons: stack on very small screens */
+@media (max-width:400px) {
+  #portalClient > div > div:nth-child(2) > div:last-child > div:first-child {
+    font-size: 13px !important;
+    padding: 12px 14px !important;
+  }
+}
+
+/* Portal login CTA pill — mobile responsive */
+@media (max-width:540px) {
+  .portal-cta-pill {
+    flex-direction: column !important;
+    text-align: center !important;
+    align-items: center !important;
+    padding: 18px 20px !important;
+    gap: 14px !important;
+    width: calc(100% - 2rem) !important;
+  }
+  .portal-cta-pill > div:last-child {
+    flex-direction: column !important;
+    width: 100% !important;
+    gap: 8px !important;
+  }
+  .portal-cta-pill > div:last-child a {
+    text-align: center !important;
+    justify-content: center !important;
+    width: 100% !important;
+  }
+}
+</style>
 </head>
 <body>
 
@@ -2322,7 +2414,7 @@ body.light .nav-links.open a:hover { color: #131DBF !important; }</style>
 
     <!-- Login CTA strip -->
     <div class="reveal" style="margin-top:40px;text-align:center;">
-      <div style="display:inline-flex;align-items:center;gap:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 28px;backdrop-filter:blur(12px);">
+      <div class="portal-cta-pill" style="display:inline-flex;align-items:center;gap:16px;background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:18px 28px;backdrop-filter:blur(12px);">
         <div>
           <div style="font-size:14px;font-weight:700;color:var(--white);margin-bottom:2px;">Already a client or partner?</div>
           <div style="font-size:12px;color:rgba(255,255,255,.4);">Access your dedicated workspace below.</div>
