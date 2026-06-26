@@ -25,7 +25,7 @@
   --shadow2:0 2px 8px rgba(27,42,74,0.12),0 8px 24px rgba(27,42,74,0.08);
   --r:8px;--r2:12px;--r3:16px;
   --font:'Poppins',Arial,system-ui,sans-serif;
-  --sb:204px;
+  --sb:224px;
   --overdue-row-bg:#FFF8F8;--client-row-bg:#FFFDF0;--hover-row-bg:#FAFBFE;
 }
 /* ── DARK MODE TOKENS ── */
@@ -175,7 +175,7 @@
 }
 .auth-back-web:hover{color:rgba(255,255,255,.8)}
 
-html,body{height:100%;font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;overflow:auto;transition:background .25s,color .25s}
+html,body{height:100%;font-family:var(--font);font-size:15.5px;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;overflow:auto;transition:background .25s,color .25s}
 .hidden{display:none!important}
 #app-shell{display:flex;height:100vh;overflow:hidden}
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:199}
@@ -1210,6 +1210,177 @@ html,body{font-size:13px}
   letter-spacing: .03em;
   color: var(--text2);
 }
+/* ═══════════════════════════════════════════════════════
+   TJC SCALE SYSTEM — Typography & Layout Enlargement
+   Overrides all hardcoded small sizes. Applied last so
+   it wins the cascade without touching HTML.
+═══════════════════════════════════════════════════════ */
+
+/* ── Sidebar ───────────────────────────────────────── */
+.sb-name          { font-size: 14px; }
+.sb-role          { font-size: 11px; }
+.sb-sect          { font-size: 10px; }
+.sb-item          { font-size: 13.5px; padding: 7px 14px; }
+.sb-item svg      { width: 15px; height: 15px; }
+.sb-badge         { font-size: 10px; }
+.sb-fx-label      { font-size: 10px; }
+.sb-fx-val        { font-size: 15px; }
+.sb-fx-sub        { font-size: 11.5px; }
+.sb-verse-text    { font-size: 11.5px; }
+.sb-verse-ref     { font-size: 10px; }
+.sb-user-name     { font-size: 13.5px; }
+.sb-user-role     { font-size: 11px; }
+
+/* ── Topbar ─────────────────────────────────────────── */
+.topbar           { height: 56px; }
+.page-title       { font-size: 17px !important; }
+
+/* ── Content area ───────────────────────────────────── */
+.content-area     { padding: 22px 24px; }
+
+/* ── Cards & KPI cards ──────────────────────────────── */
+.card-pad         { padding: 16px 20px; }
+.kpi-label        { font-size: 12.5px; }
+.kpi-val          { font-size: 27px; }
+.kpi-sub          { font-size: 12px; }
+.kpi-sub2         { font-size: 11px; }
+.kpi-cc-label     { font-size: 12.5px; }
+.kpi-cc-val       { font-size: 34px; }
+.kpi-cc-sub       { font-size: 12.5px; }
+
+/* ── Section headers ────────────────────────────────── */
+.sec-title        { font-size: 15px; }
+.sec-action       { font-size: 12.5px; }
+
+/* ── Tables ─────────────────────────────────────────── */
+.data-table       { font-size: 13.5px; }
+.data-table th    { font-size: 11.5px; padding: 9px 14px; }
+.data-table td    { font-size: 13.5px; padding: 10px 14px; }
+
+/* ── Tasks ──────────────────────────────────────────── */
+.task-row         { padding: 10px 14px; }
+.task-name        { font-size: 14px; }
+
+/* ── Tags ───────────────────────────────────────────── */
+.tag              { font-size: 11.5px; padding: 3px 9px; }
+
+/* ── Avatars ────────────────────────────────────────── */
+.av-xs            { width: 18px; height: 18px; font-size: 9px; }
+.av-sm            { width: 25px; height: 25px; font-size: 10px; }
+.av-md            { width: 34px; height: 34px; font-size: 12px; }
+.av-lg            { width: 44px; height: 44px; font-size: 15px; }
+.av-xl            { width: 56px; height: 56px; font-size: 20px; }
+
+/* ── Buttons ────────────────────────────────────────── */
+.btn              { font-size: 14px; padding: 9px 18px; }
+.btn-sm           { font-size: 13px; padding: 6px 13px; }
+.btn-xs           { font-size: 12px; padding: 4px 10px; }
+.btn-ai           { font-size: 14px; padding: 9px 18px; }
+
+/* ── Forms ──────────────────────────────────────────── */
+.form-label       { font-size: 11.5px; }
+.form-control     { font-size: 14px; padding: 9px 13px; }
+.form-note        { font-size: 12.5px; }
+.form-hint        { font-size: 12.5px; }
+.form-warn        { font-size: 12.5px; }
+.form-danger      { font-size: 12.5px; }
+
+/* ── Modals ─────────────────────────────────────────── */
+.modal-title      { font-size: 16.5px; }
+.modal-body       { padding: 18px 22px; }
+.modal-head       { padding: 18px 22px 14px; }
+.modal-foot       { padding: 14px 22px; }
+
+/* ── Pipeline (kanban) ──────────────────────────────── */
+.pipe-col-head    { font-size: 13px; }
+.pipe-card-name   { font-size: 13.5px; }
+.pipe-card-meta   { font-size: 12.5px; }
+.pipe-card-rate   { font-size: 12.5px; }
+
+/* ── Finance boxes ──────────────────────────────────── */
+.fin-box-label    { font-size: 11.5px; }
+.fin-box-usd      { font-size: 20px; }
+.fin-box-php      { font-size: 12.5px; }
+.dc-primary       { font-size: 17px; }
+.dc-secondary     { font-size: 11.5px; }
+
+/* ── Info grid ──────────────────────────────────────── */
+.info-label       { font-size: 10.5px; }
+.info-val         { font-size: 14.5px; }
+
+/* ── Activity feed ──────────────────────────────────── */
+.activity-action  { font-size: 13.5px; }
+.activity-meta    { font-size: 11.5px; }
+
+/* ── Score cards ────────────────────────────────────── */
+.score-name       { font-size: 14.5px; }
+.score-role       { font-size: 11.5px; }
+.score-metric-val { font-size: 14.5px; }
+.score-metric-lbl { font-size: 10.5px; }
+
+/* ── Welcome banner ─────────────────────────────────── */
+.wb-greeting      { font-size: 24px; }
+.wb-tip           { font-size: 14px; }
+
+/* ── VA Portal — tab sidebar ────────────────────────── */
+.portal-tabs      { width: 188px; }
+.ptab             { font-size: 13.5px; padding: 10px 18px; gap: 7px; }
+
+/* ── VA Portal — body ───────────────────────────────── */
+.portal-body      { padding: 20px 24px; }
+
+/* ── Client portal hero ─────────────────────────────── */
+.cp-hero-name     { font-size: 22px; }
+.cp-hero-sub      { font-size: 12.5px; }
+.cp-hero-health-val { font-size: 28px; }
+
+/* ── Timer ──────────────────────────────────────────── */
+.timer-display    { font-size: 38px; }
+.timer-btn-start,
+.timer-btn-stop,
+.timer-btn-reset  { font-size: 14.5px; padding: 10px 22px; }
+
+/* ── Calendar ───────────────────────────────────────── */
+.cal-day-name     { font-size: 11.5px; }
+.cal-day-num      { font-size: 13.5px; width: 24px; height: 24px; }
+.cal-ev-chip      { font-size: 11.5px; }
+
+/* ── Analytics row ──────────────────────────────────── */
+.an-stat-val      { font-size: 18px; }
+.an-stat-lbl      { font-size: 10.5px; }
+
+/* ── Search ─────────────────────────────────────────── */
+.search-input     { font-size: 14px; padding: 9px 13px 9px 34px; }
+
+/* ── Toast ──────────────────────────────────────────── */
+.toast            { font-size: 14px; }
+
+/* ── Empty state ────────────────────────────────────── */
+.empty-text       { font-size: 14.5px; }
+
+/* ── Filter tabs ────────────────────────────────────── */
+.ftab             { font-size: 13px; padding: 6px 14px; }
+
+/* ── Dual currency ──────────────────────────────────── */
+.rmet-val         { font-size: 18px; }
+.rmet-lbl         { font-size: 10.5px; }
+
+/* ── Capacity rows ──────────────────────────────────── */
+.va-cap-name      { font-size: 14.5px; }
+.va-cap-role      { font-size: 11.5px; }
+.va-cap-pct       { font-size: 13.5px; }
+
+/* ── Pipe add ───────────────────────────────────────── */
+.pipe-add         { font-size: 12.5px; }
+
+/* ── Full-width layout override ─────────────────────── */
+/* Remove centred narrow column — use full available width */
+.portal-body > *               { max-width: 100% !important; }
+.portal-body > div[style*="max-width"]   { max-width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; }
+.portal-body > div[style*="max-width:760px"] { max-width: 100% !important; }
+.portal-body > div[style*="max-width:700px"] { max-width: 100% !important; }
+.content-area > div[style*="max-width"]  { max-width: 100% !important; }
+
 </style>
 </head>
 <body>
@@ -1289,7 +1460,9 @@ const SEED = {
     { id: "u2", displayName: "Maria Reyes", email: "maria@thejobscollective.com", role: "va", initials: "MR", avatarColor: "teal", capacity: 85, status: "Active", skills: ["Facebook Ads", "Canva", "Scheduling"], clientCount: 2, pin: "123456", kpi: { completionRate: 94, slaCompliance: 91, errorRate: 3, satisfaction: 5 } },
     { id: "u3", displayName: "Ana Cruz", email: "ana@thejobscollective.com", role: "va", initials: "AC", avatarColor: "red", capacity: 60, status: "Active", skills: ["Data Entry", "Email Mgmt", "Scheduling"], clientCount: 2, pin: "123456", kpi: { completionRate: 88, slaCompliance: 78, errorRate: 6, satisfaction: 4 } },
     { id: "u4", displayName: "Paolo Lim", email: "paolo@thejobscollective.com", role: "va", initials: "PL", avatarColor: "gold", capacity: 70, status: "Active", skills: ["Copywriting", "Canva", "Research"], clientCount: 2, pin: "123456", kpi: { completionRate: 92, slaCompliance: 85, errorRate: 4, satisfaction: 5 } },
-    { id: "u5", displayName: "Grace Santos", email: "grace@thejobscollective.com", role: "va", initials: "GS", avatarColor: "green", capacity: 45, status: "Active", skills: ["Client Relations", "Reporting", "Sales"], clientCount: 3, pin: "123456", kpi: { completionRate: 96, slaCompliance: 95, errorRate: 2, satisfaction: 5 } }
+    { id: "u5", displayName: "Grace Santos", email: "grace@thejobscollective.com", role: "va", initials: "GS", avatarColor: "green", capacity: 45, status: "Active", skills: ["Client Relations", "Reporting", "Sales"], clientCount: 3, pin: "123456", kpi: { completionRate: 96, slaCompliance: 95, errorRate: 2, satisfaction: 5 } },
+    { id: "u6", displayName: "Art Teves", email: "art@thejobscollective.com", role: "growth_director", initials: "AT", avatarColor: "navy", capacity: 0, status: "Active", skills: ["Growth Strategy", "Marketing", "Business Development"], pin: "123456" },
+    { id: "u7", displayName: "Alvin Valdez", email: "alvin@thejobscollective.com", role: "ops_manager", initials: "AV", avatarColor: "purple", capacity: 0, status: "Active", skills: ["Operations", "Process Management", "Team Coordination"], pin: "123456" }
   ],
   clients: [
     { id: "c1", name: "BrandX Philippines", clientPin: "123456", status: "Active", package: "Premium", rateUsd: 500, vaCostPhp: 18e3, priority: "High", assignedVaUid: "u2", assignedVa: "Maria Reyes", assignedVaInitials: "MR", assignedVaColor: "teal", lastContact: "2025-04-22", contractEnd: "2025-09-30", timezone: "PHT (UTC+8)", healthScore: 82, onboardingStep: 7, onboardingDone: true, notes: [], deliverables: [], tools: [], socials: {}, contacts: [{ name: "Kevin Tan", role: "Marketing Manager", email: "kevin@brandx.ph", phone: "+63 917 xxx xxxx", isPrimary: true }], reports: [], oosCount: 2, oosValue: 150, archived: false, createdAt: "2025-01-15", marketingMetrics: {} },
@@ -1720,7 +1893,7 @@ function updateUserInfo() {
   const v = APP.profile;
   if (!v) return;
   document.getElementById("sb-uname").textContent = v.displayName || v.email || "User";
-  document.getElementById("sb-urole").textContent = { owner: "Founder & Owner", va: "Partner", ops_va: "Operations Partner", client: "Client" }[v.role] || v.role;
+  document.getElementById("sb-urole").textContent = { owner: "Founder & Owner", va: "Partner", ops_va: "Operations Partner", growth_director: "Director of Growth", ops_manager: "Operations Manager", client: "Client" }[v.role] || v.role;
   const av = document.getElementById("sb-av");
   if (av) {
     av.textContent = v.initials || "?";
@@ -1893,7 +2066,9 @@ function renderCurrentPage() {
     clientportal: renderClientPortal,
     conversations: renderConversations,
     calendar: () => renderCalendarView("management", "all", "All Teams"),
-    sops: renderSOPLibrary
+    sops: renderSOPLibrary,
+    growth_portal: () => typeof renderGrowthPortal === "function" ? renderGrowthPortal() : "<div class='empty'><div class='empty-text'>Growth Portal loading…</div></div>",
+    ops_portal: () => typeof renderOpsPortal === "function" ? renderOpsPortal() : "<div class='empty'><div class='empty-text'>Ops Portal loading…</div></div>"
   };
   const fn = pages[APP.page];
   ca.innerHTML = fn ? fn() : '<div class="empty"><div class="empty-text">Page not found.</div></div>';
@@ -2809,6 +2984,7 @@ function renderVADashboard() {
     ["calendar", ic("calendar") + "Calendar"],
     ["learning", ic("learn") + "Learning"],
     ["compensation", ic("invoice") + "Pay & Expenses"],
+    ["income_calc", ic("kpi") + "Income Calculator"],
     ["kpiscorecard", ic("kpi") + "Scorecard"],
     ["itsecurity", ic("key") + "IT & Security"],
     ["noticeboard", ic("notes") + "Noticeboard"],
@@ -2835,6 +3011,7 @@ function renderVADashboard() {
     reports: renderVAReports(va),
     activity: renderVAActivity(va),
     compensation: renderVACompensation(va),
+    income_calc: typeof renderVAIncomeCalculator === "function" ? renderVAIncomeCalculator(va) : "",
     kpiscorecard: renderVAKPIScorecard(va),
     itsecurity: renderVAITSecurity(va),
     noticeboard: renderVANoticeboard(va),
@@ -5240,7 +5417,7 @@ function renderAuthChooser() {
   if (step === "choose") {
     return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:420px">
       <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <a href="https://jobcollectives.github.io/jobcollectives" class="auth-back-web">
+        <a href="https://justineinacay.github.io/TJCWebsite" class="auth-back-web">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1L3 7l6 6"/></svg>
           Back to Website
         </a>
@@ -5291,7 +5468,7 @@ function renderAuthChooser() {
     const matched = searchVal.length >= 2 ? APP.data.team.filter((v) => (v.role === "va" || v.role === "ops_va") && v.displayName.toLowerCase().includes(searchVal.toLowerCase())) : [];
     return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:420px">
       <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <a href="https://jobcollectives.github.io/jobcollectives" class="auth-back-web">
+        <a href="https://justineinacay.github.io/TJCWebsite" class="auth-back-web">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1L3 7l6 6"/></svg>
           Back to Website
         </a>
@@ -5344,7 +5521,7 @@ function renderAuthChooser() {
     const matched = searchVal.length >= 2 ? APP.data.clients.filter((c) => !c.archived && ["Active", "Onboarding", "Completed"].includes(c.status) && c.name.toLowerCase().includes(searchVal.toLowerCase())) : [];
     return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:420px">
       <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
-        <a href="https://jobcollectives.github.io/jobcollectives" class="auth-back-web">
+        <a href="https://justineinacay.github.io/TJCWebsite" class="auth-back-web">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1L3 7l6 6"/></svg>
           Back to Website
         </a>
@@ -5444,8 +5621,10 @@ function checkPin() {
     APP.authStep = "choose";
     setPresence(va.id, "Available", true);
     setAppShellMode("");
-    navigate("vaportal");
-    toast("Welcome back, " + va.displayName.split(" ")[0] + "! ", "success");
+    if (va.role === "growth_director") navigate("growth_portal");
+    else if (va.role === "ops_manager") navigate("ops_portal");
+    else navigate("vaportal");
+    toast("Welcome back, " + va.displayName.split(" ")[0] + "! 👋", "success");
   } else {
     APP.va.pinEntry = "";
     renderCurrentPage();
@@ -7321,7 +7500,7 @@ function renderJobs() {
   const jobs = loadJobs();
   const open = jobs.filter((j) => j.status === "Open").length;
   return '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px"><div style="font-size:13px;color:var(--text2)">' + jobs.length + " job posting" + (jobs.length !== 1 ? "s" : "") + " \xB7 " + open + ' open on the website</div><button class="btn btn-sm btn-primary" onclick="openAddJob()">' + ic("plus") + 'Post a Job</button></div><div class="card card-pad" style="margin-bottom:14px;background:var(--bg)"><div style="font-size:12px;color:var(--text3)">' + ic("alert") + "Open roles appear instantly in the <strong>Careers</strong> section of the website on this device. Because the site is hosted statically (GitHub Pages), site visitors will see updated roles after the next deploy or once the Supabase backend is connected.</div></div>" + (jobs.length ? jobs.map((j) => {
-    return '<div class="card card-pad job-card"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:220px"><div style="font-size:15px;font-weight:700">' + j.title + '</div><div style="font-size:11px;color:var(--text3);margin:3px 0 6px">' + (j.type || "Full-Time") + " \xB7 " + (j.setup || "Remote (PHT, US-aligned hours)") + " \xB7 Posted " + (j.postedAt || "\u2014") + '</div><div style="font-size:12px;color:var(--text2);white-space:pre-wrap">' + (j.description || "") + "</div>" + (j.requirements ? '<div style="font-size:12px;color:var(--text2);margin-top:6px"><strong>Requirements:</strong> ' + j.requirements + "</div>" : "") + '</div><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end"><span class="tag ' + (j.status === "Open" ? "t-green" : "t-gray") + '">' + j.status + "</span>" + (j.salaryMin || j.salaryMax ? '<span class="tag t-teal" style="font-size:10px">\u20B1 ' + (j.salaryMin || "?") + "\u2013\u20B1" + (j.salaryMax || "?") + "/mo</span>" : "") + `<div style="display:flex;gap:5px"><button class="btn btn-xs btn-secondary" onclick="toggleJobStatus('` + j.id + `')">` + (j.status === "Open" ? "Close Role" : "Reopen") + `</button><button class="btn btn-xs btn-secondary" onclick="openEditJob('` + j.id + `')">` + ic("edit") + `Edit</button><button class="btn btn-xs btn-danger" onclick="deleteJob('` + j.id + `')">` + ic("trash") + "Delete</button></div></div></div></div>";
+    return '<div class="card card-pad job-card"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px;flex-wrap:wrap"><div style="flex:1;min-width:220px"><div style="font-size:15px;font-weight:700">' + j.title + '</div><div style="font-size:11px;color:var(--text3);margin:3px 0 6px">' + (j.type || "Full-Time") + " \xB7 " + (j.setup || "Remote (PHT, US-aligned hours)") + " \xB7 Posted " + (j.postedAt || "\u2014") + '</div><div style="font-size:12px;color:var(--text2);white-space:pre-wrap">' + (j.description || "") + "</div>" + (j.requirements ? '<div style="font-size:12px;color:var(--text2);margin-top:6px"><strong>Requirements:</strong> ' + j.requirements + "</div>" : "") + '</div><div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end"><span class="tag ' + (j.status === "Open" ? "t-green" : "t-gray") + '">' + j.status + "</span>" + (j.salaryMin || j.salaryMax ? '<span class="tag t-teal" style="font-size:10px">\u{1F4B5} $' + (j.salaryMin || "?") + "\u2013$" + (j.salaryMax || "?") + "/mo</span>" : "") + `<div style="display:flex;gap:5px"><button class="btn btn-xs btn-secondary" onclick="toggleJobStatus('` + j.id + `')">` + (j.status === "Open" ? "Close Role" : "Reopen") + `</button><button class="btn btn-xs btn-secondary" onclick="openEditJob('` + j.id + `')">` + ic("edit") + `Edit</button><button class="btn btn-xs btn-danger" onclick="deleteJob('` + j.id + `')">` + ic("trash") + "Delete</button></div></div></div></div>";
   }).join("") : emptyState('No job postings yet. Click "Post a Job" to add your first opening.'));
 }
 function jobFormHtml(j) {
@@ -9844,7 +10023,7 @@ renderAuthChooser = function() {
     <div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:440px">
       <!-- Back + Theme -->
       <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:20px">
-        <a href="https://jobcollectives.github.io/jobcollectives" style="font-size:12px;color:rgba(255,255,255,.55);text-decoration:none;display:flex;align-items:center;gap:5px">
+        <a href="https://justineinacay.github.io/TJCWebsite" style="font-size:12px;color:rgba(255,255,255,.55);text-decoration:none;display:flex;align-items:center;gap:5px">
           <svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1L3 7l6 6"/></svg>Website
         </a>
         <button class="theme-toggle-btn" onclick="toggleTheme()" style="border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:rgba(255,255,255,.6)">
@@ -10386,7 +10565,7 @@ renderAuthChooser = function() {
     }
     return null;
   })();
-  return '<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:460px"><div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><a href="https://jobcollectives.github.io/jobcollectives" style="font-size:12px;color:rgba(255,255,255,.55);text-decoration:none;display:flex;align-items:center;gap:5px"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1L3 7l6 6"/></svg>Website</a><button class="theme-toggle-btn" onclick="toggleTheme()" style="border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:rgba(255,255,255,.6)"><svg class="icon-moon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14.5 10.5A6.5 6.5 0 016.5 2.5a6.5 6.5 0 000 12 6.5 6.5 0 008-4z"/></svg><svg class="icon-sun" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="3.2"/><line x1="8.5" y1="1" x2="8.5" y2="2.8"/><line x1="8.5" y1="14.2" x2="8.5" y2="16"/><line x1="1" y1="8.5" x2="2.8" y2="8.5"/><line x1="14.2" y1="8.5" x2="16" y2="8.5"/><line x1="3.2" y1="3.2" x2="4.5" y2="4.5"/><line x1="12.5" y1="12.5" x2="13.8" y2="13.8"/><line x1="12.5" y1="4.5" x2="13.8" y2="3.2"/><line x1="3.2" y1="13.8" x2="4.5" y2="12.5"/></svg></button></div><div class="auth-card"><div class="auth-logo" style="overflow:hidden;padding:0;background:#131DBF;margin-bottom:22px">' + (logoSrc ? '<img src="' + logoSrc + '" style="width:100%;height:100%;object-fit:contain">' : '<span style="color:#fff;font-weight:900;font-size:18px">TJC</span>') + '</div><div class="auth-title" style="font-size:21px;font-weight:800;margin-bottom:6px">Welcome back</div><div style="font-size:13px;color:var(--text3);margin-bottom:30px">Choose your portal to sign in</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px">' + [
+  return '<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:460px"><div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:24px"><a href="https://justineinacay.github.io/TJCWebsite" style="font-size:12px;color:rgba(255,255,255,.55);text-decoration:none;display:flex;align-items:center;gap:5px"><svg width="12" height="12" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1L3 7l6 6"/></svg>Website</a><button class="theme-toggle-btn" onclick="toggleTheme()" style="border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.07);color:rgba(255,255,255,.6)"><svg class="icon-moon" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><path d="M14.5 10.5A6.5 6.5 0 016.5 2.5a6.5 6.5 0 000 12 6.5 6.5 0 008-4z"/></svg><svg class="icon-sun" viewBox="0 0 17 17" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"><circle cx="8.5" cy="8.5" r="3.2"/><line x1="8.5" y1="1" x2="8.5" y2="2.8"/><line x1="8.5" y1="14.2" x2="8.5" y2="16"/><line x1="1" y1="8.5" x2="2.8" y2="8.5"/><line x1="14.2" y1="8.5" x2="16" y2="8.5"/><line x1="3.2" y1="3.2" x2="4.5" y2="4.5"/><line x1="12.5" y1="12.5" x2="13.8" y2="13.8"/><line x1="12.5" y1="4.5" x2="13.8" y2="3.2"/><line x1="3.2" y1="13.8" x2="4.5" y2="12.5"/></svg></button></div><div class="auth-card"><div class="auth-logo" style="overflow:hidden;padding:0;background:#131DBF;margin-bottom:22px">' + (logoSrc ? '<img src="' + logoSrc + '" style="width:100%;height:100%;object-fit:contain">' : '<span style="color:#fff;font-weight:900;font-size:18px">TJC</span>') + '</div><div class="auth-title" style="font-size:21px;font-weight:800;margin-bottom:6px">Welcome back</div><div style="font-size:13px;color:var(--text3);margin-bottom:30px">Choose your portal to sign in</div><div style="display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-bottom:30px">' + [
     ["owner-auth", "briefcase", "Management", "var(--blue)"],
     ["va-select", "users", "Partner / Staff", "var(--teal)"],
     ["client-select", "building", "Client", "var(--gold)"],
@@ -10680,35 +10859,29 @@ function setDayRating(vaId, val) {
   const style = document.createElement("style");
   style.id = "tjc-portal-center";
   style.textContent = `
-    /* Center all partner portal content */
+    /* Full-width portal body — scale to fill screen */
     .portal-body {
       flex: 1;
       overflow-y: auto;
-      padding: 16px 18px;
+      padding: 20px 24px;
       display: flex;
       flex-direction: column;
-      align-items: center;
+      align-items: stretch;
     }
     .portal-body > * {
       width: 100%;
-      max-width: 860px;
+      max-width: 100%;
     }
-    /* Tabs that return a single root div with max-width \u2014 ensure margin auto */
     .portal-body > div[style*="max-width"] {
-      margin-left: auto !important;
-      margin-right: auto !important;
+      max-width: 100% !important;
+      margin-left: 0 !important;
+      margin-right: 0 !important;
     }
-    /* The dashboard tab returns multiple sibling elements \u2014 wrap them */
-    /* We handle this via JS below */
-
-    /* New tab wrappers from update2 \u2014 ensure centred */
     .portal-body > div[style*="max-width:760px"] {
-      margin-left: auto !important;
-      margin-right: auto !important;
+      max-width: 100% !important;
     }
     .portal-body > div[style*="max-width:700px"] {
-      margin-left: auto !important;
-      margin-right: auto !important;
+      max-width: 100% !important;
     }
 
     @media (max-width: 900px) {
@@ -11149,7 +11322,7 @@ if (_origJobFormHtml) {
   jobFormHtml = function(j) {
     j = j || {};
     const base = _origJobFormHtml(j);
-    const salaryRow = '<div class="form-row"><div class="form-group"><label class="form-label">Salary Min (PHP/mo)</label><input class="form-control" id="f-job-sal-min" type="number" min="0" placeholder="e.g. 500" value="' + (j.salaryMin || "") + '"></div><div class="form-group"><label class="form-label">Salary Max (PHP/mo)</label><input class="form-control" id="f-job-sal-max" type="number" min="0" placeholder="e.g. 900" value="' + (j.salaryMax || "") + '"></div></div>';
+    const salaryRow = '<div class="form-row"><div class="form-group"><label class="form-label">Salary Min (USD/mo)</label><input class="form-control" id="f-job-sal-min" type="number" min="0" placeholder="e.g. 500" value="' + (j.salaryMin || "") + '"></div><div class="form-group"><label class="form-label">Salary Max (USD/mo)</label><input class="form-control" id="f-job-sal-max" type="number" min="0" placeholder="e.g. 900" value="' + (j.salaryMax || "") + '"></div></div>';
     return base.replace(
       '<div class="form-group"><label class="form-label">Status</label>',
       salaryRow + '<div class="form-group"><label class="form-label">Status</label>'
@@ -11668,7 +11841,7 @@ if(typeof _startRealtime === 'function'){
   _startRealtime = async function(){
     // Realtime disabled — DataCloneError fix.
     // Data syncs on every lsSave call instead (write-through cache).
-    // [TJC SB] Realtime disabled.
+    console.log('[TJC SB] Realtime disabled (DataCloneError prevention). Using write-through sync.');
   };
 }
 
@@ -12046,7 +12219,7 @@ if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
   );
 
   if (!IS_PRODUCTION || IS_SANDBOX) {
-    // [TJC SB] Sandbox mode — Supabase skipped, localStorage active.
+    console.log('[TJC SB] Skipped — not on production host (' + (host || 'sandboxed') + '). Using localStorage only.');
     return;
   }
 
@@ -12241,7 +12414,7 @@ if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
     };
   }
 
-  // [TJC SB] Production REST sync active.
+  console.log('[TJC SB] Production mode — REST sync active');
 })();
 
 
@@ -13009,350 +13182,106 @@ renderCurrentPage = function() {
   }
 };
 
-
-// ═══════════════════════════════════════════════════════════════════
-//  TJC UPDATE 12 — Client Portal Light Mode Fix
-//  Replaces the update11 CSS injection with a corrected version
-// ═══════════════════════════════════════════════════════════════════
-(function applyPortalLightModeCSS(){
-  var existing = document.getElementById('tjc-light-mode-fixes');
-  if (existing) existing.remove();
-
-  var style = document.createElement('style');
-  style.id = 'tjc-light-mode-fixes';
-  style.textContent = `
-    /* ─── TOPBAR: Keep dark in both modes — text is hardcoded white ─── */
-    .cp-topbar { background: var(--navy) !important; }
-
-    /* ─── TASK ROWS ──────────────────────────────────────────────────── */
-    [data-theme="light"] .task-row:hover {
-      background: #EEF2FF !important;
-    }
-    [data-theme="light"] .task-row.overdue-row {
-      background: rgba(239,68,68,.06) !important;
-    }
-    [data-theme="light"] .task-row.overdue-row:hover {
-      background: rgba(239,68,68,.11) !important;
-    }
-
-    /* ─── CLIENT PORTAL TABS (ptab) ─────────────────────────────────── */
-    [data-theme="light"] .ptab {
-      color: #475569 !important;
-    }
-    [data-theme="light"] .ptab.on {
-      background: rgba(19,29,191,.07) !important;
-      color: #131DBF !important;
-      border-left-color: #131DBF !important;
-      box-shadow: none !important;
-    }
-    [data-theme="light"] .ptab:hover:not(.on) {
-      background: #F1F5F9 !important;
-      color: #1e293b !important;
-    }
-
-    /* ─── CLIENT PORTAL SIDEBAR ─────────────────────────────────────── */
-    [data-theme="light"] .cp-portal-tabs {
-      background: #F8FAFC !important;
-      border-right-color: #E2E8F0 !important;
-    }
-
-    /* ─── CLIENT PORTAL BODY CARDS ───────────────────────────────────── */
-    [data-theme="light"] .cp-portal-body .card {
-      background: #fff !important;
-      border-color: #E2E8F0 !important;
-    }
-    [data-theme="light"] .cp-portal-body {
-      background: #F8FAFC !important;
-    }
-    [data-theme="light"] .cp-stat {
-      background: #fff !important;
-      border: 1px solid #E2E8F0 !important;
-    }
-    [data-theme="light"] .cp-stat-val {
-      color: #0A0F3C !important;
-    }
-    [data-theme="light"] .cp-stat-lbl {
-      color: #7B83A8 !important;
-    }
-
-    /* ─── SECTION HEADERS ────────────────────────────────────────────── */
-    [data-theme="light"] .sec-title {
-      color: #44496E !important;
-    }
-    [data-theme="light"] .sec-head .btn {
-      border-color: #CBD5E1 !important;
-      color: #44496E !important;
-    }
-
-    /* ─── TASK NAME / META ───────────────────────────────────────────── */
-    [data-theme="light"] .task-name {
-      color: #0A0F3C !important;
-    }
-    [data-theme="light"] .task-meta {
-      color: #7B83A8 !important;
-    }
-    [data-theme="light"] .task-row {
-      border-bottom-color: #E2E8F0 !important;
-    }
-
-    /* ─── HR PORTAL SIDEBAR ──────────────────────────────────────────── */
-    [data-theme="light"] .hr-nav-item {
-      color: #334155 !important;
-    }
-    [data-theme="light"] .hr-nav-item.active {
-      color: #131DBF !important;
-      background: rgba(19,29,191,.07) !important;
-    }
-
-    /* ─── PARTNER PORTAL TABS ────────────────────────────────────────── */
-    [data-theme="light"] .ptab {
-      color: #475569 !important;
-    }
-
-    /* ─── THEME TOGGLE BUTTON ────────────────────────────────────────── */
-    .topbar-theme-toggle {
-      background: rgba(255,255,255,.12) !important;
-      border: 1px solid rgba(255,255,255,.2) !important;
-      color: rgba(255,255,255,.85) !important;
-      border-radius: 8px;
-      padding: 5px 9px;
-      cursor: pointer;
-      font-size: 13px;
-      line-height: 1;
-      display: inline-flex;
-      align-items: center;
-      transition: background .15s;
-    }
-    /* Exception: cp-topbar stays dark so toggle stays light-styled */
-    .cp-topbar .topbar-theme-toggle {
-      background: rgba(255,255,255,.12) !important;
-      border-color: rgba(255,255,255,.2) !important;
-      color: rgba(255,255,255,.85) !important;
-    }
-    [data-theme="light"] .topbar-theme-toggle:not(.cp-topbar *) {
-      background: rgba(0,0,0,.06) !important;
-      border-color: rgba(0,0,0,.15) !important;
-      color: #334155 !important;
-    }
-
-    /* ─── EMPTY STATE TEXT ───────────────────────────────────────────── */
-    [data-theme="light"] .empty-text {
-      color: #94A3B8 !important;
-    }
-
-    /* ─── TAG / BADGE CONTRAST ───────────────────────────────────────── */
-    [data-theme="light"] .tag.t-navy {
-      background: #EEF2FF !important;
-      color: #131DBF !important;
-    }
-  `;
-  document.head.appendChild(style);
-})();
-
-
-// ═══════════════════════════════════════════════════════════════════
-//  TJC UPDATE 13
-//  1. Job form: Core Responsibilities, Qualifications, Requirements
-//     as bulleted multi-line textareas
-//  2. Job cards: render bullets properly
-//  3. Apply Now → Gmail compose (mail.google.com)
-//  4. Careers page Apply Now → Gmail compose
-// ═══════════════════════════════════════════════════════════════════
-
-// ── Shared bullet render helpers ────────────────────────────────────
-function _toBulletHtml(text, style) {
-  if (!text) return '';
-  var lines = text.split('\n').map(function(l){ return l.replace(/^[\u2022\-\*]\s*/, '').trim(); }).filter(function(l){ return l.length > 0; });
-  if (!lines.length) return '';
-  style = style || 'margin:4px 0 0 0;padding-left:18px;font-size:12px;color:var(--text2);line-height:1.6';
-  return '<ul style="' + style + '">' + lines.map(function(l){ return '<li>' + l + '</li>'; }).join('') + '</ul>';
-}
-
-function _toBulletPublic(text) {
-  return _toBulletHtml(text, 'margin:6px 0;padding-left:16px;font-size:13px;color:rgba(255,255,255,.65);line-height:1.65');
-}
-
-// ── 1. REPLACE jobFormHtml ──────────────────────────────────────────
-var _origJobFormHtml13 = typeof jobFormHtml === 'function' ? jobFormHtml : null;
-jobFormHtml = function(j) {
-  j = j || {};
-  var bulletHint = '<div style="font-size:10px;color:var(--text3);margin-top:3px">One item per line — displayed as bullet points on the careers page</div>';
-  return (
-    '<div class="form-group">' +
-      '<label class="form-label">Job Title *</label>' +
-      '<input class="form-control" id="f-job-title" value="' + (j.title || '') + '" placeholder="e.g. Executive Virtual Assistant">' +
-    '</div>' +
-
-    '<div class="form-row">' +
-      '<div class="form-group"><label class="form-label">Employment Type</label>' +
-        '<select class="form-control" id="f-job-type">' +
-          ['Full-Time','Part-Time','Project-Based'].map(function(t){ return '<option' + (t === j.type ? ' selected' : '') + '>' + t + '</option>'; }).join('') +
-        '</select>' +
-      '</div>' +
-      '<div class="form-group"><label class="form-label">Work Setup</label>' +
-        '<input class="form-control" id="f-job-setup" value="' + (j.setup || 'Remote (PHT, US-aligned hours)') + '">' +
-      '</div>' +
-    '</div>' +
-
-    '<div class="form-row">' +
-      '<div class="form-group"><label class="form-label">Salary Min (PHP/mo)</label>' +
-        '<input class="form-control" id="f-job-sal-min" type="number" min="0" placeholder="e.g. 25000" value="' + (j.salaryMin || '') + '">' +
-      '</div>' +
-      '<div class="form-group"><label class="form-label">Salary Max (PHP/mo)</label>' +
-        '<input class="form-control" id="f-job-sal-max" type="number" min="0" placeholder="e.g. 45000" value="' + (j.salaryMax || '') + '">' +
-      '</div>' +
-    '</div>' +
-
-    '<div class="form-group">' +
-      '<label class="form-label">Short Description *</label>' +
-      '<textarea class="form-control" id="f-job-desc" rows="3" placeholder="2–3 sentences summarising this role and its impact...">' + (j.description || '') + '</textarea>' +
-    '</div>' +
-
-    '<div class="form-group">' +
-      '<label class="form-label">Core Responsibilities</label>' +
-      '<textarea class="form-control" id="f-job-resp" rows="5" placeholder="Manage executive email inbox\nSchedule meetings across time zones\nPrepare weekly reports and decks\nCoordinate with vendors and suppliers">' + (j.responsibilities || '') + '</textarea>' +
-      bulletHint +
-    '</div>' +
-
-    '<div class="form-group">' +
-      '<label class="form-label">Qualifications</label>' +
-      '<textarea class="form-control" id="f-job-qual" rows="4" placeholder="2+ years VA or administrative experience\nExcellent written and spoken English\nProven ability to work US business hours (EST/PST)">' + (j.qualifications || '') + '</textarea>' +
-      bulletHint +
-    '</div>' +
-
-    '<div class="form-group">' +
-      '<label class="form-label">Requirements & Tools</label>' +
-      '<textarea class="form-control" id="f-job-req" rows="4" placeholder="Reliable internet connection (min. 25 Mbps)\nOwn laptop or desktop (Windows 10 / macOS)\nGoogle Workspace, Slack, Notion, Canva">' + (j.requirements || '') + '</textarea>' +
-      bulletHint +
-    '</div>' +
-
-    '<div class="form-group"><label class="form-label">Status</label>' +
-      '<select class="form-control" id="f-job-status">' +
-        ['Open','Closed'].map(function(s){ return '<option' + (s === (j.status || 'Open') ? ' selected' : '') + '>' + s + '</option>'; }).join('') +
-      '</select>' +
-    '</div>'
-  );
-};
-
-// ── 2. REPLACE saveJob to save new fields ──────────────────────────
-var _origSaveJob13 = typeof saveJob === 'function' ? saveJob : null;
-if (_origSaveJob13) {
-  saveJob = function(id) {
-    var title = (document.getElementById('f-job-title') || {}).value;
-    if (!title || !title.trim()) { if (typeof toast === 'function') toast('Please enter a job title.', 'error'); return; }
-
-    var respEl  = document.getElementById('f-job-resp');
-    var qualEl  = document.getElementById('f-job-qual');
-    var reqEl   = document.getElementById('f-job-req');
-    var salMinEl= document.getElementById('f-job-sal-min');
-    var salMaxEl= document.getElementById('f-job-sal-max');
-
-    // Patch APP.data or the saveJob result after original runs
-    // We call the original but then update the saved job with new fields
-    _origSaveJob13(id);
-
-    // Find the job that was just saved and add the new fields
-    var jobs = typeof loadJobs === 'function' ? loadJobs() : [];
-    var target = id ? jobs.find(function(x){ return x.id === id; }) : jobs[0];
-    if (target) {
-      if (respEl)  target.responsibilities = respEl.value.trim();
-      if (qualEl)  target.qualifications   = qualEl.value.trim();
-      if (reqEl)   target.requirements     = reqEl.value.trim();
-      if (salMinEl && salMinEl.value) target.salaryMin = parseFloat(salMinEl.value);
-      if (salMaxEl && salMaxEl.value) target.salaryMax = parseFloat(salMaxEl.value);
-      if (typeof saveJobs === 'function') saveJobs(jobs);
-      if (typeof sbUpsert === 'function') sbUpsert('jobs', target).catch(function(){});
-    }
-  };
-}
-
-// ── 3. REPLACE renderJobs management card with bulleted sections ────
-var _origRenderJobs13 = typeof renderJobs === 'function' ? renderJobs : null;
-if (_origRenderJobs13) {
-  renderJobs = function() {
-    var jobs = typeof loadJobs === 'function' ? loadJobs() : [];
-    var open  = jobs.filter(function(j){ return j.status === 'Open'; }).length;
-
-    var header = '<div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:14px;flex-wrap:wrap;gap:8px">' +
-      '<div style="font-size:13px;color:var(--text2)">' + jobs.length + ' job posting' + (jobs.length !== 1 ? 's' : '') + ' \xB7 ' + open + ' open</div>' +
-      '<button class="btn btn-sm btn-primary" onclick="openAddJob()">' + (typeof ic === 'function' ? ic('plus') : '+') + ' Post a Job</button>' +
-    '</div>';
-
-    if (!jobs.length) return header + (typeof emptyState === 'function' ? emptyState('No job postings yet. Click "Post a Job" to add your first opening.') : '');
-
-    return header + jobs.map(function(j) {
-      var sal = (j.salaryMin || j.salaryMax)
-        ? '\u20B1' + (j.salaryMin ? Number(j.salaryMin).toLocaleString() : '?') + '\u2013\u20B1' + (j.salaryMax ? Number(j.salaryMax).toLocaleString() : '?') + '/mo'
-        : '';
-
-      return '<div class="card card-pad job-card" style="margin-bottom:14px">' +
-        '<div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap">' +
-          '<div style="flex:1;min-width:200px">' +
-            '<div style="font-size:15px;font-weight:700;margin-bottom:3px">' + j.title + '</div>' +
-            '<div style="font-size:11px;color:var(--text3);margin-bottom:8px">' +
-              (j.type || 'Full-Time') + ' \xB7 ' + (j.setup || 'Remote') + (sal ? ' \xB7 ' + sal : '') + ' \xB7 Posted ' + (j.postedAt || '\u2014') +
-            '</div>' +
-            (j.description ? '<div style="font-size:12px;color:var(--text2);margin-bottom:8px">' + j.description + '</div>' : '') +
-            (j.responsibilities ? '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Responsibilities</div>' + _toBulletHtml(j.responsibilities) : '') +
-            (j.qualifications   ? '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Qualifications</div>'   + _toBulletHtml(j.qualifications) : '') +
-            (j.requirements     ? '<div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.06em;margin-top:8px">Requirements</div>'     + _toBulletHtml(j.requirements) : '') +
-          '</div>' +
-          '<div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end;flex-shrink:0">' +
-            '<span class="tag ' + (j.status === 'Open' ? 't-green' : 't-gray') + '">' + j.status + '</span>' +
-            (sal ? '<span class="tag t-teal" style="font-size:10px">\u20B1 ' + sal + '</span>' : '') +
-            '<div style="display:flex;gap:5px;margin-top:4px">' +
-              '<button class="btn btn-xs btn-secondary" onclick="toggleJobStatus(\'' + j.id + '\')">' + (j.status === 'Open' ? 'Close Role' : 'Reopen') + '</button>' +
-              '<button class="btn btn-xs btn-secondary" onclick="openEditJob(\'' + j.id + '\')">' + (typeof ic === 'function' ? ic('edit') : '') + ' Edit</button>' +
-              '<button class="btn btn-xs btn-danger" onclick="deleteJob(\'' + j.id + '\')">' + (typeof ic === 'function' ? ic('trash') : '') + ' Delete</button>' +
-            '</div>' +
-          '</div>' +
-        '</div>' +
-      '</div>';
-    }).join('');
-  };
-}
-
-// ── 4. PATCH careers page Apply Now → Gmail compose ────────────────
-// Patch the public career card builder (runs in index.html via localStorage jobs)
-// We override the tcJobToggle window function AND inject a new card renderer
-// that uses Gmail compose URLs
-(function patchCareersGmail(){
-  // Override the careers grid renderer to use Gmail compose
-  // This runs AFTER the existing careers script and replaces the Apply links
-  var _interval = setInterval(function(){
-    var grid = document.getElementById('careersGrid');
-    if (!grid) return;
-    clearInterval(_interval);
-
-    // Fix any existing "Apply Now" mailto: links → Gmail compose links
-    grid.querySelectorAll('a.career-apply').forEach(function(a){
-      var mailto = a.href;
-      if (mailto.indexOf('mailto:') === 0) {
-        var to      = 'apply@jobcollectives.com';
-        var subject = mailto.replace(/^mailto:[^?]+\?subject=/, '');
-        a.href   = 'https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + subject;
-        a.target = '_blank';
-        a.rel    = 'noopener noreferrer';
-      }
-    });
-  }, 500);
-})();
-
-// Patch Apply Now in portal job cards (partner portal job listings)
-(function patchPortalJobApply(){
-  var _origRenderVAJobs = typeof renderVAJobs === 'function' ? renderVAJobs : null;
-  if (!_origRenderVAJobs) return;
-  renderVAJobs = function() {
-    var html = _origRenderVAJobs();
-    // Replace mailto: in apply buttons with Gmail compose
-    return html.replace(/href="mailto:apply@jobcollectives\.com([^"]*)"/g, function(_, qs) {
-      var to = 'apply@jobcollectives.com';
-      var su = qs.replace(/^\?subject=/, '');
-      return 'href="https://mail.google.com/mail/?view=cm&fs=1&to=' + encodeURIComponent(to) + '&su=' + su + '" target="_blank" rel="noopener noreferrer"';
-    });
-  };
-})();
-
 </script>
 </body>
 </html>
+<script>
+/* ══ Supabase portal helpers ══ */
+async function gpLoad(table){try{const sb=await _initSB();if(!sb)return[];const{data,error}=await sb.from(table).select("*").order("created_at",{ascending:false});if(error)throw error;return data||[];}catch(e){return[];}}
+async function gpSave(table,row,editId){try{const sb=await _initSB();if(!sb)throw new Error("SB not ready");const clean=Object.fromEntries(Object.entries(row).filter(([,v])=>v!==undefined));if(editId){const{error}=await sb.from(table).update(clean).eq("id",editId);if(error)throw error;}else{clean.id=table+"_"+Date.now();const{error}=await sb.from(table).insert(clean);if(error)throw error;}}catch(e){throw e;}}
+async function gpDelete(table,id){try{const sb=await _initSB();if(!sb)return;const{error}=await sb.from(table).delete().eq("id",id);if(error)throw error;}catch(e){}}
+const _GP={},_OP={};
+
+/* ══ GROWTH PORTAL ══ */
+function renderGrowthPortal(){const va=APP.data.team.find(v=>v.id===APP.va.vaId);if(!APP.va.loggedIn||!va||va.role!=="growth_director")return`<div class="empty"><div class="empty-icon">🔒</div><div class="empty-text">Access restricted to Director of Growth.</div></div>`;const tab=APP.va.tab||"dashboard";const tabs=[["dashboard","📊","Dashboard"],["strategies","🎯","Strategies"],["campaigns","📣","Campaigns"],["reports","📈","Reports"],["kpis","⚡","KPI Tracker"],["pipeline","💼","Pipeline"],["ideas","💡","Ideas"]];const tabBar=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px">${tabs.map(([id,e,l])=>`<button onclick="APP.va.tab='${id}';renderCurrentPage()" class="btn btn-sm ${tab===id?'btn-primary':'btn-secondary'}">${e} ${l}</button>`).join("")}<button class="btn btn-sm btn-secondary" style="margin-left:auto" onclick="vaLogout()">Sign Out</button></div>`;const renders={dashboard:gpDash,strategies:gpStrategies,campaigns:gpCampaigns,reports:gpReports,kpis:gpKPIs,pipeline:gpPipeline,ideas:gpIdeas};const body=renders[tab]?renders[tab]():"";return`<div style="padding:0 0 40px"><div style="display:flex;align-items:center;gap:14px;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px"><div class="av av-lg av-navy">AT</div><div><div class="page-title" style="margin:0">Growth Portal</div><div style="font-size:13px;color:var(--text3);margin-top:2px">Art Teves &middot; Director of Growth &middot; ${new Date().toLocaleDateString("en-PH",{weekday:"long",month:"long",day:"numeric"})}</div></div></div>${tabBar}${body}</div>`;}
+function gpLazy(key,table,renderFn){if(!_GP[key]){gpLoad(table).then(r=>{_GP[key]=r;renderCurrentPage();});return`<div class="empty"><div class="empty-text">Loading…</div></div>`;}return renderFn(_GP[key]);}
+function gpDash(){const needed={strategies:"gp_strategies",campaigns:"gp_campaigns",reports:"gp_reports",kpis:"gp_kpis"};let allLoaded=true;Object.entries(needed).forEach(([k,t])=>{if(!_GP[k]){allLoaded=false;gpLoad(t).then(r=>{_GP[k]=r;if(Object.keys(needed).every(x=>_GP[x]))renderCurrentPage();});}});if(!allLoaded)return`<div class="empty"><div class="empty-text">Loading dashboard…</div></div>`;const s=_GP.strategies,c=_GP.campaigns,r=_GP.reports,k=_GP.kpis;const aS=s.filter(x=>x.status==="Active").length,aC=c.filter(x=>x.status==="Running").length,oK=k.filter(x=>Number(x.actual||0)<Number(x.target||0)).length;return`<div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px"><div class="kpi-card"><div class="kpi-icon">🎯</div><div class="kpi-val" style="color:var(--navy)">${aS}</div><div class="kpi-label">Active Strategies</div></div><div class="kpi-card"><div class="kpi-icon">📣</div><div class="kpi-val" style="color:var(--green)">${aC}</div><div class="kpi-label">Running Campaigns</div></div><div class="kpi-card"><div class="kpi-icon">📈</div><div class="kpi-val" style="color:var(--gold)">${r.length}</div><div class="kpi-label">Reports Filed</div></div><div class="kpi-card"><div class="kpi-icon">⚡</div><div class="kpi-val" style="color:${oK>0?'var(--red)':'var(--green)'}">${oK}</div><div class="kpi-label">KPIs Below Target</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="card card-pad"><div class="sec-head" style="margin-bottom:12px"><div class="sec-title">Recent Strategies</div><span class="sec-action" onclick="APP.va.tab='strategies';renderCurrentPage()">View all →</span></div>${s.slice(0,3).length===0?`<div class="empty" style="padding:20px 0"><div class="empty-text">No strategies yet.</div></div>`:s.slice(0,3).map(x=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:14px;font-weight:600">${x.title}</div><div style="font-size:12px;color:var(--text3)">${x.focus||"—"} · <span class="tag ${x.status==='Active'?'t-green':'t-gray'}">${x.status||"Draft"}</span></div></div>`).join("")}</div><div class="card card-pad"><div class="sec-head" style="margin-bottom:12px"><div class="sec-title">Recent Reports</div><span class="sec-action" onclick="APP.va.tab='reports';renderCurrentPage()">View all →</span></div>${r.slice(0,3).length===0?`<div class="empty" style="padding:20px 0"><div class="empty-text">No reports yet.</div></div>`:r.slice(0,3).map(x=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:14px;font-weight:600">${x.title}</div><div style="font-size:12px;color:var(--text3)">${x.type||"Report"} · ${x.period||""}</div></div>`).join("")}</div></div>`;}
+function gpStrategies(){return gpLazy("strategies","gp_strategies",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Growth Strategies</div><button class="btn btn-sm btn-primary" onclick="gpOpenStrategy()">+ Add Strategy</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Log quarterly and monthly strategies. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No strategies yet.</div></div>`:items.map(s=>`<div class="card" style="padding:16px 20px;border-left:3px solid ${s.status==="Active"?"var(--green)":s.status==="Completed"?"var(--teal)":"var(--border2)"};margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:4px">${s.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px">${s.focus||"—"} · ${s.quarter||""} · <span class="tag ${s.status==="Active"?"t-green":s.status==="Completed"?"t-teal":"t-gray"}">${s.status||"Draft"}</span></div>${s.objective?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>Objective:</b> ${s.objective}</div>`:""} ${s.kpis?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>KPIs:</b> ${s.kpis}</div>`:""} ${s.notes?`<div style="font-size:13px;color:var(--text3)"><b>Notes:</b> ${s.notes}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="gpOpenStrategy('${s.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelStrategy('${s.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function gpOpenStrategy(id){const s=id?(_GP.strategies||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Strategy":"Add Strategy",`<div class="form-row"><div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="gp-s-title" value="${s.title||""}" placeholder="e.g. Q3 Lead Generation Push"></div><div class="form-group"><label class="form-label">Focus Area</label><select class="form-control" id="gp-s-focus"><option${s.focus==="Revenue Growth"?" selected":""}>Revenue Growth</option><option${s.focus==="Lead Generation"?" selected":""}>Lead Generation</option><option${s.focus==="Brand Awareness"?" selected":""}>Brand Awareness</option><option${s.focus==="Client Retention"?" selected":""}>Client Retention</option><option${s.focus==="Market Expansion"?" selected":""}>Market Expansion</option><option${s.focus==="Product Launch"?" selected":""}>Product Launch</option><option${s.focus==="Partnership"?" selected":""}>Partnership</option><option>Other</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Quarter / Period</label><input class="form-control" id="gp-s-quarter" value="${s.quarter||""}" placeholder="e.g. Q3 2025"></div><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="gp-s-status"><option${s.status==="Draft"?" selected":""}>Draft</option><option${s.status==="Active"?" selected":""}>Active</option><option${s.status==="On Hold"?" selected":""}>On Hold</option><option${s.status==="Completed"?" selected":""}>Completed</option></select></div></div><div class="form-group"><label class="form-label">Objective / Goal</label><textarea class="form-control" id="gp-s-obj" rows="2" placeholder="What does this strategy aim to achieve?">${s.objective||""}</textarea></div><div class="form-group"><label class="form-label">Key Metrics / KPIs</label><textarea class="form-control" id="gp-s-kpis" rows="2" placeholder="e.g. 50 leads/mo, 15% conversion">${s.kpis||""}</textarea></div><div class="form-group"><label class="form-label">Notes / Action Items</label><textarea class="form-control" id="gp-s-notes" rows="3" placeholder="Tactics, channels, dependencies...">${s.notes||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSaveStrategy('${id||""}')">Save</button>`);}
+async function gpSaveStrategy(id){const title=(document.getElementById("gp-s-title")||{}).value||"";if(!title.trim()){toast("Title is required.","error");return;}const row={title:title.trim(),focus:(document.getElementById("gp-s-focus")||{}).value||"",quarter:(document.getElementById("gp-s-quarter")||{}).value||"",status:(document.getElementById("gp-s-status")||{}).value||"Draft",objective:(document.getElementById("gp-s-obj")||{}).value||"",kpis:(document.getElementById("gp-s-kpis")||{}).value||"",notes:(document.getElementById("gp-s-notes")||{}).value||""};try{await gpSave("gp_strategies",row,id||null);delete _GP.strategies;closeModal();APP.va.tab="strategies";toast("Strategy saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function gpDelStrategy(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_strategies",id);delete _GP.strategies;renderCurrentPage();toast("Deleted.","success");}catch(e){toast("Error.","error");}}
+function gpCampaigns(){return gpLazy("campaigns","gp_campaigns",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Campaign Tracker</div><button class="btn btn-sm btn-primary" onclick="gpOpenCampaign()">+ Add Campaign</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Track active and planned marketing campaigns. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No campaigns yet.</div></div>`:items.map(c=>`<div class="card" style="padding:16px 20px;border-left:3px solid ${{Running:"var(--green)",Planned:"var(--navy)",Completed:"var(--teal)",Paused:"var(--amber)"}[c.status]||"var(--border2)"};margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:4px">${c.name}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px">${c.channel||"—"} · ${c.period||""} · <span class="tag ${c.status==="Running"?"t-green":c.status==="Completed"?"t-teal":"t-gray"}">${c.status||"Planned"}</span></div>${c.goal?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>Goal:</b> ${c.goal}</div>`:""} ${c.budget?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>Budget:</b> ${c.budget}</div>`:""} ${c.results?`<div style="font-size:13px;color:var(--green);margin-bottom:2px"><b>Results:</b> ${c.results}</div>`:""} ${c.notes?`<div style="font-size:13px;color:var(--text3)"><b>Notes:</b> ${c.notes}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="gpOpenCampaign('${c.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelCampaign('${c.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function gpOpenCampaign(id){const c=id?(_GP.campaigns||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Campaign":"Add Campaign",`<div class="form-row"><div class="form-group"><label class="form-label">Name *</label><input class="form-control" id="gp-c-name" value="${c.name||""}" placeholder="e.g. June IG Promo"></div><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="gp-c-status"><option${c.status==="Planned"?" selected":""}>Planned</option><option${c.status==="Running"?" selected":""}>Running</option><option${c.status==="Paused"?" selected":""}>Paused</option><option${c.status==="Completed"?" selected":""}>Completed</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Channel(s)</label><input class="form-control" id="gp-c-ch" value="${c.channel||""}" placeholder="e.g. Facebook, Email"></div><div class="form-group"><label class="form-label">Period</label><input class="form-control" id="gp-c-period" value="${c.period||""}" placeholder="e.g. Jun 1-30, 2025"></div></div><div class="form-group"><label class="form-label">Campaign Goal</label><input class="form-control" id="gp-c-goal" value="${c.goal||""}" placeholder="e.g. 200 leads, 10% CTR"></div><div class="form-group"><label class="form-label">Budget</label><input class="form-control" id="gp-c-budget" value="${c.budget||""}" placeholder="e.g. $500, P25,000"></div><div class="form-group"><label class="form-label">Results / Performance</label><textarea class="form-control" id="gp-c-results" rows="2" placeholder="Fill in once campaign runs...">${c.results||""}</textarea></div><div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="gp-c-notes" rows="2" placeholder="Targeting, creatives, dependencies...">${c.notes||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSaveCampaign('${id||""}')">Save</button>`);}
+async function gpSaveCampaign(id){const name=(document.getElementById("gp-c-name")||{}).value||"";if(!name.trim()){toast("Name required.","error");return;}const row={name:name.trim(),status:(document.getElementById("gp-c-status")||{}).value||"Planned",channel:(document.getElementById("gp-c-ch")||{}).value||"",period:(document.getElementById("gp-c-period")||{}).value||"",goal:(document.getElementById("gp-c-goal")||{}).value||"",budget:(document.getElementById("gp-c-budget")||{}).value||"",results:(document.getElementById("gp-c-results")||{}).value||"",notes:(document.getElementById("gp-c-notes")||{}).value||""};try{await gpSave("gp_campaigns",row,id||null);delete _GP.campaigns;closeModal();APP.va.tab="campaigns";toast("Saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function gpDelCampaign(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_campaigns",id);delete _GP.campaigns;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+function gpReports(){return gpLazy("reports","gp_reports",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Growth Reports</div><button class="btn btn-sm btn-primary" onclick="gpOpenReport()">+ Add Report</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Weekly, monthly, quarterly, and campaign reports. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No reports filed yet.</div></div>`:items.map(r=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${r.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px"><span class="tag t-navy">${r.type||"Report"}</span> · ${r.period||""}</div>${r.summary?`<div style="font-size:13px;color:var(--text2);margin-bottom:3px"><b>Summary:</b> ${r.summary}</div>`:""} ${r.metrics?`<div style="font-size:13px;color:var(--text2);margin-bottom:3px"><b>Metrics:</b> ${r.metrics}</div>`:""} ${r.wins?`<div style="font-size:13px;color:var(--green);margin-bottom:2px">✅ <b>Wins:</b> ${r.wins}</div>`:""} ${r.issues?`<div style="font-size:13px;color:var(--red);margin-bottom:2px">⚠️ <b>Issues:</b> ${r.issues}</div>`:""} ${r.recommendations?`<div style="font-size:13px;color:var(--navy)">💡 <b>Recs:</b> ${r.recommendations}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="gpOpenReport('${r.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelReport('${r.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function gpOpenReport(id){const r=id?(_GP.reports||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Report":"Add Report",`<div class="form-row"><div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="gp-r-title" value="${r.title||""}" placeholder="e.g. May 2025 Monthly Growth Report"></div><div class="form-group"><label class="form-label">Type</label><select class="form-control" id="gp-r-type"><option${r.type==="Weekly"?" selected":""}>Weekly</option><option${r.type==="Monthly"?" selected":""}>Monthly</option><option${r.type==="Quarterly"?" selected":""}>Quarterly</option><option${r.type==="Campaign Report"?" selected":""}>Campaign Report</option><option${r.type==="Ad Hoc"?" selected":""}>Ad Hoc</option></select></div></div><div class="form-group"><label class="form-label">Period Covered</label><input class="form-control" id="gp-r-period" value="${r.period||""}" placeholder="e.g. May 1-31, 2025"></div><div class="form-group"><label class="form-label">Executive Summary</label><textarea class="form-control" id="gp-r-summary" rows="3" placeholder="Overall performance summary...">${r.summary||""}</textarea></div><div class="form-group"><label class="form-label">Key Metrics</label><textarea class="form-control" id="gp-r-metrics" rows="3" placeholder="Leads: 87 | CPL: $4.2 | Conversion: 12%...">${r.metrics||""}</textarea></div><div class="form-group"><label class="form-label">Wins / Highlights</label><textarea class="form-control" id="gp-r-wins" rows="2" placeholder="What worked well?">${r.wins||""}</textarea></div><div class="form-group"><label class="form-label">Issues / Misses</label><textarea class="form-control" id="gp-r-issues" rows="2" placeholder="What underperformed?">${r.issues||""}</textarea></div><div class="form-group"><label class="form-label">Recommendations</label><textarea class="form-control" id="gp-r-recs" rows="2" placeholder="Next steps and adjustments...">${r.recommendations||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSaveReport('${id||""}')">Save Report</button>`);}
+async function gpSaveReport(id){const title=(document.getElementById("gp-r-title")||{}).value||"";if(!title.trim()){toast("Title required.","error");return;}const row={title:title.trim(),type:(document.getElementById("gp-r-type")||{}).value||"",period:(document.getElementById("gp-r-period")||{}).value||"",summary:(document.getElementById("gp-r-summary")||{}).value||"",metrics:(document.getElementById("gp-r-metrics")||{}).value||"",wins:(document.getElementById("gp-r-wins")||{}).value||"",issues:(document.getElementById("gp-r-issues")||{}).value||"",recommendations:(document.getElementById("gp-r-recs")||{}).value||""};try{await gpSave("gp_reports",row,id||null);delete _GP.reports;closeModal();APP.va.tab="reports";toast("Report saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function gpDelReport(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_reports",id);delete _GP.reports;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+function gpKPIs(){return gpLazy("kpis","gp_kpis",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">KPI Tracker</div><button class="btn btn-sm btn-primary" onclick="gpOpenKPI()">+ Add KPI</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Track growth KPIs with targets vs actuals. Numbers drive the dashboard indicator.</div>${items.length===0?`<div class="empty"><div class="empty-text">No KPIs set yet.</div></div>`:`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>KPI</th><th>Category</th><th>Period</th><th>Target</th><th>Actual</th><th>%</th><th>Actions</th></tr></thead><tbody>${items.map(k=>{const pct=k.target>0?Math.round((k.actual/k.target)*100):0;const col=pct>=100?"var(--green)":pct>=70?"var(--amber)":"var(--red)";return`<tr><td><div style="font-weight:600">${k.name}</div>${k.notes?`<div style="font-size:12px;color:var(--text3)">${k.notes}</div>`:""}</td><td>${k.category||"—"}</td><td>${k.period||"—"}</td><td><b>${k.target||0} ${k.unit||""}</b></td><td style="color:${col};font-weight:700">${k.actual||0} ${k.unit||""}</td><td><span class="tag" style="background:${col}22;color:${col}">${pct}%</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-sm btn-secondary" onclick="gpOpenKPI('${k.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelKPI('${k.id}')">Del</button></div></td></tr>`;}).join("")}</tbody></table></div>`}</div>`);}
+function gpOpenKPI(id){const k=id?(_GP.kpis||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit KPI":"Add KPI",`<div class="form-row"><div class="form-group"><label class="form-label">KPI Name *</label><input class="form-control" id="gp-k-name" value="${k.name||""}" placeholder="e.g. Monthly Qualified Leads"></div><div class="form-group"><label class="form-label">Category</label><select class="form-control" id="gp-k-cat"><option${k.category==="Lead Generation"?" selected":""}>Lead Generation</option><option${k.category==="Revenue"?" selected":""}>Revenue</option><option${k.category==="Conversion"?" selected":""}>Conversion</option><option${k.category==="Retention"?" selected":""}>Retention</option><option${k.category==="Brand"?" selected":""}>Brand</option><option${k.category==="Traffic"?" selected":""}>Traffic</option><option${k.category==="Engagement"?" selected":""}>Engagement</option><option>Other</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Period</label><input class="form-control" id="gp-k-period" value="${k.period||""}" placeholder="e.g. June 2025"></div><div class="form-group"><label class="form-label">Unit</label><input class="form-control" id="gp-k-unit" value="${k.unit||""}" placeholder="e.g. leads, %, $"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Target</label><input class="form-control" type="number" id="gp-k-target" value="${k.target||0}"></div><div class="form-group"><label class="form-label">Actual</label><input class="form-control" type="number" id="gp-k-actual" value="${k.actual||0}"></div></div><div class="form-group"><label class="form-label">Notes</label><input class="form-control" id="gp-k-notes" value="${k.notes||""}" placeholder="Context or methodology..."></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSaveKPI('${id||""}')">Save KPI</button>`);}
+async function gpSaveKPI(id){const name=(document.getElementById("gp-k-name")||{}).value||"";if(!name.trim()){toast("Name required.","error");return;}const row={name:name.trim(),category:(document.getElementById("gp-k-cat")||{}).value||"",period:(document.getElementById("gp-k-period")||{}).value||"",unit:(document.getElementById("gp-k-unit")||{}).value||"",target:Number((document.getElementById("gp-k-target")||{}).value||0),actual:Number((document.getElementById("gp-k-actual")||{}).value||0),notes:(document.getElementById("gp-k-notes")||{}).value||""};try{await gpSave("gp_kpis",row,id||null);delete _GP.kpis;closeModal();APP.va.tab="kpis";toast("KPI saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function gpDelKPI(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_kpis",id);delete _GP.kpis;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+function gpPipeline(){return gpLazy("pipeline","gp_pipeline",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Pipeline Notes</div><button class="btn btn-sm btn-primary" onclick="gpOpenPipeline()">+ Add Note</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Track BD notes and prospect interactions.</div>${items.length===0?`<div class="empty"><div class="empty-text">No pipeline notes yet.</div></div>`:items.map(p=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${p.prospect||"Note"}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:4px"><span class="tag t-navy">${p.stage||"—"}</span> ${p.value?`· ${p.value}`:""}</div>${p.notes?`<div style="font-size:13px;color:var(--text2)">${p.notes}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="gpOpenPipeline('${p.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelPipeline('${p.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function gpOpenPipeline(id){const p=id?(_GP.pipeline||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Note":"Add Pipeline Note",`<div class="form-row"><div class="form-group"><label class="form-label">Prospect / Account</label><input class="form-control" id="gp-p-prospect" value="${p.prospect||""}" placeholder="Company or contact name"></div><div class="form-group"><label class="form-label">Stage</label><select class="form-control" id="gp-p-stage"><option${p.stage==="Awareness"?" selected":""}>Awareness</option><option${p.stage==="Interest"?" selected":""}>Interest</option><option${p.stage==="Discovery Call"?" selected":""}>Discovery Call</option><option${p.stage==="Proposal"?" selected":""}>Proposal</option><option${p.stage==="Negotiation"?" selected":""}>Negotiation</option><option${p.stage==="Closed Won"?" selected":""}>Closed Won</option><option${p.stage==="Closed Lost"?" selected":""}>Closed Lost</option></select></div></div><div class="form-group"><label class="form-label">Estimated Value</label><input class="form-control" id="gp-p-value" value="${p.value||""}" placeholder="e.g. $500/mo"></div><div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="gp-p-notes" rows="4" placeholder="Interaction details, next steps...">${p.notes||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSavePipeline('${id||""}')">Save</button>`);}
+async function gpSavePipeline(id){const row={prospect:(document.getElementById("gp-p-prospect")||{}).value||"",stage:(document.getElementById("gp-p-stage")||{}).value||"Awareness",value:(document.getElementById("gp-p-value")||{}).value||"",notes:(document.getElementById("gp-p-notes")||{}).value||""};try{await gpSave("gp_pipeline",row,id||null);delete _GP.pipeline;closeModal();APP.va.tab="pipeline";toast("Saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function gpDelPipeline(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_pipeline",id);delete _GP.pipeline;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+function gpIdeas(){return gpLazy("ideas","gp_ideas",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Ideas & Initiatives</div><button class="btn btn-sm btn-primary" onclick="gpOpenIdea()">+ Add Idea</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Capture growth ideas before they become full strategies.</div>${items.length===0?`<div class="empty"><div class="empty-text">No ideas logged yet.</div></div>`:items.map(idea=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${idea.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:4px"><span class="tag ${idea.status==="Approved"?"t-green":idea.status==="Testing"?"t-navy":"t-gray"}">${idea.status||"Pending"}</span> · ${idea.impact||""} impact</div>${idea.description?`<div style="font-size:13px;color:var(--text2)">${idea.description}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="gpOpenIdea('${idea.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelIdea('${idea.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function gpOpenIdea(id){const idea=id?(_GP.ideas||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Idea":"Add Idea",`<div class="form-row"><div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="gp-i-title" value="${idea.title||""}" placeholder="e.g. Referral Program"></div><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="gp-i-status"><option${idea.status==="Pending"?" selected":""}>Pending</option><option${idea.status==="Approved"?" selected":""}>Approved</option><option${idea.status==="Testing"?" selected":""}>Testing</option><option${idea.status==="Implemented"?" selected":""}>Implemented</option><option${idea.status==="Rejected"?" selected":""}>Rejected</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Est. Impact</label><select class="form-control" id="gp-i-impact"><option${idea.impact==="High"?" selected":""}>High</option><option${idea.impact==="Medium"?" selected":""}>Medium</option><option${idea.impact==="Low"?" selected":""}>Low</option></select></div></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="gp-i-desc" rows="4" placeholder="What is the idea? Why might it work?">${idea.description||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSaveIdea('${id||""}')">Save</button>`);}
+async function gpSaveIdea(id){const title=(document.getElementById("gp-i-title")||{}).value||"";if(!title.trim()){toast("Title required.","error");return;}const row={title:title.trim(),status:(document.getElementById("gp-i-status")||{}).value||"Pending",impact:(document.getElementById("gp-i-impact")||{}).value||"Medium",description:(document.getElementById("gp-i-desc")||{}).value||""};try{await gpSave("gp_ideas",row,id||null);delete _GP.ideas;closeModal();APP.va.tab="ideas";toast("Saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function gpDelIdea(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_ideas",id);delete _GP.ideas;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+
+/* ══ OPS PORTAL ══ */
+function renderOpsPortal(){const va=APP.data.team.find(v=>v.id===APP.va.vaId);if(!APP.va.loggedIn||!va||va.role!=="ops_manager")return`<div class="empty"><div class="empty-icon">🔒</div><div class="empty-text">Access restricted to Operations Manager.</div></div>`;const tab=APP.va.tab||"dashboard";const tabs=[["dashboard","⚙️","Dashboard"],["processes","📋","Processes"],["incidents","🚨","Incidents"],["reports","📊","Reports"],["team_notes","👥","Team Notes"],["sops","📖","SOP Tracker"],["improvements","🔧","Improvements"]];const tabBar=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px">${tabs.map(([id,e,l])=>`<button onclick="APP.va.tab='${id}';renderCurrentPage()" class="btn btn-sm ${tab===id?'btn-primary':'btn-secondary'}">${e} ${l}</button>`).join("")}<button class="btn btn-sm btn-secondary" style="margin-left:auto" onclick="vaLogout()">Sign Out</button></div>`;const renders={dashboard:opDash,processes:opProcesses,incidents:opIncidents,reports:opReports,team_notes:opTeamNotes,sops:opSops,improvements:opImprovements};const body=renders[tab]?renders[tab]():"";return`<div style="padding:0 0 40px"><div style="display:flex;align-items:center;gap:14px;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px"><div class="av av-lg av-purple">AV</div><div><div class="page-title" style="margin:0">Operations Portal</div><div style="font-size:13px;color:var(--text3);margin-top:2px">Alvin Valdez &middot; Operations Manager &middot; ${new Date().toLocaleDateString("en-PH",{weekday:"long",month:"long",day:"numeric"})}</div></div></div>${tabBar}${body}</div>`;}
+function opLazy(key,table,renderFn){if(!_OP[key]){gpLoad(table).then(r=>{_OP[key]=r;renderCurrentPage();});return`<div class="empty"><div class="empty-text">Loading…</div></div>`;}return renderFn(_OP[key]);}
+function opDash(){const needed={processes:"op_processes",incidents:"op_incidents",reports:"op_reports",improvements:"op_improvements"};let allLoaded=true;Object.entries(needed).forEach(([k,t])=>{if(!_OP[k]){allLoaded=false;gpLoad(t).then(r=>{_OP[k]=r;if(Object.keys(needed).every(x=>_OP[x]))renderCurrentPage();});}});if(!allLoaded)return`<div class="empty"><div class="empty-text">Loading dashboard…</div></div>`;const p=_OP.processes,inc=_OP.incidents,r=_OP.reports,imp=_OP.improvements;const aP=p.filter(x=>x.status==="Active").length,oI=inc.filter(x=>x.status==="Open"||x.status==="In Progress").length,pImp=imp.filter(x=>x.status==="Pending"||x.status==="In Progress").length;const recInc=inc.filter(x=>x.status==="Open"||x.status==="In Progress").slice(0,3),recR=r.slice(0,3);return`<div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px"><div class="kpi-card"><div class="kpi-icon">⚙️</div><div class="kpi-val" style="color:var(--navy)">${aP}</div><div class="kpi-label">Active Processes</div></div><div class="kpi-card"><div class="kpi-icon">🚨</div><div class="kpi-val" style="color:${oI>0?'var(--red)':'var(--green)'}">${oI}</div><div class="kpi-label">Open Incidents</div></div><div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-val" style="color:var(--gold)">${r.length}</div><div class="kpi-label">Reports Filed</div></div><div class="kpi-card"><div class="kpi-icon">🔧</div><div class="kpi-val" style="color:var(--purple)">${pImp}</div><div class="kpi-label">Pending Improvements</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="card card-pad"><div class="sec-head" style="margin-bottom:12px"><div class="sec-title">Open Incidents</div><span class="sec-action" onclick="APP.va.tab='incidents';renderCurrentPage()">View all →</span></div>${recInc.length===0?`<div class="empty" style="padding:20px 0"><div class="empty-text" style="color:var(--green)">✅ No open incidents.</div></div>`:recInc.map(x=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:14px;font-weight:600">${x.title}</div><div style="font-size:12.5px;color:var(--text3);margin-top:2px"><span class="tag ${x.severity==="Critical"?"t-red":x.severity==="High"?"t-amber":"t-gray"}">${x.severity||"Low"}</span> · ${x.status||""}</div></div>`).join("")}</div><div class="card card-pad"><div class="sec-head" style="margin-bottom:12px"><div class="sec-title">Recent Reports</div><span class="sec-action" onclick="APP.va.tab='reports';renderCurrentPage()">View all →</span></div>${recR.length===0?`<div class="empty" style="padding:20px 0"><div class="empty-text">No reports yet.</div></div>`:recR.map(x=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:14px;font-weight:600">${x.title}</div><div style="font-size:12.5px;color:var(--text3);margin-top:2px">${x.type||"Report"} · ${x.period||""}</div></div>`).join("")}</div></div>`;}
+function opProcesses(){return opLazy("processes","op_processes",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Process Registry</div><button class="btn btn-sm btn-primary" onclick="opOpenProcess()">+ Add Process</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Document and track operational processes. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No processes logged yet.</div></div>`:items.map(p=>`<div class="card" style="padding:16px 20px;border-left:3px solid ${{Active:"var(--green)",Review:"var(--amber)",Draft:"var(--text3)",Deprecated:"var(--red)"}[p.status]||"var(--border2)"};margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${p.name}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px">${p.category||"—"} · Owner: ${p.owner||"—"} · <span class="tag ${p.status==="Active"?"t-green":p.status==="Review"?"t-amber":"t-gray"}">${p.status||"Draft"}</span></div>${p.description?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px">${p.description}</div>`:""} ${p.notes?`<div style="font-size:13px;color:var(--text3)"><b>Notes:</b> ${p.notes}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenProcess('${p.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelProcess('${p.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function opOpenProcess(id){const p=id?(_OP.processes||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Process":"Add Process",`<div class="form-row"><div class="form-group"><label class="form-label">Process Name *</label><input class="form-control" id="op-pr-name" value="${p.name||""}" placeholder="e.g. Client Onboarding Flow"></div><div class="form-group"><label class="form-label">Category</label><select class="form-control" id="op-pr-cat"><option${p.category==="Client Management"?" selected":""}>Client Management</option><option${p.category==="Team Operations"?" selected":""}>Team Operations</option><option${p.category==="Finance"?" selected":""}>Finance</option><option${p.category==="Recruitment"?" selected":""}>Recruitment</option><option${p.category==="Quality Control"?" selected":""}>Quality Control</option><option${p.category==="Communication"?" selected":""}>Communication</option><option${p.category==="Technology"?" selected":""}>Technology</option><option>Other</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Process Owner</label><input class="form-control" id="op-pr-owner" value="${p.owner||""}" placeholder="e.g. Alvin, Maria"></div><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="op-pr-status"><option${p.status==="Draft"?" selected":""}>Draft</option><option${p.status==="Active"?" selected":""}>Active</option><option${p.status==="Review"?" selected":""}>Review</option><option${p.status==="Deprecated"?" selected":""}>Deprecated</option></select></div></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="op-pr-desc" rows="3" placeholder="What does this process cover?">${p.description||""}</textarea></div><div class="form-group"><label class="form-label">Notes / Dependencies</label><textarea class="form-control" id="op-pr-notes" rows="2" placeholder="Tools, SOPs, dependencies...">${p.notes||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveProcess('${id||""}')">Save</button>`);}
+async function opSaveProcess(id){const name=(document.getElementById("op-pr-name")||{}).value||"";if(!name.trim()){toast("Name required.","error");return;}const row={name:name.trim(),category:(document.getElementById("op-pr-cat")||{}).value||"",owner:(document.getElementById("op-pr-owner")||{}).value||"",status:(document.getElementById("op-pr-status")||{}).value||"Draft",description:(document.getElementById("op-pr-desc")||{}).value||"",notes:(document.getElementById("op-pr-notes")||{}).value||""};try{await gpSave("op_processes",row,id||null);delete _OP.processes;closeModal();APP.va.tab="processes";toast("Process saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function opDelProcess(id){if(!confirm("Delete?"))return;try{await gpDelete("op_processes",id);delete _OP.processes;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+function opIncidents(){return opLazy("incidents","op_incidents",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Incident Log</div><button class="btn btn-sm btn-primary" onclick="opOpenIncident()">+ Log Incident</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Log operational issues and resolutions. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-icon">✅</div><div class="empty-text">No incidents on record.</div></div>`:items.map(inc=>`<div class="card" style="padding:16px 20px;border-left:3px solid ${{Critical:"var(--red)",High:"var(--amber)",Medium:"var(--navy)",Low:"var(--text3)"}[inc.severity]||"var(--text3)"};margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${inc.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px"><span class="tag ${inc.severity==="Critical"?"t-red":inc.severity==="High"?"t-amber":"t-gray"}">${inc.severity||"Low"}</span> · <span class="tag ${inc.status==="Resolved"?"t-green":inc.status==="In Progress"?"t-navy":"t-red"}">${inc.status||"Open"}</span></div>${inc.description?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>What happened:</b> ${inc.description}</div>`:""} ${inc.impact?`<div style="font-size:13px;color:var(--red);margin-bottom:2px"><b>Impact:</b> ${inc.impact}</div>`:""} ${inc.resolution?`<div style="font-size:13px;color:var(--green);margin-bottom:2px"><b>Resolution:</b> ${inc.resolution}</div>`:""} ${inc.learnings?`<div style="font-size:13px;color:var(--navy)"><b>Learnings:</b> ${inc.learnings}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenIncident('${inc.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelIncident('${inc.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function opOpenIncident(id){const inc=id?(_OP.incidents||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Incident":"Log Incident",`<div class="form-row"><div class="form-group"><label class="form-label">Incident Title *</label><input class="form-control" id="op-inc-title" value="${inc.title||""}" placeholder="e.g. SLA breach - BrandX Week 18"></div><div class="form-group"><label class="form-label">Severity</label><select class="form-control" id="op-inc-sev"><option${inc.severity==="Low"?" selected":""}>Low</option><option${inc.severity==="Medium"?" selected":""}>Medium</option><option${inc.severity==="High"?" selected":""}>High</option><option${inc.severity==="Critical"?" selected":""}>Critical</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="op-inc-status"><option${inc.status==="Open"?" selected":""}>Open</option><option${inc.status==="In Progress"?" selected":""}>In Progress</option><option${inc.status==="Resolved"?" selected":""}>Resolved</option></select></div><div class="form-group"><label class="form-label">Affected Area</label><input class="form-control" id="op-inc-area" value="${inc.area||""}" placeholder="e.g. Client Delivery, Team, Finance"></div></div><div class="form-group"><label class="form-label">What Happened</label><textarea class="form-control" id="op-inc-desc" rows="3" placeholder="Describe the incident...">${inc.description||""}</textarea></div><div class="form-group"><label class="form-label">Impact</label><textarea class="form-control" id="op-inc-impact" rows="2" placeholder="Who/what was affected?">${inc.impact||""}</textarea></div><div class="form-group"><label class="form-label">Resolution</label><textarea class="form-control" id="op-inc-res" rows="2" placeholder="What was done to fix it?">${inc.resolution||""}</textarea></div><div class="form-group"><label class="form-label">Learnings / Preventive Actions</label><textarea class="form-control" id="op-inc-learn" rows="2" placeholder="What do we do differently next time?">${inc.learnings||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveIncident('${id||""}')">Log Incident</button>`);}
+async function opSaveIncident(id){const title=(document.getElementById("op-inc-title")||{}).value||"";if(!title.trim()){toast("Title required.","error");return;}const row={title:title.trim(),severity:(document.getElementById("op-inc-sev")||{}).value||"Low",status:(document.getElementById("op-inc-status")||{}).value||"Open",area:(document.getElementById("op-inc-area")||{}).value||"",description:(document.getElementById("op-inc-desc")||{}).value||"",impact:(document.getElementById("op-inc-impact")||{}).value||"",resolution:(document.getElementById("op-inc-res")||{}).value||"",learnings:(document.getElementById("op-inc-learn")||{}).value||""};try{await gpSave("op_incidents",row,id||null);delete _OP.incidents;closeModal();APP.va.tab="incidents";toast("Incident logged.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function opDelIncident(id){if(!confirm("Delete?"))return;try{await gpDelete("op_incidents",id);delete _OP.incidents;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+function opReports(){return opLazy("reports","op_reports",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Operations Reports</div><button class="btn btn-sm btn-primary" onclick="opOpenReport()">+ Add Report</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Weekly, monthly, and quarterly ops reports. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No ops reports yet.</div></div>`:items.map(r=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${r.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px"><span class="tag t-navy">${r.type||"Report"}</span> · ${r.period||""}</div>${r.summary?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>Summary:</b> ${r.summary}</div>`:""} ${r.metrics?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>Metrics:</b> ${r.metrics}</div>`:""} ${r.issues?`<div style="font-size:13px;color:var(--red);margin-bottom:2px">⚠️ <b>Issues:</b> ${r.issues}</div>":""} ${r.actions?`<div style="font-size:13px;color:var(--navy)">🔧 <b>Actions:</b> ${r.actions}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenReport('${r.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelReport('${r.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function opOpenReport(id){const r=id?(_OP.reports||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Ops Report":"Add Ops Report",`<div class="form-row"><div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="op-r-title" value="${r.title||""}" placeholder="e.g. Week 23 Operations Report"></div><div class="form-group"><label class="form-label">Type</label><select class="form-control" id="op-r-type"><option${r.type==="Weekly"?" selected":""}>Weekly</option><option${r.type==="Monthly"?" selected":""}>Monthly</option><option${r.type==="Quarterly"?" selected":""}>Quarterly</option><option${r.type==="Ad Hoc"?" selected":""}>Ad Hoc</option></select></div></div><div class="form-group"><label class="form-label">Period Covered</label><input class="form-control" id="op-r-period" value="${r.period||""}" placeholder="e.g. Jun 9-15, 2025"></div><div class="form-group"><label class="form-label">Summary</label><textarea class="form-control" id="op-r-summary" rows="3" placeholder="Overall operational status...">${r.summary||""}</textarea></div><div class="form-group"><label class="form-label">Key Metrics</label><textarea class="form-control" id="op-r-metrics" rows="3" placeholder="Task completion: 94% | SLA: 91% | Active clients: 4...">${r.metrics||""}</textarea></div><div class="form-group"><label class="form-label">Issues / Risks</label><textarea class="form-control" id="op-r-issues" rows="2" placeholder="Any operational issues this period?">${r.issues||""}</textarea></div><div class="form-group"><label class="form-label">Actions / Next Steps</label><textarea class="form-control" id="op-r-actions" rows="2" placeholder="What was done? What is planned?">${r.actions||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveReport('${id||""}')">Save Report</button>`);}
+async function opSaveReport(id){const title=(document.getElementById("op-r-title")||{}).value||"";if(!title.trim()){toast("Title required.","error");return;}const row={title:title.trim(),type:(document.getElementById("op-r-type")||{}).value||"",period:(document.getElementById("op-r-period")||{}).value||"",summary:(document.getElementById("op-r-summary")||{}).value||"",metrics:(document.getElementById("op-r-metrics")||{}).value||"",issues:(document.getElementById("op-r-issues")||{}).value||"",actions:(document.getElementById("op-r-actions")||{}).value||""};try{await gpSave("op_reports",row,id||null);delete _OP.reports;closeModal();APP.va.tab="reports";toast("Report saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function opDelReport(id){if(!confirm("Delete?"))return;try{await gpDelete("op_reports",id);delete _OP.reports;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+function opTeamNotes(){return opLazy("team_notes","op_team_notes",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Team Notes</div><button class="btn btn-sm btn-primary" onclick="opOpenTeamNote()">+ Add Note</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Performance observations, 1:1 notes, coaching points. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No team notes yet.</div></div>`:items.map(n=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:14.5px;font-weight:700;margin-bottom:2px">${n.person||"Team"} <span style="font-weight:400;color:var(--text3)">· ${n.type||"Note"}</span></div>${n.note?`<div style="font-size:13px;color:var(--text2);margin-top:4px">${n.note}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenTeamNote('${n.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelTeamNote('${n.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function opOpenTeamNote(id){const n=id?(_OP.team_notes||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Team Note":"Add Team Note",`<div class="form-row"><div class="form-group"><label class="form-label">Person / Team</label><input class="form-control" id="op-tn-person" value="${n.person||""}" placeholder="e.g. Maria, Entire Team"></div><div class="form-group"><label class="form-label">Type</label><select class="form-control" id="op-tn-type"><option${n.type==="Performance Note"?" selected":""}>Performance Note</option><option${n.type==="1:1 Observation"?" selected":""}>1:1 Observation</option><option${n.type==="Coaching Point"?" selected":""}>Coaching Point</option><option${n.type==="Recognition"?" selected":""}>Recognition</option><option${n.type==="Concern"?" selected":""}>Concern</option><option${n.type==="General"?" selected":""}>General</option></select></div></div><div class="form-group"><label class="form-label">Note *</label><textarea class="form-control" id="op-tn-note" rows="5" placeholder="What happened? What was observed?">${n.note||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveTeamNote('${id||""}')">Save Note</button>`);}
+async function opSaveTeamNote(id){const note=(document.getElementById("op-tn-note")||{}).value||"";if(!note.trim()){toast("Note required.","error");return;}const row={person:(document.getElementById("op-tn-person")||{}).value||"",type:(document.getElementById("op-tn-type")||{}).value||"General",note:note.trim()};try{await gpSave("op_team_notes",row,id||null);delete _OP.team_notes;closeModal();APP.va.tab="team_notes";toast("Note saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function opDelTeamNote(id){if(!confirm("Delete?"))return;try{await gpDelete("op_team_notes",id);delete _OP.team_notes;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+function opSops(){return opLazy("sop_tracker","op_sop_tracker",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">SOP Compliance Tracker</div><button class="btn btn-sm btn-primary" onclick="opOpenSop()">+ Add Entry</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Track SOP adherence per team member and flag gaps or breaches.</div>${items.length===0?`<div class="empty"><div class="empty-text">No SOP compliance entries yet.</div></div>`:items.map(s=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:14.5px;font-weight:700;margin-bottom:2px">${s.sop||"—"} <span style="font-weight:400;color:var(--text3)">— ${s.person||""}</span></div><div style="font-size:12.5px;color:var(--text3);margin-bottom:4px"><span class="tag ${s.result==="Pass"?"t-green":s.result==="Fail"?"t-red":"t-amber"}">${s.result||"Review"}</span></div>${s.notes?`<div style="font-size:13px;color:var(--text2)">${s.notes}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenSop('${s.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelSop('${s.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function opOpenSop(id){const s=id?(_OP.sop_tracker||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit SOP Entry":"Add SOP Entry",`<div class="form-row"><div class="form-group"><label class="form-label">SOP Name</label><input class="form-control" id="op-sop-name" value="${s.sop||""}" placeholder="e.g. SLA and Response Protocol"></div><div class="form-group"><label class="form-label">Team Member</label><input class="form-control" id="op-sop-person" value="${s.person||""}" placeholder="e.g. Maria Reyes"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Result</label><select class="form-control" id="op-sop-result"><option${s.result==="Pass"?" selected":""}>Pass</option><option${s.result==="Needs Review"?" selected":""}>Needs Review</option><option${s.result==="Fail"?" selected":""}>Fail</option></select></div></div><div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="op-sop-notes" rows="3" placeholder="Observations, breaches, or commendations...">${s.notes||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveSop('${id||""}')">Save</button>`);}
+async function opSaveSop(id){const row={sop:(document.getElementById("op-sop-name")||{}).value||"",person:(document.getElementById("op-sop-person")||{}).value||"",result:(document.getElementById("op-sop-result")||{}).value||"Pass",notes:(document.getElementById("op-sop-notes")||{}).value||""};try{await gpSave("op_sop_tracker",row,id||null);delete _OP.sop_tracker;closeModal();APP.va.tab="sops";toast("Saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function opDelSop(id){if(!confirm("Delete?"))return;try{await gpDelete("op_sop_tracker",id);delete _OP.sop_tracker;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+function opImprovements(){return opLazy("improvements","op_improvements",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Process Improvements</div><button class="btn btn-sm btn-primary" onclick="opOpenImprovement()">+ Add Item</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Log improvement ideas and track implementation. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No improvement items yet.</div></div>`:items.map(imp=>`<div class="card" style="padding:16px 20px;border-left:3px solid ${{Pending:"var(--amber)","In Progress":"var(--navy)",Implemented:"var(--green)",Rejected:"var(--red)"}[imp.status]||"var(--border2)"};margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${imp.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px">${imp.area||"—"} · <span class="tag ${imp.status==="Implemented"?"t-green":imp.status==="In Progress"?"t-navy":"t-gray"}">${imp.status||"Pending"}</span></div>${imp.description?`<div style="font-size:13px;color:var(--text2)">${imp.description}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenImprovement('${imp.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelImprovement('${imp.id}')">Del</button></div></div></div>`).join("")}</div>`);}
+function opOpenImprovement(id){const imp=id?(_OP.improvements||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Improvement":"Add Improvement",`<div class="form-row"><div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="op-imp-title" value="${imp.title||""}" placeholder="e.g. Automate weekly client reports"></div><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="op-imp-status"><option${imp.status==="Pending"?" selected":""}>Pending</option><option${imp.status==="In Progress"?" selected":""}>In Progress</option><option${imp.status==="Implemented"?" selected":""}>Implemented</option><option${imp.status==="Rejected"?" selected":""}>Rejected</option></select></div></div><div class="form-group"><label class="form-label">Area / Process</label><input class="form-control" id="op-imp-area" value="${imp.area||""}" placeholder="e.g. Reporting, Client Onboarding, SLA Monitoring"></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="op-imp-desc" rows="4" placeholder="What needs improving and why? Proposed solution?">${imp.description||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveImprovement('${id||""}')">Save</button>`);}
+async function opSaveImprovement(id){const title=(document.getElementById("op-imp-title")||{}).value||"";if(!title.trim()){toast("Title required.","error");return;}const row={title:title.trim(),status:(document.getElementById("op-imp-status")||{}).value||"Pending",area:(document.getElementById("op-imp-area")||{}).value||"",description:(document.getElementById("op-imp-desc")||{}).value||""};try{await gpSave("op_improvements",row,id||null);delete _OP.improvements;closeModal();APP.va.tab="improvements";toast("Saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
+async function opDelImprovement(id){if(!confirm("Delete?"))return;try{await gpDelete("op_improvements",id);delete _OP.improvements;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
+
+/* ══ INCOME CALCULATOR ══ */
+const PH_DEDUCTIONS={sss(g){const MSC=Math.min(Math.max(Math.round(g/500)*500,4000),29750);return{ee:Math.round(MSC*0.045),msc:MSC};},philhealth(g){return{ee:Math.round(Math.min(Math.max(g*0.05,500),10000)/2)};},pagibig(g){return{ee:Math.min(Math.round(g*(g<=1500?0.01:0.02)),100)};},tax(a){if(a<=250000)return 0;if(a<=400000)return Math.round((a-250000)*0.15);if(a<=800000)return Math.round(22500+(a-400000)*0.20);if(a<=2000000)return Math.round(102500+(a-800000)*0.25);if(a<=8000000)return Math.round(402500+(a-2000000)*0.30);return Math.round(2202500+(a-8000000)*0.35);}};
+function icPeso(v){return"₱"+Number(v).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2});}
+function icHr(m){const h=Math.floor(m/60),mn=m%60;return h+"h"+(mn>0?" "+mn+"m":"");}
+function _incomeKey(id){return"tjc_income_cfg_"+id;}
+function _loadIncomeCfg(id){try{return JSON.parse(localStorage.getItem(_incomeKey(id))||"{}");}catch(e){return{};}}
+function _saveIncomeCfg(id,cfg){try{localStorage.setItem(_incomeKey(id),JSON.stringify(cfg));}catch(e){}}
+function renderVAIncomeCalculator(va){
+  const cfg=_loadIncomeCfg(va.id);
+  const hourlyRate=Number(cfg.hourlyRate||0);
+  const showDed=cfg.showDeductions===true;
+  const currency=cfg.currency||"PHP";
+  const usdRate=Number(cfg.usdRate||CFG.exchangeRate||56);
+  const workHrs=Number(cfg.workHrsPerDay||8);
+  const td=today();
+  const weekStart=getWeekStart();
+  const myLogs=APP.data.timelogs.filter(l=>l.vaUid===va.id);
+  const todayMins=myLogs.filter(l=>l.date===td).reduce((a,l)=>a+(l.minutes||0),0);
+  const weekMins=myLogs.filter(l=>l.date>=weekStart).reduce((a,l)=>a+(l.minutes||0),0);
+  const monthStr=td.slice(0,7);
+  const monthMins=myLogs.filter(l=>l.date.startsWith(monthStr)).reduce((a,l)=>a+(l.minutes||0),0);
+  const rpm=hourlyRate/60;
+  const gToday=todayMins*rpm,gWeek=weekMins*rpm,gMonth=monthMins*rpm;
+  let sssEE=0,phEE=0,piEE=0,taxM=0,totalDed=0,netMonth=gMonth;
+  if(showDed&&gMonth>0){const gPHP=currency==="USD"?gMonth*usdRate:gMonth;const{ee:s}=PH_DEDUCTIONS.sss(gPHP);const{ee:ph}=PH_DEDUCTIONS.philhealth(gPHP);const{ee:pi}=PH_DEDUCTIONS.pagibig(gPHP);sssEE=s;phEE=ph;piEE=pi;const td2=sssEE+phEE+piEE;taxM=Math.round(PH_DEDUCTIONS.tax((gPHP-td2)*12)/12);totalDed=td2+taxM;netMonth=currency==="USD"?(gPHP-totalDed)/usdRate:gPHP-totalDed;}
+  function fmt(a){if(currency==="USD")return"$"+a.toFixed(2);return icPeso(a);}
+  const last7=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));return d.toISOString().slice(0,10);});
+  const dailyData=last7.map(date=>{const mins=myLogs.filter(l=>l.date===date).reduce((a,l)=>a+(l.minutes||0),0);const gross=mins*rpm;const dayLabel=new Date(date+"T00:00:00").toLocaleDateString("en-PH",{weekday:"short",month:"short",day:"numeric"});return{date,mins,gross,dayLabel,isToday:date===td};});
+  const needsSetup=hourlyRate===0;
+  return`<div><div class="sec-head"><div class="sec-title">💰 Income Calculator</div><button class="btn btn-sm btn-secondary" onclick="vaIncomeOpenSettings('${va.id}')">⚙️ Settings</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:18px">Your earnings calculated from actual logged time. Set your hourly rate to get started.</div>${needsSetup?`<div class="card card-pad" style="border:2px dashed var(--border2);text-align:center;padding:40px 24px"><div style="font-size:36px;margin-bottom:14px">⚙️</div><div style="font-size:17px;font-weight:700;margin-bottom:8px">Set your hourly rate to begin</div><div style="font-size:13px;color:var(--text3);margin-bottom:20px">Enter your agreed rate per hour with TJC to see your earnings from time logs.</div><button class="btn btn-primary" onclick="vaIncomeOpenSettings('${va.id}')">Set Up My Rate</button></div>`:`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px"><div class="card" style="padding:20px;text-align:center;border-top:3px solid var(--teal)"><div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Today · ${icHr(todayMins)}</div><div style="font-size:28px;font-weight:900;color:var(--teal)">${fmt(gToday)}</div><div style="font-size:12px;color:var(--text3);margin-top:4px">from ${todayMins} min logged</div></div><div class="card" style="padding:20px;text-align:center;border-top:3px solid var(--navy)"><div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">This Week · ${icHr(weekMins)}</div><div style="font-size:28px;font-weight:900;color:var(--navy)">${fmt(gWeek)}</div><div style="font-size:12px;color:var(--text3);margin-top:4px">from ${weekMins} min logged</div></div><div class="card" style="padding:20px;text-align:center;border-top:3px solid var(--gold)"><div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">This Month · ${icHr(monthMins)}</div><div style="font-size:28px;font-weight:900;color:var(--gold-dark)">${fmt(gMonth)}</div><div style="font-size:12px;color:var(--text3);margin-top:4px">from ${monthMins} min logged</div></div></div><div style="background:var(--navy);border-radius:var(--r2);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px"><div style="font-size:13px;color:rgba(255,255,255,.7)">Rate: <b style="color:#fff">${currency==="USD"?"$":"₱"}${hourlyRate}/hr</b> &nbsp;·&nbsp; ${workHrs}h/day ${currency==="USD"?`&nbsp;·&nbsp; ₱${usdRate}/$1`:""}</div><button class="btn btn-sm" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff" onclick="vaIncomeOpenSettings('${va.id}')">Edit</button></div><div class="card card-pad" style="margin-bottom:16px"><div style="font-size:14px;font-weight:700;margin-bottom:16px">📅 Last 7 Days</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end"><${dailyData.map(d=>{const maxM=Math.max(...dailyData.map(x=>x.mins),1);const pct=Math.round((d.mins/maxM)*100);const bc=d.isToday?"var(--teal)":d.mins>0?"var(--navy)":"var(--border2)";return`<div style="text-align:center"><div style="font-size:11.5px;font-weight:700;color:var(--text3);margin-bottom:4px">${d.mins>0?fmt(d.gross):"—"}</div><div style="background:${bc};height:${Math.max(pct*.8,d.mins>0?4:0)}px;border-radius:4px 4px 0 0;min-height:${d.mins>0?"4px":"0"}"></div><div style="font-size:10px;color:${d.isToday?"var(--teal)":"var(--text3)"};margin-top:4px;font-weight:${d.isToday?"700":"400"}">${d.dayLabel.split(",")[0]}</div><div style="font-size:10px;color:var(--text3)">${d.mins>0?icHr(d.mins):"—"}</div></div>`;}).join("")}></div></div><div class="card card-pad" style="margin-bottom:16px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><div style="font-size:14px;font-weight:700">🧾 Net Pay Calculator (Philippines)</div><label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text2)"><div onclick="vaIncomeToggleDeductions('${va.id}')" style="width:40px;height:22px;background:${showDed?"var(--teal)":"var(--border2)"};border-radius:11px;position:relative;cursor:pointer;transition:background .2s"><div style="width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:2px;left:${showDed?"20px":"2px"};transition:left .2s"></div></div><span>${showDed?"Deductions ON":"Show deductions"}</span></label></div>${showDed&&gMonth>0?`<div style="font-size:12.5px;color:var(--text3);margin-bottom:14px">Based on this month's gross (${icPeso(currency==="USD"?gMonth*usdRate:gMonth)} PHP). Using 2024 PH government rates.</div><div style="border:1px solid var(--border);border-radius:var(--r2);overflow:hidden"><div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)"><div style="font-size:14px;font-weight:600">Gross Monthly Pay</div><div style="font-size:15px;font-weight:700">${icPeso(currency==="USD"?gMonth*usdRate:gMonth)}</div></div><div style="padding:0 16px">${[["SSS","Employee share · 4.5% of MSC",sssEE],["PhilHealth","Employee share · 2.5% of salary",phEE],["Pag-IBIG (HDMF)","Employee share · 2%, max ₱100",piEE],["Withholding Tax (BIR)","2024 revised tax table · monthly estimate",taxM]].map(([name,sub,val])=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13.5px;font-weight:600">${name}</div><div style="font-size:12px;color:var(--text3)">${sub}</div></div><div style="font-size:13.5px;color:var(--red)">− ${icPeso(val)}</div></div>`).join("")}</div><div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--navy)"><div><div style="font-size:15px;font-weight:700;color:#fff">Estimated Net Pay</div><div style="font-size:11.5px;color:rgba(255,255,255,.5)">Total deductions: ${icPeso(totalDed)}</div></div><div style="font-size:22px;font-weight:900;color:var(--teal)">${icPeso(currency==="USD"?netMonth*usdRate:netMonth)}</div></div></div><div style="font-size:12px;color:var(--text3);margin-top:12px;padding:10px 14px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border)">⚠️ <b>Disclaimer:</b> This is an estimate based on current logged hours and standard PH statutory deductions. Actual take-home pay may vary. Consult HR or a tax professional for exact figures.</div>`:showDed&&gMonth===0?`<div class="empty" style="padding:20px 0"><div class="empty-text">Log some time this month to see your net pay estimate.</div></div>`:`<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px">Toggle on to see your estimated take-home pay after SSS, PhilHealth, Pag-IBIG, and withholding tax deductions.</div>`}</div><div class="card card-pad"><div style="font-size:14px;font-weight:700;margin-bottom:14px">⏱️ Per-Hour & Per-Day Estimate</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="text-align:center;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2)"><div style="font-size:20px;font-weight:800;color:var(--text)">${fmt(hourlyRate)}</div><div style="font-size:12px;color:var(--text3);margin-top:3px;text-transform:uppercase">Per Hour</div></div><div style="text-align:center;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2)"><div style="font-size:20px;font-weight:800;color:var(--navy)">${fmt(hourlyRate*workHrs)}</div><div style="font-size:12px;color:var(--text3);margin-top:3px;text-transform:uppercase">Per Day (${workHrs}h)</div></div><div style="text-align:center;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2)"><div style="font-size:20px;font-weight:800;color:var(--gold-dark)">${fmt(hourlyRate*workHrs*22)}</div><div style="font-size:12px;color:var(--text3);margin-top:3px;text-transform:uppercase">Per Month (22 days)</div></div></div></div>`}</div>`;
+}
+function vaIncomeOpenSettings(vaId){const cfg=_loadIncomeCfg(vaId);openModal("⚙️ Income Calculator Settings",`<div style="font-size:13px;color:var(--text3);margin-bottom:16px">Configure your hourly rate and preferences. Data stays private on your device.</div><div class="form-row"><div class="form-group"><label class="form-label">Currency</label><select class="form-control" id="ic-currency"><option value="PHP" ${(cfg.currency||"PHP")==="PHP"?"selected":""}>₱ PHP (Philippine Peso)</option><option value="USD" ${cfg.currency==="USD"?"selected":""}>$ USD (US Dollar)</option></select></div><div class="form-group"><label class="form-label">Hourly Rate *</label><input class="form-control" id="ic-rate" type="number" min="0" step="0.01" value="${cfg.hourlyRate||""}" placeholder="e.g. 250 (PHP) or 4.50 (USD)"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Working Hours Per Day</label><select class="form-control" id="ic-hrs">${[4,6,7,8,9,10].map(h=>`<option value="${h}" ${Number(cfg.workHrsPerDay||8)===h?"selected":""}>${h} hours</option>`).join("")}</select></div><div class="form-group"><label class="form-label">USD → PHP Exchange Rate</label><input class="form-control" id="ic-usd" type="number" min="1" step="0.01" value="${cfg.usdRate||CFG.exchangeRate||56}" placeholder="e.g. 56.50"></div></div><div class="form-group"><label class="form-label" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="ic-deductions" ${cfg.showDeductions?"checked":""} style="width:16px;height:16px;accent-color:var(--teal)"> Show net pay with PH statutory deductions (SSS, PhilHealth, Pag-IBIG, Tax)</label></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="vaIncomeSaveSettings('${vaId}')">Save Settings</button>`);}
+function vaIncomeSaveSettings(vaId){const rate=parseFloat(document.getElementById("ic-rate").value);if(!rate||rate<=0){toast("Please enter a valid hourly rate.","error");return;}const cfg={hourlyRate:rate,currency:document.getElementById("ic-currency").value,workHrsPerDay:parseInt(document.getElementById("ic-hrs").value),usdRate:parseFloat(document.getElementById("ic-usd").value)||CFG.exchangeRate||56,showDeductions:document.getElementById("ic-deductions").checked};_saveIncomeCfg(vaId,cfg);closeModal();toast("Settings saved.","success");renderCurrentPage();}
+function vaIncomeToggleDeductions(vaId){const cfg=_loadIncomeCfg(vaId);cfg.showDeductions=!cfg.showDeductions;_saveIncomeCfg(vaId,cfg);renderCurrentPage();}
+</script>
