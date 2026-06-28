@@ -25,7 +25,7 @@
   --shadow2:0 2px 8px rgba(27,42,74,0.12),0 8px 24px rgba(27,42,74,0.08);
   --r:8px;--r2:12px;--r3:16px;
   --font:'Poppins',Arial,system-ui,sans-serif;
-  --sb:224px;
+  --sb:204px;
   --overdue-row-bg:#FFF8F8;--client-row-bg:#FFFDF0;--hover-row-bg:#FAFBFE;
 }
 /* ── DARK MODE TOKENS ── */
@@ -175,7 +175,7 @@
 }
 .auth-back-web:hover{color:rgba(255,255,255,.8)}
 
-html,body{height:100%;font-family:var(--font);font-size:15.5px;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;overflow:auto;transition:background .25s,color .25s}
+html,body{height:100%;font-family:var(--font);font-size:14px;color:var(--text);background:var(--bg);-webkit-font-smoothing:antialiased;overflow:auto;transition:background .25s,color .25s}
 .hidden{display:none!important}
 #app-shell{display:flex;height:100vh;overflow:hidden}
 .sb-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:199}
@@ -488,16 +488,17 @@ select.form-control{cursor:pointer}
 .fin-box-php{font-size:11px;color:var(--text3);font-weight:500;margin-top:2px}
 .fin-box-note{font-size:10px;color:var(--text3);margin-top:3px}
 @media(max-width:680px){
-  .sidebar{position:fixed;top:0;bottom:0;left:0;transform:translateX(-100%)}
+  .sidebar{position:fixed;top:0;bottom:0;left:0;transform:translateX(-100%);z-index:200}
   .sidebar.open{transform:translateX(0)}
   .hamburger{display:flex}
-  .kpi-grid{grid-template-columns:repeat(2,1fr)}
-  .form-row,.form-row-3{grid-template-columns:1fr}
+  .kpi-grid{grid-template-columns:repeat(2,1fr)!important}
+  .form-row,.form-row-3{grid-template-columns:1fr!important}
   .pipeline{flex-direction:column}
   .pipe-col{min-width:unset}
-  .content-area{padding:12px}
+  .content-area{padding:10px 12px 80px!important}
   .bottom-nav{display:block}
-  .data-table th:nth-child(n+4),.data-table td:nth-child(n+4){display:none}
+  /* Data table: collapse gracefully */
+  .data-table th:nth-child(n+5),.data-table td:nth-child(n+5){display:none}
   .cp-hero-health{display:none}
 }
 @media(min-width:681px){.bottom-nav{display:none!important}}
@@ -1211,175 +1212,349 @@ html,body{font-size:13px}
   color: var(--text2);
 }
 /* ═══════════════════════════════════════════════════════
-   TJC SCALE SYSTEM — Typography & Layout Enlargement
-   Overrides all hardcoded small sizes. Applied last so
-   it wins the cascade without touching HTML.
+   TJC RESPONSIVE SYSTEM
+   Full-bleed desktop · Fluid mobile · Bottom-nav safe area
 ═══════════════════════════════════════════════════════ */
 
-/* ── Sidebar ───────────────────────────────────────── */
-.sb-name          { font-size: 14px; }
-.sb-role          { font-size: 11px; }
-.sb-sect          { font-size: 10px; }
-.sb-item          { font-size: 13.5px; padding: 7px 14px; }
-.sb-item svg      { width: 15px; height: 15px; }
-.sb-badge         { font-size: 10px; }
-.sb-fx-label      { font-size: 10px; }
-.sb-fx-val        { font-size: 15px; }
-.sb-fx-sub        { font-size: 11.5px; }
-.sb-verse-text    { font-size: 11.5px; }
-.sb-verse-ref     { font-size: 10px; }
-.sb-user-name     { font-size: 13.5px; }
-.sb-user-role     { font-size: 11px; }
+/* ── Desktop: remove all max-width caps, full bleed ── */
+.content-area > *,
+.content-area > div[style*="max-width"] {
+  max-width: 100% !important;
+  margin-left: 0 !important;
+  margin-right: 0 !important;
+}
+/* Named wrappers that cap layout */
+div[style*="max-width:900px"],
+div[style*="max-width:1000px"],
+div[style*="max-width:1100px"],
+div[style*="max-width:760px"],
+div[style*="max-width:700px"],
+div[style*="max-width:680px"],
+div[style*="max-width:640px"],
+div[style*="max-width:560px"] {
+  max-width: 100% !important;
+}
+/* Finance inline-grid: make them fluid */
+.fin-summary {
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)) !important;
+}
 
-/* ── Topbar ─────────────────────────────────────────── */
-.topbar           { height: 56px; }
-.page-title       { font-size: 17px !important; }
+/* ── Bottom nav: taller, better touch targets ── */
+.bottom-nav {
+  position: fixed !important;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  z-index: 150;
+  background: var(--surface) !important;
+  border-top: 1px solid var(--border) !important;
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.bn-inner {
+  display: flex;
+  align-items: stretch;
+  height: 58px;
+}
+.bn-item {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 3px;
+  font-size: 10px;
+  font-weight: 600;
+  color: var(--text3);
+  cursor: pointer;
+  padding: 6px 4px;
+  transition: color .15s, background .15s;
+  -webkit-tap-highlight-color: transparent;
+}
+.bn-item.on {
+  color: var(--teal) !important;
+}
+.bn-icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 28px;
+  height: 28px;
+}
+.bn-icon svg {
+  width: 22px !important;
+  height: 22px !important;
+}
+/* Content area: account for bottom nav on mobile */
+@media(max-width:680px) {
+  .content-area {
+    padding-bottom: 72px !important;
+  }
+  /* Topbar: compact */
+  .topbar {
+    height: 50px !important;
+    padding: 0 12px !important;
+  }
+  .page-title {
+    font-size: 15px !important;
+  }
+  /* Finance page: stack invoice grid */
+  div[style*="grid-template-columns:minmax(0,1.15fr)"],
+  div[style*="grid-template-columns:minmax(0,1.6fr)"] {
+    grid-template-columns: 1fr !important;
+    display: grid !important;
+  }
+  /* Finance: invoice row — wrap tightly */
+  .fin-summary {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  /* Invoice rows: reduce gap */
+  div[style*="display:flex;align-items:center;gap:8px;padding:9px 12px"] {
+    flex-wrap: wrap;
+    gap: 6px !important;
+  }
+  /* Hide secondary columns in invoice rows on mobile */
+  .dual-currency .dc-secondary { display: none; }
+  /* Tasks table: show only name + status */
+  .data-table th:nth-child(n+4),
+  .data-table td:nth-child(n+4) { display: none !important; }
+  .data-table th:nth-child(3),
+  .data-table td:nth-child(3) { display: none !important; }
+  /* KPI grid: 2-column on phone */
+  .kpi-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  /* Home dashboard grids: stack */
+  div[style*="grid-template-columns:minmax(0,1fr) minmax(0,1fr)"],
+  div[style*="grid-template-columns:1fr 1fr"],
+  div[style*="grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)"],
+  div[style*="grid-template-columns:1fr 1fr 1fr"] {
+    grid-template-columns: 1fr !important;
+    display: grid !important;
+  }
+  /* Pipe: vertical scroll */
+  .pipeline {
+    flex-direction: column !important;
+  }
+  .pipe-col {
+    min-width: unset !important;
+    width: 100% !important;
+  }
+  /* Cards: comfortable padding */
+  .card-pad {
+    padding: 12px 14px !important;
+  }
+  /* Buttons in topbar: smaller */
+  .btn {
+    font-size: 13px !important;
+    padding: 7px 14px !important;
+  }
+  .btn-sm {
+    font-size: 11px !important;
+    padding: 5px 10px !important;
+  }
+  /* Sec-head: stack label + action */
+  .sec-head {
+    flex-wrap: wrap !important;
+    gap: 8px !important;
+  }
+  /* Content section: full-bleed */
+  .content-area {
+    padding: 12px 12px 72px !important;
+  }
+  /* VA Portal body */
+  .portal-body {
+    padding: 14px 12px 72px !important;
+  }
+  /* VA Portal tabs: horizontal scroll */
+  .portal-tabs {
+    width: 100% !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    height: auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    display: flex !important;
+    flex-shrink: 0 !important;
+    padding: 6px 8px !important;
+    gap: 4px !important;
+    scrollbar-width: none !important;
+  }
+  .portal-tabs::-webkit-scrollbar { display: none; }
+  .ptab {
+    white-space: nowrap !important;
+    padding: 10px 14px !important;
+    font-size: 12.5px !important;
+    flex-shrink: 0 !important;
+    border-radius: 6px !important;
+    border-left: none !important;
+    border-bottom: 2px solid transparent !important;
+  }
+  .ptab.on {
+    border-bottom: 2px solid var(--teal) !important;
+    border-left: none !important;
+    background: var(--teal-pale) !important;
+  }
+  /* VA portal layout: stack vertically */
+  .portal-layout {
+    flex-direction: column !important;
+    overflow: hidden !important;
+  }
+  /* VA portal tabs become horizontal scrolling strip */
+  .portal-layout > .portal-tabs,
+  .portal-layout > .cp-portal-tabs {
+    flex-direction: row !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 44px !important;
+    border-right: none !important;
+    border-bottom: 2px solid var(--border) !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    flex-shrink: 0 !important;
+    padding: 0 8px !important;
+    gap: 2px !important;
+    scrollbar-width: none !important;
+    -webkit-overflow-scrolling: touch !important;
+    background: var(--surface) !important;
+  }
+  .portal-layout > .portal-tabs::-webkit-scrollbar,
+  .portal-layout > .cp-portal-tabs::-webkit-scrollbar { display: none !important; }
+  /* Portal body: fill remaining height and scroll */
+  .portal-layout > .portal-body,
+  .portal-layout > .cp-portal-body {
+    flex: 1 !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    width: 100% !important;
+    padding: 14px 12px 80px !important;
+  }
+  /* Portal topbar: wrap on mobile */
+  .portal-topbar {
+    flex-wrap: wrap !important;
+    min-height: auto !important;
+    padding: 8px 12px !important;
+    gap: 6px !important;
+  }
+  /* HR portal sidebar: horizontal scroll tabs */
+  div[style*="width:190px;flex-shrink:0;background:var(--surface)"] {
+    width: 100% !important;
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    overflow-y: hidden !important;
+    height: auto !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--border) !important;
+    display: flex !important;
+    padding: 6px !important;
+    scrollbar-width: none !important;
+    flex-shrink: 0 !important;
+  }
+  /* Auth screens: full width */
+  .auth-wrap > div {
+    max-width: 100% !important;
+    padding: 0 16px !important;
+  }
+  /* Modal: full screen on mobile */
+  .modal-box {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-radius: 16px 16px 0 0 !important;
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    margin: 0 !important;
+    max-height: 90vh !important;
+  }
+  .modal-overlay {
+    align-items: flex-end !important;
+  }
+  /* Topbar quick-add strip: scroll */
+  .topbar-actions {
+    overflow-x: auto !important;
+    scrollbar-width: none !important;
+    flex-wrap: nowrap !important;
+  }
+  .topbar-actions::-webkit-scrollbar { display: none; }
+  /* Welcome banner: compact */
+  .welcome-banner {
+    padding: 16px !important;
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 12px !important;
+  }
+  .wb-right { width: 100% !important; }
+  /* Finance: info strip */
+  div[style*="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px"] {
+    flex-direction: column !important;
+    align-items: flex-start !important;
+    gap: 8px !important;
+  }
+  /* Finance: button row wrap */
+  div[style*="display:flex;gap:8px"] {
+    flex-wrap: wrap !important;
+  }
+  /* Info grid: 2 col */
+  .info-grid {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  /* Score cards: full width */
+  div[style*="grid-template-columns:repeat(auto-fill,minmax(280px"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Capacity: stack */
+  div[style*="grid-template-columns:repeat(auto-fill,minmax(300px"] {
+    grid-template-columns: 1fr !important;
+  }
+  /* Hide non-essential table columns */
+  table th:last-child, table td:last-child {
+    white-space: nowrap;
+  }
+  /* Task row: compact */
+  .task-row {
+    padding: 10px 10px !important;
+    gap: 8px !important;
+  }
+  .task-name {
+    font-size: 13px !important;
+  }
+  /* Tag: smaller */
+  .tag {
+    font-size: 10px !important;
+    padding: 2px 7px !important;
+  }
+}
 
-/* ── Content area ───────────────────────────────────── */
-.content-area     { padding: 22px 24px; }
-
-/* ── Cards & KPI cards ──────────────────────────────── */
-.card-pad         { padding: 16px 20px; }
-.kpi-label        { font-size: 12.5px; }
-.kpi-val          { font-size: 27px; }
-.kpi-sub          { font-size: 12px; }
-.kpi-sub2         { font-size: 11px; }
-.kpi-cc-label     { font-size: 12.5px; }
-.kpi-cc-val       { font-size: 34px; }
-.kpi-cc-sub       { font-size: 12.5px; }
-
-/* ── Section headers ────────────────────────────────── */
-.sec-title        { font-size: 15px; }
-.sec-action       { font-size: 12.5px; }
-
-/* ── Tables ─────────────────────────────────────────── */
-.data-table       { font-size: 13.5px; }
-.data-table th    { font-size: 11.5px; padding: 9px 14px; }
-.data-table td    { font-size: 13.5px; padding: 10px 14px; }
-
-/* ── Tasks ──────────────────────────────────────────── */
-.task-row         { padding: 10px 14px; }
-.task-name        { font-size: 14px; }
-
-/* ── Tags ───────────────────────────────────────────── */
-.tag              { font-size: 11.5px; padding: 3px 9px; }
-
-/* ── Avatars ────────────────────────────────────────── */
-.av-xs            { width: 18px; height: 18px; font-size: 9px; }
-.av-sm            { width: 25px; height: 25px; font-size: 10px; }
-.av-md            { width: 34px; height: 34px; font-size: 12px; }
-.av-lg            { width: 44px; height: 44px; font-size: 15px; }
-.av-xl            { width: 56px; height: 56px; font-size: 20px; }
-
-/* ── Buttons ────────────────────────────────────────── */
-.btn              { font-size: 14px; padding: 9px 18px; }
-.btn-sm           { font-size: 13px; padding: 6px 13px; }
-.btn-xs           { font-size: 12px; padding: 4px 10px; }
-.btn-ai           { font-size: 14px; padding: 9px 18px; }
-
-/* ── Forms ──────────────────────────────────────────── */
-.form-label       { font-size: 11.5px; }
-.form-control     { font-size: 14px; padding: 9px 13px; }
-.form-note        { font-size: 12.5px; }
-.form-hint        { font-size: 12.5px; }
-.form-warn        { font-size: 12.5px; }
-.form-danger      { font-size: 12.5px; }
-
-/* ── Modals ─────────────────────────────────────────── */
-.modal-title      { font-size: 16.5px; }
-.modal-body       { padding: 18px 22px; }
-.modal-head       { padding: 18px 22px 14px; }
-.modal-foot       { padding: 14px 22px; }
-
-/* ── Pipeline (kanban) ──────────────────────────────── */
-.pipe-col-head    { font-size: 13px; }
-.pipe-card-name   { font-size: 13.5px; }
-.pipe-card-meta   { font-size: 12.5px; }
-.pipe-card-rate   { font-size: 12.5px; }
-
-/* ── Finance boxes ──────────────────────────────────── */
-.fin-box-label    { font-size: 11.5px; }
-.fin-box-usd      { font-size: 20px; }
-.fin-box-php      { font-size: 12.5px; }
-.dc-primary       { font-size: 17px; }
-.dc-secondary     { font-size: 11.5px; }
-
-/* ── Info grid ──────────────────────────────────────── */
-.info-label       { font-size: 10.5px; }
-.info-val         { font-size: 14.5px; }
-
-/* ── Activity feed ──────────────────────────────────── */
-.activity-action  { font-size: 13.5px; }
-.activity-meta    { font-size: 11.5px; }
-
-/* ── Score cards ────────────────────────────────────── */
-.score-name       { font-size: 14.5px; }
-.score-role       { font-size: 11.5px; }
-.score-metric-val { font-size: 14.5px; }
-.score-metric-lbl { font-size: 10.5px; }
-
-/* ── Welcome banner ─────────────────────────────────── */
-.wb-greeting      { font-size: 24px; }
-.wb-tip           { font-size: 14px; }
-
-/* ── VA Portal — tab sidebar ────────────────────────── */
-.portal-tabs      { width: 188px; }
-.ptab             { font-size: 13.5px; padding: 10px 18px; gap: 7px; }
-
-/* ── VA Portal — body ───────────────────────────────── */
-.portal-body      { padding: 20px 24px; }
-
-/* ── Client portal hero ─────────────────────────────── */
-.cp-hero-name     { font-size: 22px; }
-.cp-hero-sub      { font-size: 12.5px; }
-.cp-hero-health-val { font-size: 28px; }
-
-/* ── Timer ──────────────────────────────────────────── */
-.timer-display    { font-size: 38px; }
-.timer-btn-start,
-.timer-btn-stop,
-.timer-btn-reset  { font-size: 14.5px; padding: 10px 22px; }
-
-/* ── Calendar ───────────────────────────────────────── */
-.cal-day-name     { font-size: 11.5px; }
-.cal-day-num      { font-size: 13.5px; width: 24px; height: 24px; }
-.cal-ev-chip      { font-size: 11.5px; }
-
-/* ── Analytics row ──────────────────────────────────── */
-.an-stat-val      { font-size: 18px; }
-.an-stat-lbl      { font-size: 10.5px; }
-
-/* ── Search ─────────────────────────────────────────── */
-.search-input     { font-size: 14px; padding: 9px 13px 9px 34px; }
-
-/* ── Toast ──────────────────────────────────────────── */
-.toast            { font-size: 14px; }
-
-/* ── Empty state ────────────────────────────────────── */
-.empty-text       { font-size: 14.5px; }
-
-/* ── Filter tabs ────────────────────────────────────── */
-.ftab             { font-size: 13px; padding: 6px 14px; }
-
-/* ── Dual currency ──────────────────────────────────── */
-.rmet-val         { font-size: 18px; }
-.rmet-lbl         { font-size: 10.5px; }
-
-/* ── Capacity rows ──────────────────────────────────── */
-.va-cap-name      { font-size: 14.5px; }
-.va-cap-role      { font-size: 11.5px; }
-.va-cap-pct       { font-size: 13.5px; }
-
-/* ── Pipe add ───────────────────────────────────────── */
-.pipe-add         { font-size: 12.5px; }
-
-/* ── Full-width layout override ─────────────────────── */
-/* Remove centred narrow column — use full available width */
-.portal-body > *               { max-width: 100% !important; }
-.portal-body > div[style*="max-width"]   { max-width: 100% !important; margin-left: 0 !important; margin-right: 0 !important; }
-.portal-body > div[style*="max-width:760px"] { max-width: 100% !important; }
-.portal-body > div[style*="max-width:700px"] { max-width: 100% !important; }
-.content-area > div[style*="max-width"]  { max-width: 100% !important; }
+/* ── Tablet (681–1024px): better grid behaviour ── */
+@media(min-width:681px) and (max-width:1024px) {
+  .content-area {
+    padding: 16px 18px !important;
+  }
+  .kpi-grid {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+  div[style*="grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1fr)"] {
+    grid-template-columns: repeat(2, 1fr) !important;
+  }
+  .fin-summary {
+    grid-template-columns: repeat(3, 1fr) !important;
+  }
+}
+@media(max-width:680px) {
+  /* Tasks: card-like rows on mobile */
+  .sp-content-row {
+    flex-wrap: wrap !important;
+    gap: 6px !important;
+    padding: 10px 12px !important;
+  }
+  /* Hide low-priority columns in task rows */
+  .sp-content-row > *:nth-child(2) { display: none !important; } /* checkbox 2 */
+  div[style*="grid-template-columns:44px 44px 1fr 140px 90px 90px 110px"] {
+    grid-template-columns: 32px 1fr auto !important;
+    gap: 8px !important;
+  }
+}
 
 </style>
 </head>
@@ -1460,9 +1635,7 @@ const SEED = {
     { id: "u2", displayName: "Maria Reyes", email: "maria@thejobscollective.com", role: "va", initials: "MR", avatarColor: "teal", capacity: 85, status: "Active", skills: ["Facebook Ads", "Canva", "Scheduling"], clientCount: 2, pin: "123456", kpi: { completionRate: 94, slaCompliance: 91, errorRate: 3, satisfaction: 5 } },
     { id: "u3", displayName: "Ana Cruz", email: "ana@thejobscollective.com", role: "va", initials: "AC", avatarColor: "red", capacity: 60, status: "Active", skills: ["Data Entry", "Email Mgmt", "Scheduling"], clientCount: 2, pin: "123456", kpi: { completionRate: 88, slaCompliance: 78, errorRate: 6, satisfaction: 4 } },
     { id: "u4", displayName: "Paolo Lim", email: "paolo@thejobscollective.com", role: "va", initials: "PL", avatarColor: "gold", capacity: 70, status: "Active", skills: ["Copywriting", "Canva", "Research"], clientCount: 2, pin: "123456", kpi: { completionRate: 92, slaCompliance: 85, errorRate: 4, satisfaction: 5 } },
-    { id: "u5", displayName: "Grace Santos", email: "grace@thejobscollective.com", role: "va", initials: "GS", avatarColor: "green", capacity: 45, status: "Active", skills: ["Client Relations", "Reporting", "Sales"], clientCount: 3, pin: "123456", kpi: { completionRate: 96, slaCompliance: 95, errorRate: 2, satisfaction: 5 } },
-    { id: "u6", displayName: "Art Teves", email: "art@thejobscollective.com", role: "growth_director", initials: "AT", avatarColor: "navy", capacity: 0, status: "Active", skills: ["Growth Strategy", "Marketing", "Business Development"], pin: "123456" },
-    { id: "u7", displayName: "Alvin Valdez", email: "alvin@thejobscollective.com", role: "ops_manager", initials: "AV", avatarColor: "purple", capacity: 0, status: "Active", skills: ["Operations", "Process Management", "Team Coordination"], pin: "123456" }
+    { id: "u5", displayName: "Grace Santos", email: "grace@thejobscollective.com", role: "va", initials: "GS", avatarColor: "green", capacity: 45, status: "Active", skills: ["Client Relations", "Reporting", "Sales"], clientCount: 3, pin: "123456", kpi: { completionRate: 96, slaCompliance: 95, errorRate: 2, satisfaction: 5 } }
   ],
   clients: [
     { id: "c1", name: "BrandX Philippines", clientPin: "123456", status: "Active", package: "Premium", rateUsd: 500, vaCostPhp: 18e3, priority: "High", assignedVaUid: "u2", assignedVa: "Maria Reyes", assignedVaInitials: "MR", assignedVaColor: "teal", lastContact: "2025-04-22", contractEnd: "2025-09-30", timezone: "PHT (UTC+8)", healthScore: 82, onboardingStep: 7, onboardingDone: true, notes: [], deliverables: [], tools: [], socials: {}, contacts: [{ name: "Kevin Tan", role: "Marketing Manager", email: "kevin@brandx.ph", phone: "+63 917 xxx xxxx", isPrimary: true }], reports: [], oosCount: 2, oosValue: 150, archived: false, createdAt: "2025-01-15", marketingMetrics: {} },
@@ -1893,7 +2066,7 @@ function updateUserInfo() {
   const v = APP.profile;
   if (!v) return;
   document.getElementById("sb-uname").textContent = v.displayName || v.email || "User";
-  document.getElementById("sb-urole").textContent = { owner: "Founder & Owner", va: "Partner", ops_va: "Operations Partner", growth_director: "Director of Growth", ops_manager: "Operations Manager", client: "Client" }[v.role] || v.role;
+  document.getElementById("sb-urole").textContent = { owner: "Founder & Owner", va: "Partner", ops_va: "Operations Partner", client: "Client" }[v.role] || v.role;
   const av = document.getElementById("sb-av");
   if (av) {
     av.textContent = v.initials || "?";
@@ -2066,9 +2239,7 @@ function renderCurrentPage() {
     clientportal: renderClientPortal,
     conversations: renderConversations,
     calendar: () => renderCalendarView("management", "all", "All Teams"),
-    sops: renderSOPLibrary,
-    growth_portal: () => typeof renderGrowthPortal === "function" ? renderGrowthPortal() : "<div class='empty'><div class='empty-text'>Growth Portal loading…</div></div>",
-    ops_portal: () => typeof renderOpsPortal === "function" ? renderOpsPortal() : "<div class='empty'><div class='empty-text'>Ops Portal loading…</div></div>"
+    sops: renderSOPLibrary
   };
   const fn = pages[APP.page];
   ca.innerHTML = fn ? fn() : '<div class="empty"><div class="empty-text">Page not found.</div></div>';
@@ -2984,7 +3155,6 @@ function renderVADashboard() {
     ["calendar", ic("calendar") + "Calendar"],
     ["learning", ic("learn") + "Learning"],
     ["compensation", ic("invoice") + "Pay & Expenses"],
-    ["income_calc", ic("kpi") + "Income Calculator"],
     ["kpiscorecard", ic("kpi") + "Scorecard"],
     ["itsecurity", ic("key") + "IT & Security"],
     ["noticeboard", ic("notes") + "Noticeboard"],
@@ -3011,7 +3181,6 @@ function renderVADashboard() {
     reports: renderVAReports(va),
     activity: renderVAActivity(va),
     compensation: renderVACompensation(va),
-    income_calc: typeof renderVAIncomeCalculator === "function" ? renderVAIncomeCalculator(va) : "",
     kpiscorecard: renderVAKPIScorecard(va),
     itsecurity: renderVAITSecurity(va),
     noticeboard: renderVANoticeboard(va),
@@ -3039,7 +3208,7 @@ function renderVADashboard() {
       <button class="btn btn-sm" style="background:rgba(201,168,76,.2);border:1px solid rgba(201,168,76,.4);color:var(--gold);font-size:11px" onclick="vaPortalLogout()">Log Out</button>
     </div>
   </div>`;
-  return `<div style="display:flex;flex-direction:column;height:100vh;overflow:hidden">${topbar}<div style="display:flex;flex:1;overflow:hidden">${tabBar}<div class="portal-body">${tabContent[APP.va.tab] || ""}</div></div></div>`;
+  return `<div style="display:flex;flex-direction:column;height:100vh;overflow:hidden">${topbar}<div class="portal-layout" style="display:flex;flex:1;overflow:hidden">${tabBar}<div class="portal-body">${tabContent[APP.va.tab] || ""}</div></div></div>`;
 }
 function uploadVAPhoto(vaId) {
   const input = document.createElement("input");
@@ -5621,10 +5790,8 @@ function checkPin() {
     APP.authStep = "choose";
     setPresence(va.id, "Available", true);
     setAppShellMode("");
-    if (va.role === "growth_director") navigate("growth_portal");
-    else if (va.role === "ops_manager") navigate("ops_portal");
-    else navigate("vaportal");
-    toast("Welcome back, " + va.displayName.split(" ")[0] + "! 👋", "success");
+    navigate("vaportal");
+    toast("Welcome back, " + va.displayName.split(" ")[0] + "! ", "success");
   } else {
     APP.va.pinEntry = "";
     renderCurrentPage();
@@ -6132,7 +6299,7 @@ function renderClientFacingPortal() {
       </div>
     </div>`;
   }
-  return `<div style="display:flex;flex-direction:column;height:100vh;overflow:hidden">${topbar}<div style="display:flex;flex:1;overflow:hidden">${tabBar}<div class="cp-portal-body">${body}</div></div></div>`;
+  return `<div style="display:flex;flex-direction:column;height:100vh;overflow:hidden">${topbar}<div class="portal-layout" style="display:flex;flex:1;overflow:hidden">${tabBar}<div class="cp-portal-body">${body}</div></div></div>`;
 }
 function openChangeOwnerPin() {
   openModal(
@@ -7995,17 +8162,28 @@ function hrLogout() {
   renderCurrentPage();
 }
 function renderHRPortal() {
+  /* Access: owner (Justine), ops_manager (Alvin), or HR PIN login */
+  const isOwnerOrOps = APP.authMode === "owner" || (APP.authMode === "va" && (APP.data.team.find(v=>v.id===APP.va.vaId)||{}).role === "ops_manager");
+  if (!isOwnerOrOps && !APP.hr.loggedIn) return renderHRPinScreen();
   const tab = APP.hr.tab || "dashboard";
   const tabs = [
     ["dashboard", ic("home"), "Dashboard"],
-    ["directory", ic("users"), "Directory"],
+    ["directory", ic("users"), "Employees"],
     ["attendance", ic("clock"), "Attendance"],
     ["leaves", ic("leave"), "Leave & Shifts"],
+    ["schedules_hr", ic("calendar"), "Schedules"],
+    ["payroll_hr", ic("invoice"), "Payroll"],
+    ["payslips_hr", ic("report"), "Payslips"],
+    ["payroll_rules", ic("kpi"), "Payroll Rules"],
+    ["performance", ic("kpi"), "Performance"],
+    ["training_hr", ic("learn"), "Training & Dev"],
+    ["documents_hr", ic("book"), "Documents"],
     ["recruitment", ic("briefcase"), "Recruitment"],
     ["onboarding", ic("learn"), "Onboarding"],
-    ["performance", ic("kpi"), "Performance"],
     ["applications", ic("report"), "Applications"],
     ["jobs", ic("jobsicon"), "Job Postings"],
+    ["holidays_hr", ic("calendar"), "Holiday Calendar"],
+    ["reports_hr", ic("activity"), "Reports"],
     ["settings", ic("key"), "HR Settings"]
   ];
   const bodyFn = {
@@ -8013,33 +8191,40 @@ function renderHRPortal() {
     directory: renderHRDirectory,
     attendance: renderHRAttendance,
     leaves: renderHRLeaves,
+    schedules_hr: renderHRSchedules,
+    payroll_hr: renderHRPayroll,
+    payslips_hr: renderHRPayslips,
+    payroll_rules: renderHRPayrollRules,
     recruitment: renderHRRecruitment,
     onboarding: renderHROnboarding,
     performance: renderHRPerformance,
+    training_hr: renderHRTraining,
+    documents_hr: renderHRDocuments,
     applications: renderHRApplications,
     jobs: renderHRJobs,
+    holidays_hr: renderHRHolidays,
+    reports_hr: renderHRReports,
     settings: renderHRSettings
   };
   const body = (bodyFn[tab] || renderHRDashboard)();
   return `<div style="display:flex;flex-direction:column;height:100%;background:var(--bg)">
-    <!-- HR Topbar -->
     <div style="background:var(--navy);padding:12px 20px;display:flex;align-items:center;justify-content:space-between;flex-shrink:0">
       <div style="display:flex;align-items:center;gap:10px">
         <span style="color:var(--teal);font-size:18px">${ic("hr", 20)}</span>
         <span style="color:#fff;font-weight:800;font-size:15px;letter-spacing:-.01em">TJC <span style="color:var(--teal)">HR</span> Portal</span>
       </div>
-      <button onclick="hrLogout()" class="btn btn-ghost" style="font-size:12px;color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)">Sign Out</button>
+      <div style="display:flex;align-items:center;gap:8px">
+        <span style="font-size:11px;color:rgba(255,255,255,.5)">${isOwnerOrOps ? "Management Access" : "HR Access"}</span>
+        <button onclick="${isOwnerOrOps ? "navigate('home')" : "hrLogout()"}" class="btn btn-ghost" style="font-size:12px;color:rgba(255,255,255,.7);border-color:rgba(255,255,255,.2)">${isOwnerOrOps ? "← Back" : "Sign Out"}</button>
+      </div>
     </div>
-    <!-- Body -->
     <div style="display:flex;flex:1;overflow:hidden">
-      <!-- Sidebar -->
-      <div style="width:180px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:10px 0">
+      <div style="width:190px;flex-shrink:0;background:var(--surface);border-right:1px solid var(--border);overflow-y:auto;padding:10px 0;scrollbar-width:none">
         ${tabs.map(([key, icon, label]) => `
-          <div onclick="APP.hr.tab='${key}';renderCurrentPage()" style="display:flex;align-items:center;gap:9px;padding:10px 16px;cursor:pointer;border-radius:8px;margin:1px 6px;font-size:13px;font-weight:${tab === key ? "700" : "500"};color:${tab === key ? "var(--blue)" : "var(--text2)"};background:${tab === key ? "var(--teal-pale)" : "transparent"}">
+          <div onclick="APP.hr.tab='${key}';renderCurrentPage()" style="display:flex;align-items:center;gap:9px;padding:9px 14px;cursor:pointer;border-radius:8px;margin:1px 6px;font-size:13px;font-weight:${tab===key?"700":"500"};color:${tab===key?"var(--navy)":"var(--text2)"};background:${tab===key?"var(--teal-pale)":"transparent"}">
             <span style="opacity:.8">${icon}</span>${label}
           </div>`).join("")}
       </div>
-      <!-- Content -->
       <div style="flex:1;overflow-y:auto;padding:24px">${body}</div>
     </div>
   </div>`;
@@ -8050,93 +8235,94 @@ function renderHRDashboard() {
   const attendance = hrLoad("attendance");
   const apps = hrLoad("applications");
   const jobs = loadJobs ? loadJobs() : [];
+  const payroll = hrLoad("hr_payroll");
+  const training = hrLoad("hr_training");
+  const holidays = hrLoad("hr_holidays");
   const active = team.filter((v) => v.status === "Active").length;
   const onLeave = leaves.filter((l) => l.status === "Approved" && isLeaveActive(l)).length;
   const openJobs = jobs.filter((j) => j.status === "Open").length;
   const pendingApps = apps.filter((a) => a.status === "New").length;
   const pendingLeaves = leaves.filter((l) => l.status === "Pending").length;
-  const today2 = /* @__PURE__ */ new Date();
-  const yr = hrLoad("attendance").filter((a) => a.type === "absent" && new Date(a.date) > new Date(today2.getFullYear() - 1, today2.getMonth(), today2.getDate()));
+  const today2 = new Date();
+  const todayStr = today2.toISOString().slice(0,10);
   const onboarding = hrLoad("onboarding");
   const recentHires = onboarding.filter((o) => hrDaysLeft(o.startDate) != null && hrDaysLeft(o.startDate) > -90).length;
+  const pendingPayroll = payroll.filter(p=>p.status==="Draft"||p.status==="Pending").length;
+  const activeTraining = training.filter(t=>t.status==="Active"||t.status==="Ongoing").length;
+  const todayPresent = attendance.filter(a=>a.date===todayStr&&a.type==="present").length;
+  const todayAbsent = attendance.filter(a=>a.date===todayStr&&a.type==="absent").length;
+  const todayLate = attendance.filter(a=>a.date===todayStr&&a.type==="late").length;
   const kpis = [
-    { label: "Active Partners", val: active, sub: "Total headcount", color: "var(--blue)", icon: ic("users") },
-    { label: "On Leave Today", val: onLeave, sub: "Approved absences", color: "var(--teal)", icon: ic("leave") },
-    { label: "Open Roles", val: openJobs, sub: "Awaiting candidates", color: "var(--gold)", icon: ic("briefcase") },
-    { label: "New Applications", val: pendingApps, sub: "Pending review", color: "#8B5CF6", icon: ic("report") },
-    { label: "Pending Leave Requests", val: pendingLeaves, sub: "Awaiting approval", color: "#EF4444", icon: ic("alert") },
-    { label: "Recent Onboards", val: recentHires, sub: "Last 90 days", color: "#10B981", icon: ic("learn") }
+    { label:"Active Employees", val:active, sub:"Total headcount", color:"var(--navy)", icon:ic("users"), tab:"directory" },
+    { label:"Present Today", val:todayPresent, sub:`${todayAbsent} absent · ${todayLate} late`, color:"var(--teal)", icon:ic("clock"), tab:"attendance" },
+    { label:"On Leave Today", val:onLeave, sub:`${pendingLeaves} pending approval`, color:"#8B5CF6", icon:ic("leave"), tab:"leaves" },
+    { label:"Open Roles", val:openJobs, sub:`${pendingApps} new applications`, color:"var(--gold)", icon:ic("briefcase"), tab:"recruitment" },
+    { label:"Payroll (this month)", val:pendingPayroll, sub:"Draft / Pending", color:"#EF4444", icon:ic("invoice"), tab:"payroll_hr" },
+    { label:"Active Training", val:activeTraining, sub:"Programs running", color:"#10B981", icon:ic("learn"), tab:"training_hr" }
   ];
-  const recentLeaves = [...leaves].sort((a, b) => {
-    var _a;
-    return ((_a = b.createdAt) == null ? void 0 : _a.localeCompare(a.createdAt || "")) || 0;
-  }).slice(0, 5);
-  const recentApps = [...apps].sort((a, b) => {
-    var _a;
-    return ((_a = b.createdAt) == null ? void 0 : _a.localeCompare(a.createdAt || "")) || 0;
-  }).slice(0, 5);
-  return `
-    <div style="max-width:1100px">
-      <h2 style="font-size:22px;font-weight:800;margin-bottom:4px">HR Dashboard</h2>
-      <p style="color:var(--text3);font-size:13px;margin-bottom:24px">Organizational health \xB7 ${(/* @__PURE__ */ new Date()).toLocaleDateString("en-US", { weekday: "long", month: "long", day: "numeric", year: "numeric" })}</p>
-
-      <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:28px">
-        ${kpis.map((k) => `<div class="card" style="padding:18px 20px;display:flex;align-items:center;gap:14px">
-          <div style="width:44px;height:44px;border-radius:12px;background:${k.color}18;display:flex;align-items:center;justify-content:center;color:${k.color};flex-shrink:0">${k.icon}</div>
-          <div>
-            <div style="font-size:26px;font-weight:900;color:${k.color};line-height:1">${k.val}</div>
-            <div style="font-size:13px;font-weight:600;margin-top:2px">${k.label}</div>
-            <div style="font-size:11px;color:var(--text3)">${k.sub}</div>
+  const recentLeaves = [...leaves].sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")).slice(0,5);
+  const recentApps = [...apps].sort((a,b)=>(b.createdAt||"").localeCompare(a.createdAt||"")).slice(0,5);
+  const upcomingHols = hrLoad("hr_holidays").filter(h=>h.date>=todayStr).sort((a,b)=>a.date.localeCompare(b.date)).slice(0,4);
+  return `<div>
+    <div style="display:flex;align-items:flex-end;justify-content:space-between;margin-bottom:6px">
+      <div><h2 style="font-size:22px;font-weight:800;margin-bottom:2px">HR Dashboard</h2>
+      <p style="color:var(--text3);font-size:13px">${today2.toLocaleDateString("en-PH",{weekday:"long",month:"long",day:"numeric",year:"numeric"})}</p></div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px;margin-top:20px">
+      ${kpis.map(k=>`<div class="card" style="padding:18px 20px;display:flex;align-items:center;gap:14px;cursor:pointer" onclick="APP.hr.tab='${k.tab}';renderCurrentPage()">
+        <div style="width:46px;height:46px;border-radius:12px;background:${k.color}18;display:flex;align-items:center;justify-content:center;color:${k.color};flex-shrink:0">${k.icon}</div>
+        <div><div style="font-size:28px;font-weight:900;color:${k.color};line-height:1">${k.val}</div>
+        <div style="font-size:13px;font-weight:600;margin-top:2px">${k.label}</div>
+        <div style="font-size:11px;color:var(--text3)">${k.sub}</div></div>
+      </div>`).join("")}
+    </div>
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+      <div class="card" style="padding:18px">
+        <div style="font-weight:700;font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:8px">${ic("leave")} Recent Leave Requests</div>
+        ${recentLeaves.length?recentLeaves.map(l=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--navy);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">${(l.name||"?").split(" ").map(x=>x[0]).join("").slice(0,2)}</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">${l.name||"Unknown"}</div>
+          <div style="font-size:11px;color:var(--text3)">${l.type} · ${hrFmt(l.startDate)} – ${hrFmt(l.endDate)}</div></div>
+          <div style="display:flex;flex-direction:column;gap:4px;align-items:flex-end">
+            <span class="tag ${l.status==="Approved"?"t-teal":l.status==="Rejected"?"t-red":"t-amber"}">${l.status}</span>
+            ${l.status==="Pending"?`<div style="display:flex;gap:4px"><button class="btn btn-xs" style="background:var(--teal);color:#fff;border:none" onclick="hrApproveLeave('${l.id}')">✓</button><button class="btn btn-xs btn-danger" onclick="hrRejectLeave('${l.id}')">✗</button></div>`:""}
           </div>
-        </div>`).join("")}
+        </div>`).join(""):`<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No leave requests yet</div>`}
       </div>
-
-      <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
-        <!-- Leave Requests -->
-        <div class="card" style="padding:18px">
-          <div style="font-weight:700;font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:8px">${ic("leave")} Recent Leave Requests</div>
-          ${recentLeaves.length ? recentLeaves.map((l) => `
-            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
-              <div style="width:32px;height:32px;border-radius:50%;background:var(--blue);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">${(l.name || "?").split(" ").map((x) => x[0]).join("").slice(0, 2)}</div>
-              <div style="flex:1">
-                <div style="font-size:13px;font-weight:600">${l.name || "Unknown"}</div>
-                <div style="font-size:11px;color:var(--text3)">${l.type} \xB7 ${hrFmt(l.startDate)} \u2013 ${hrFmt(l.endDate)}</div>
-              </div>
-              <span class="tag ${l.status === "Approved" ? "t-teal" : l.status === "Rejected" ? "t-red" : "t-amber"}">${l.status}</span>
-            </div>`).join("") : `<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No leave requests yet</div>`}
-        </div>
-
-        <!-- Recent Applications -->
-        <div class="card" style="padding:18px">
-          <div style="font-weight:700;font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:8px">${ic("report")} Recent Applications</div>
-          ${recentApps.length ? recentApps.map((a) => `
-            <div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
-              <div style="width:32px;height:32px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">${(a.name || "?").slice(0, 2).toUpperCase()}</div>
-              <div style="flex:1">
-                <div style="font-size:13px;font-weight:600">${a.name || "Applicant"}</div>
-                <div style="font-size:11px;color:var(--text3)">Applied for: ${a.jobTitle || "Role"} \xB7 ${hrFmt(a.createdAt)}</div>
-              </div>
-              <span class="tag ${a.status === "New" ? "t-amber" : a.status === "Hired" ? "t-teal" : a.status === "Rejected" ? "t-red" : "t-gray"}">${a.status}</span>
-            </div>`).join("") : `<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No applications yet</div>`}
-        </div>
+      <div class="card" style="padding:18px">
+        <div style="font-weight:700;font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:8px">${ic("report")} Recent Applications</div>
+        ${recentApps.length?recentApps.map(a=>`<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+          <div style="width:32px;height:32px;border-radius:50%;background:var(--teal);color:#fff;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700">${(a.name||"?").slice(0,2).toUpperCase()}</div>
+          <div style="flex:1"><div style="font-size:13px;font-weight:600">${a.name||"Applicant"}</div>
+          <div style="font-size:11px;color:var(--text3)">Applied for: ${a.jobTitle||"Role"} · ${hrFmt(a.createdAt)}</div></div>
+          <span class="tag ${a.status==="New"?"t-amber":a.status==="Hired"?"t-teal":a.status==="Rejected"?"t-red":"t-gray"}">${a.status}</span>
+        </div>`).join(""):`<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No applications yet</div>`}
       </div>
-
-      <!-- Workforce Distribution -->
-      <div class="card" style="padding:18px;margin-top:20px">
-        <div style="font-weight:700;font-size:14px;margin-bottom:14px;display:flex;align-items:center;gap:8px">${ic("users")} Workforce Snapshot</div>
+    </div>
+    <div style="display:grid;grid-template-columns:2fr 1fr;gap:20px">
+      <div class="card" style="padding:18px">
+        <div style="font-weight:700;font-size:14px;margin-bottom:14px">${ic("users")} Workforce Snapshot</div>
         <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px">
-          ${[
-    { label: "Full-Time", count: team.filter((v) => v.employmentType === "Full-Time").length, color: "var(--blue)" },
-    { label: "Part-Time", count: team.filter((v) => v.employmentType === "Part-Time").length, color: "var(--teal)" },
-    { label: "Contractor", count: team.filter((v) => v.employmentType === "Contractor").length, color: "var(--gold)" },
-    { label: "Onboarding", count: team.filter((v) => v.status === "Onboarding").length, color: "#8B5CF6" }
-  ].map((s) => `<div style="text-align:center;padding:14px;border-radius:10px;background:${s.color}12;border:1px solid ${s.color}30">
+          ${[{label:"Full-Time",count:team.filter(v=>v.employmentType==="Full-Time").length,color:"var(--navy)"},
+            {label:"Part-Time",count:team.filter(v=>v.employmentType==="Part-Time").length,color:"var(--teal)"},
+            {label:"Contractor",count:team.filter(v=>v.employmentType==="Contractor").length,color:"var(--gold)"},
+            {label:"Onboarding",count:team.filter(v=>v.status==="Onboarding").length,color:"#8B5CF6"}
+          ].map(s=>`<div style="text-align:center;padding:14px;border-radius:10px;background:${s.color}12;border:1px solid ${s.color}30">
             <div style="font-size:24px;font-weight:900;color:${s.color}">${s.count}</div>
             <div style="font-size:12px;font-weight:600;margin-top:3px">${s.label}</div>
           </div>`).join("")}
         </div>
       </div>
-    </div>`;
+      <div class="card" style="padding:18px">
+        <div style="font-weight:700;font-size:14px;margin-bottom:14px">${ic("calendar")} Upcoming Holidays</div>
+        ${upcomingHols.length?upcomingHols.map(h=>`<div style="padding:7px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:13px;font-weight:600">${h.name}</div>
+          <div style="font-size:11px;color:var(--text3)">${hrFmt(h.date)}</div></div>
+          <span class="tag t-amber" style="font-size:10px">${h.type||"Regular"}</span>
+        </div>`).join(""):`<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No holidays set yet.<br><button class="btn btn-sm btn-primary" style="margin-top:8px" onclick="APP.hr.tab='holidays_hr';renderCurrentPage()">Add Holiday</button></div>`}
+      </div>
+    </div>
+  </div>`;
 }
 function renderHRDirectory() {
   const team = APP.data.team || [];
@@ -10859,29 +11045,35 @@ function setDayRating(vaId, val) {
   const style = document.createElement("style");
   style.id = "tjc-portal-center";
   style.textContent = `
-    /* Full-width portal body — scale to fill screen */
+    /* Center all partner portal content */
     .portal-body {
       flex: 1;
       overflow-y: auto;
-      padding: 20px 24px;
+      padding: 16px 18px;
       display: flex;
       flex-direction: column;
-      align-items: stretch;
+      align-items: center;
     }
     .portal-body > * {
       width: 100%;
-      max-width: 100%;
+      max-width: 860px;
     }
+    /* Tabs that return a single root div with max-width \u2014 ensure margin auto */
     .portal-body > div[style*="max-width"] {
-      max-width: 100% !important;
-      margin-left: 0 !important;
-      margin-right: 0 !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
     }
+    /* The dashboard tab returns multiple sibling elements \u2014 wrap them */
+    /* We handle this via JS below */
+
+    /* New tab wrappers from update2 \u2014 ensure centred */
     .portal-body > div[style*="max-width:760px"] {
-      max-width: 100% !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
     }
     .portal-body > div[style*="max-width:700px"] {
-      max-width: 100% !important;
+      margin-left: auto !important;
+      margin-right: auto !important;
     }
 
     @media (max-width: 900px) {
@@ -13186,102 +13378,828 @@ renderCurrentPage = function() {
 </body>
 </html>
 <script>
-/* ══ Supabase portal helpers ══ */
-async function gpLoad(table){try{const sb=await _initSB();if(!sb)return[];const{data,error}=await sb.from(table).select("*").order("created_at",{ascending:false});if(error)throw error;return data||[];}catch(e){return[];}}
-async function gpSave(table,row,editId){try{const sb=await _initSB();if(!sb)throw new Error("SB not ready");const clean=Object.fromEntries(Object.entries(row).filter(([,v])=>v!==undefined));if(editId){const{error}=await sb.from(table).update(clean).eq("id",editId);if(error)throw error;}else{clean.id=table+"_"+Date.now();const{error}=await sb.from(table).insert(clean);if(error)throw error;}}catch(e){throw e;}}
-async function gpDelete(table,id){try{const sb=await _initSB();if(!sb)return;const{error}=await sb.from(table).delete().eq("id",id);if(error)throw error;}catch(e){}}
-const _GP={},_OP={};
+/* ═══════════════════════════════════════════════════════
+   TJC HR PORTAL — EXPANDED MODULES
+   Schedules, Payroll, Payslips, Payroll Rules, Training,
+   Documents, Holidays, Reports, Leave Quick-Actions
+   All data via hrLoad/hrSave (localStorage, key prefix hr_)
+═══════════════════════════════════════════════════════ */
 
-/* ══ GROWTH PORTAL ══ */
-function renderGrowthPortal(){const va=APP.data.team.find(v=>v.id===APP.va.vaId);if(!APP.va.loggedIn||!va||va.role!=="growth_director")return`<div class="empty"><div class="empty-icon">🔒</div><div class="empty-text">Access restricted to Director of Growth.</div></div>`;const tab=APP.va.tab||"dashboard";const tabs=[["dashboard","📊","Dashboard"],["strategies","🎯","Strategies"],["campaigns","📣","Campaigns"],["reports","📈","Reports"],["kpis","⚡","KPI Tracker"],["pipeline","💼","Pipeline"],["ideas","💡","Ideas"]];const tabBar=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px">${tabs.map(([id,e,l])=>`<button onclick="APP.va.tab='${id}';renderCurrentPage()" class="btn btn-sm ${tab===id?'btn-primary':'btn-secondary'}">${e} ${l}</button>`).join("")}<button class="btn btn-sm btn-secondary" style="margin-left:auto" onclick="vaLogout()">Sign Out</button></div>`;const renders={dashboard:gpDash,strategies:gpStrategies,campaigns:gpCampaigns,reports:gpReports,kpis:gpKPIs,pipeline:gpPipeline,ideas:gpIdeas};const body=renders[tab]?renders[tab]():"";return`<div style="padding:0 0 40px"><div style="display:flex;align-items:center;gap:14px;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px"><div class="av av-lg av-navy">AT</div><div><div class="page-title" style="margin:0">Growth Portal</div><div style="font-size:13px;color:var(--text3);margin-top:2px">Art Teves &middot; Director of Growth &middot; ${new Date().toLocaleDateString("en-PH",{weekday:"long",month:"long",day:"numeric"})}</div></div></div>${tabBar}${body}</div>`;}
-function gpLazy(key,table,renderFn){if(!_GP[key]){gpLoad(table).then(r=>{_GP[key]=r;renderCurrentPage();});return`<div class="empty"><div class="empty-text">Loading…</div></div>`;}return renderFn(_GP[key]);}
-function gpDash(){const needed={strategies:"gp_strategies",campaigns:"gp_campaigns",reports:"gp_reports",kpis:"gp_kpis"};let allLoaded=true;Object.entries(needed).forEach(([k,t])=>{if(!_GP[k]){allLoaded=false;gpLoad(t).then(r=>{_GP[k]=r;if(Object.keys(needed).every(x=>_GP[x]))renderCurrentPage();});}});if(!allLoaded)return`<div class="empty"><div class="empty-text">Loading dashboard…</div></div>`;const s=_GP.strategies,c=_GP.campaigns,r=_GP.reports,k=_GP.kpis;const aS=s.filter(x=>x.status==="Active").length,aC=c.filter(x=>x.status==="Running").length,oK=k.filter(x=>Number(x.actual||0)<Number(x.target||0)).length;return`<div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px"><div class="kpi-card"><div class="kpi-icon">🎯</div><div class="kpi-val" style="color:var(--navy)">${aS}</div><div class="kpi-label">Active Strategies</div></div><div class="kpi-card"><div class="kpi-icon">📣</div><div class="kpi-val" style="color:var(--green)">${aC}</div><div class="kpi-label">Running Campaigns</div></div><div class="kpi-card"><div class="kpi-icon">📈</div><div class="kpi-val" style="color:var(--gold)">${r.length}</div><div class="kpi-label">Reports Filed</div></div><div class="kpi-card"><div class="kpi-icon">⚡</div><div class="kpi-val" style="color:${oK>0?'var(--red)':'var(--green)'}">${oK}</div><div class="kpi-label">KPIs Below Target</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="card card-pad"><div class="sec-head" style="margin-bottom:12px"><div class="sec-title">Recent Strategies</div><span class="sec-action" onclick="APP.va.tab='strategies';renderCurrentPage()">View all →</span></div>${s.slice(0,3).length===0?`<div class="empty" style="padding:20px 0"><div class="empty-text">No strategies yet.</div></div>`:s.slice(0,3).map(x=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:14px;font-weight:600">${x.title}</div><div style="font-size:12px;color:var(--text3)">${x.focus||"—"} · <span class="tag ${x.status==='Active'?'t-green':'t-gray'}">${x.status||"Draft"}</span></div></div>`).join("")}</div><div class="card card-pad"><div class="sec-head" style="margin-bottom:12px"><div class="sec-title">Recent Reports</div><span class="sec-action" onclick="APP.va.tab='reports';renderCurrentPage()">View all →</span></div>${r.slice(0,3).length===0?`<div class="empty" style="padding:20px 0"><div class="empty-text">No reports yet.</div></div>`:r.slice(0,3).map(x=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:14px;font-weight:600">${x.title}</div><div style="font-size:12px;color:var(--text3)">${x.type||"Report"} · ${x.period||""}</div></div>`).join("")}</div></div>`;}
-function gpStrategies(){return gpLazy("strategies","gp_strategies",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Growth Strategies</div><button class="btn btn-sm btn-primary" onclick="gpOpenStrategy()">+ Add Strategy</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Log quarterly and monthly strategies. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No strategies yet.</div></div>`:items.map(s=>`<div class="card" style="padding:16px 20px;border-left:3px solid ${s.status==="Active"?"var(--green)":s.status==="Completed"?"var(--teal)":"var(--border2)"};margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:4px">${s.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px">${s.focus||"—"} · ${s.quarter||""} · <span class="tag ${s.status==="Active"?"t-green":s.status==="Completed"?"t-teal":"t-gray"}">${s.status||"Draft"}</span></div>${s.objective?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>Objective:</b> ${s.objective}</div>`:""} ${s.kpis?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>KPIs:</b> ${s.kpis}</div>`:""} ${s.notes?`<div style="font-size:13px;color:var(--text3)"><b>Notes:</b> ${s.notes}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="gpOpenStrategy('${s.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelStrategy('${s.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function gpOpenStrategy(id){const s=id?(_GP.strategies||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Strategy":"Add Strategy",`<div class="form-row"><div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="gp-s-title" value="${s.title||""}" placeholder="e.g. Q3 Lead Generation Push"></div><div class="form-group"><label class="form-label">Focus Area</label><select class="form-control" id="gp-s-focus"><option${s.focus==="Revenue Growth"?" selected":""}>Revenue Growth</option><option${s.focus==="Lead Generation"?" selected":""}>Lead Generation</option><option${s.focus==="Brand Awareness"?" selected":""}>Brand Awareness</option><option${s.focus==="Client Retention"?" selected":""}>Client Retention</option><option${s.focus==="Market Expansion"?" selected":""}>Market Expansion</option><option${s.focus==="Product Launch"?" selected":""}>Product Launch</option><option${s.focus==="Partnership"?" selected":""}>Partnership</option><option>Other</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Quarter / Period</label><input class="form-control" id="gp-s-quarter" value="${s.quarter||""}" placeholder="e.g. Q3 2025"></div><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="gp-s-status"><option${s.status==="Draft"?" selected":""}>Draft</option><option${s.status==="Active"?" selected":""}>Active</option><option${s.status==="On Hold"?" selected":""}>On Hold</option><option${s.status==="Completed"?" selected":""}>Completed</option></select></div></div><div class="form-group"><label class="form-label">Objective / Goal</label><textarea class="form-control" id="gp-s-obj" rows="2" placeholder="What does this strategy aim to achieve?">${s.objective||""}</textarea></div><div class="form-group"><label class="form-label">Key Metrics / KPIs</label><textarea class="form-control" id="gp-s-kpis" rows="2" placeholder="e.g. 50 leads/mo, 15% conversion">${s.kpis||""}</textarea></div><div class="form-group"><label class="form-label">Notes / Action Items</label><textarea class="form-control" id="gp-s-notes" rows="3" placeholder="Tactics, channels, dependencies...">${s.notes||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSaveStrategy('${id||""}')">Save</button>`);}
-async function gpSaveStrategy(id){const title=(document.getElementById("gp-s-title")||{}).value||"";if(!title.trim()){toast("Title is required.","error");return;}const row={title:title.trim(),focus:(document.getElementById("gp-s-focus")||{}).value||"",quarter:(document.getElementById("gp-s-quarter")||{}).value||"",status:(document.getElementById("gp-s-status")||{}).value||"Draft",objective:(document.getElementById("gp-s-obj")||{}).value||"",kpis:(document.getElementById("gp-s-kpis")||{}).value||"",notes:(document.getElementById("gp-s-notes")||{}).value||""};try{await gpSave("gp_strategies",row,id||null);delete _GP.strategies;closeModal();APP.va.tab="strategies";toast("Strategy saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function gpDelStrategy(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_strategies",id);delete _GP.strategies;renderCurrentPage();toast("Deleted.","success");}catch(e){toast("Error.","error");}}
-function gpCampaigns(){return gpLazy("campaigns","gp_campaigns",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Campaign Tracker</div><button class="btn btn-sm btn-primary" onclick="gpOpenCampaign()">+ Add Campaign</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Track active and planned marketing campaigns. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No campaigns yet.</div></div>`:items.map(c=>`<div class="card" style="padding:16px 20px;border-left:3px solid ${{Running:"var(--green)",Planned:"var(--navy)",Completed:"var(--teal)",Paused:"var(--amber)"}[c.status]||"var(--border2)"};margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:4px">${c.name}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px">${c.channel||"—"} · ${c.period||""} · <span class="tag ${c.status==="Running"?"t-green":c.status==="Completed"?"t-teal":"t-gray"}">${c.status||"Planned"}</span></div>${c.goal?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>Goal:</b> ${c.goal}</div>`:""} ${c.budget?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>Budget:</b> ${c.budget}</div>`:""} ${c.results?`<div style="font-size:13px;color:var(--green);margin-bottom:2px"><b>Results:</b> ${c.results}</div>`:""} ${c.notes?`<div style="font-size:13px;color:var(--text3)"><b>Notes:</b> ${c.notes}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="gpOpenCampaign('${c.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelCampaign('${c.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function gpOpenCampaign(id){const c=id?(_GP.campaigns||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Campaign":"Add Campaign",`<div class="form-row"><div class="form-group"><label class="form-label">Name *</label><input class="form-control" id="gp-c-name" value="${c.name||""}" placeholder="e.g. June IG Promo"></div><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="gp-c-status"><option${c.status==="Planned"?" selected":""}>Planned</option><option${c.status==="Running"?" selected":""}>Running</option><option${c.status==="Paused"?" selected":""}>Paused</option><option${c.status==="Completed"?" selected":""}>Completed</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Channel(s)</label><input class="form-control" id="gp-c-ch" value="${c.channel||""}" placeholder="e.g. Facebook, Email"></div><div class="form-group"><label class="form-label">Period</label><input class="form-control" id="gp-c-period" value="${c.period||""}" placeholder="e.g. Jun 1-30, 2025"></div></div><div class="form-group"><label class="form-label">Campaign Goal</label><input class="form-control" id="gp-c-goal" value="${c.goal||""}" placeholder="e.g. 200 leads, 10% CTR"></div><div class="form-group"><label class="form-label">Budget</label><input class="form-control" id="gp-c-budget" value="${c.budget||""}" placeholder="e.g. $500, P25,000"></div><div class="form-group"><label class="form-label">Results / Performance</label><textarea class="form-control" id="gp-c-results" rows="2" placeholder="Fill in once campaign runs...">${c.results||""}</textarea></div><div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="gp-c-notes" rows="2" placeholder="Targeting, creatives, dependencies...">${c.notes||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSaveCampaign('${id||""}')">Save</button>`);}
-async function gpSaveCampaign(id){const name=(document.getElementById("gp-c-name")||{}).value||"";if(!name.trim()){toast("Name required.","error");return;}const row={name:name.trim(),status:(document.getElementById("gp-c-status")||{}).value||"Planned",channel:(document.getElementById("gp-c-ch")||{}).value||"",period:(document.getElementById("gp-c-period")||{}).value||"",goal:(document.getElementById("gp-c-goal")||{}).value||"",budget:(document.getElementById("gp-c-budget")||{}).value||"",results:(document.getElementById("gp-c-results")||{}).value||"",notes:(document.getElementById("gp-c-notes")||{}).value||""};try{await gpSave("gp_campaigns",row,id||null);delete _GP.campaigns;closeModal();APP.va.tab="campaigns";toast("Saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function gpDelCampaign(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_campaigns",id);delete _GP.campaigns;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-function gpReports(){return gpLazy("reports","gp_reports",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Growth Reports</div><button class="btn btn-sm btn-primary" onclick="gpOpenReport()">+ Add Report</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Weekly, monthly, quarterly, and campaign reports. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No reports filed yet.</div></div>`:items.map(r=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${r.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px"><span class="tag t-navy">${r.type||"Report"}</span> · ${r.period||""}</div>${r.summary?`<div style="font-size:13px;color:var(--text2);margin-bottom:3px"><b>Summary:</b> ${r.summary}</div>`:""} ${r.metrics?`<div style="font-size:13px;color:var(--text2);margin-bottom:3px"><b>Metrics:</b> ${r.metrics}</div>`:""} ${r.wins?`<div style="font-size:13px;color:var(--green);margin-bottom:2px">✅ <b>Wins:</b> ${r.wins}</div>`:""} ${r.issues?`<div style="font-size:13px;color:var(--red);margin-bottom:2px">⚠️ <b>Issues:</b> ${r.issues}</div>`:""} ${r.recommendations?`<div style="font-size:13px;color:var(--navy)">💡 <b>Recs:</b> ${r.recommendations}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="gpOpenReport('${r.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelReport('${r.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function gpOpenReport(id){const r=id?(_GP.reports||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Report":"Add Report",`<div class="form-row"><div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="gp-r-title" value="${r.title||""}" placeholder="e.g. May 2025 Monthly Growth Report"></div><div class="form-group"><label class="form-label">Type</label><select class="form-control" id="gp-r-type"><option${r.type==="Weekly"?" selected":""}>Weekly</option><option${r.type==="Monthly"?" selected":""}>Monthly</option><option${r.type==="Quarterly"?" selected":""}>Quarterly</option><option${r.type==="Campaign Report"?" selected":""}>Campaign Report</option><option${r.type==="Ad Hoc"?" selected":""}>Ad Hoc</option></select></div></div><div class="form-group"><label class="form-label">Period Covered</label><input class="form-control" id="gp-r-period" value="${r.period||""}" placeholder="e.g. May 1-31, 2025"></div><div class="form-group"><label class="form-label">Executive Summary</label><textarea class="form-control" id="gp-r-summary" rows="3" placeholder="Overall performance summary...">${r.summary||""}</textarea></div><div class="form-group"><label class="form-label">Key Metrics</label><textarea class="form-control" id="gp-r-metrics" rows="3" placeholder="Leads: 87 | CPL: $4.2 | Conversion: 12%...">${r.metrics||""}</textarea></div><div class="form-group"><label class="form-label">Wins / Highlights</label><textarea class="form-control" id="gp-r-wins" rows="2" placeholder="What worked well?">${r.wins||""}</textarea></div><div class="form-group"><label class="form-label">Issues / Misses</label><textarea class="form-control" id="gp-r-issues" rows="2" placeholder="What underperformed?">${r.issues||""}</textarea></div><div class="form-group"><label class="form-label">Recommendations</label><textarea class="form-control" id="gp-r-recs" rows="2" placeholder="Next steps and adjustments...">${r.recommendations||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSaveReport('${id||""}')">Save Report</button>`);}
-async function gpSaveReport(id){const title=(document.getElementById("gp-r-title")||{}).value||"";if(!title.trim()){toast("Title required.","error");return;}const row={title:title.trim(),type:(document.getElementById("gp-r-type")||{}).value||"",period:(document.getElementById("gp-r-period")||{}).value||"",summary:(document.getElementById("gp-r-summary")||{}).value||"",metrics:(document.getElementById("gp-r-metrics")||{}).value||"",wins:(document.getElementById("gp-r-wins")||{}).value||"",issues:(document.getElementById("gp-r-issues")||{}).value||"",recommendations:(document.getElementById("gp-r-recs")||{}).value||""};try{await gpSave("gp_reports",row,id||null);delete _GP.reports;closeModal();APP.va.tab="reports";toast("Report saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function gpDelReport(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_reports",id);delete _GP.reports;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-function gpKPIs(){return gpLazy("kpis","gp_kpis",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">KPI Tracker</div><button class="btn btn-sm btn-primary" onclick="gpOpenKPI()">+ Add KPI</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Track growth KPIs with targets vs actuals. Numbers drive the dashboard indicator.</div>${items.length===0?`<div class="empty"><div class="empty-text">No KPIs set yet.</div></div>`:`<div style="overflow-x:auto"><table class="data-table"><thead><tr><th>KPI</th><th>Category</th><th>Period</th><th>Target</th><th>Actual</th><th>%</th><th>Actions</th></tr></thead><tbody>${items.map(k=>{const pct=k.target>0?Math.round((k.actual/k.target)*100):0;const col=pct>=100?"var(--green)":pct>=70?"var(--amber)":"var(--red)";return`<tr><td><div style="font-weight:600">${k.name}</div>${k.notes?`<div style="font-size:12px;color:var(--text3)">${k.notes}</div>`:""}</td><td>${k.category||"—"}</td><td>${k.period||"—"}</td><td><b>${k.target||0} ${k.unit||""}</b></td><td style="color:${col};font-weight:700">${k.actual||0} ${k.unit||""}</td><td><span class="tag" style="background:${col}22;color:${col}">${pct}%</span></td><td><div style="display:flex;gap:4px"><button class="btn btn-sm btn-secondary" onclick="gpOpenKPI('${k.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelKPI('${k.id}')">Del</button></div></td></tr>`;}).join("")}</tbody></table></div>`}</div>`);}
-function gpOpenKPI(id){const k=id?(_GP.kpis||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit KPI":"Add KPI",`<div class="form-row"><div class="form-group"><label class="form-label">KPI Name *</label><input class="form-control" id="gp-k-name" value="${k.name||""}" placeholder="e.g. Monthly Qualified Leads"></div><div class="form-group"><label class="form-label">Category</label><select class="form-control" id="gp-k-cat"><option${k.category==="Lead Generation"?" selected":""}>Lead Generation</option><option${k.category==="Revenue"?" selected":""}>Revenue</option><option${k.category==="Conversion"?" selected":""}>Conversion</option><option${k.category==="Retention"?" selected":""}>Retention</option><option${k.category==="Brand"?" selected":""}>Brand</option><option${k.category==="Traffic"?" selected":""}>Traffic</option><option${k.category==="Engagement"?" selected":""}>Engagement</option><option>Other</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Period</label><input class="form-control" id="gp-k-period" value="${k.period||""}" placeholder="e.g. June 2025"></div><div class="form-group"><label class="form-label">Unit</label><input class="form-control" id="gp-k-unit" value="${k.unit||""}" placeholder="e.g. leads, %, $"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Target</label><input class="form-control" type="number" id="gp-k-target" value="${k.target||0}"></div><div class="form-group"><label class="form-label">Actual</label><input class="form-control" type="number" id="gp-k-actual" value="${k.actual||0}"></div></div><div class="form-group"><label class="form-label">Notes</label><input class="form-control" id="gp-k-notes" value="${k.notes||""}" placeholder="Context or methodology..."></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSaveKPI('${id||""}')">Save KPI</button>`);}
-async function gpSaveKPI(id){const name=(document.getElementById("gp-k-name")||{}).value||"";if(!name.trim()){toast("Name required.","error");return;}const row={name:name.trim(),category:(document.getElementById("gp-k-cat")||{}).value||"",period:(document.getElementById("gp-k-period")||{}).value||"",unit:(document.getElementById("gp-k-unit")||{}).value||"",target:Number((document.getElementById("gp-k-target")||{}).value||0),actual:Number((document.getElementById("gp-k-actual")||{}).value||0),notes:(document.getElementById("gp-k-notes")||{}).value||""};try{await gpSave("gp_kpis",row,id||null);delete _GP.kpis;closeModal();APP.va.tab="kpis";toast("KPI saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function gpDelKPI(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_kpis",id);delete _GP.kpis;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-function gpPipeline(){return gpLazy("pipeline","gp_pipeline",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Pipeline Notes</div><button class="btn btn-sm btn-primary" onclick="gpOpenPipeline()">+ Add Note</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Track BD notes and prospect interactions.</div>${items.length===0?`<div class="empty"><div class="empty-text">No pipeline notes yet.</div></div>`:items.map(p=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${p.prospect||"Note"}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:4px"><span class="tag t-navy">${p.stage||"—"}</span> ${p.value?`· ${p.value}`:""}</div>${p.notes?`<div style="font-size:13px;color:var(--text2)">${p.notes}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="gpOpenPipeline('${p.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelPipeline('${p.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function gpOpenPipeline(id){const p=id?(_GP.pipeline||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Note":"Add Pipeline Note",`<div class="form-row"><div class="form-group"><label class="form-label">Prospect / Account</label><input class="form-control" id="gp-p-prospect" value="${p.prospect||""}" placeholder="Company or contact name"></div><div class="form-group"><label class="form-label">Stage</label><select class="form-control" id="gp-p-stage"><option${p.stage==="Awareness"?" selected":""}>Awareness</option><option${p.stage==="Interest"?" selected":""}>Interest</option><option${p.stage==="Discovery Call"?" selected":""}>Discovery Call</option><option${p.stage==="Proposal"?" selected":""}>Proposal</option><option${p.stage==="Negotiation"?" selected":""}>Negotiation</option><option${p.stage==="Closed Won"?" selected":""}>Closed Won</option><option${p.stage==="Closed Lost"?" selected":""}>Closed Lost</option></select></div></div><div class="form-group"><label class="form-label">Estimated Value</label><input class="form-control" id="gp-p-value" value="${p.value||""}" placeholder="e.g. $500/mo"></div><div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="gp-p-notes" rows="4" placeholder="Interaction details, next steps...">${p.notes||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSavePipeline('${id||""}')">Save</button>`);}
-async function gpSavePipeline(id){const row={prospect:(document.getElementById("gp-p-prospect")||{}).value||"",stage:(document.getElementById("gp-p-stage")||{}).value||"Awareness",value:(document.getElementById("gp-p-value")||{}).value||"",notes:(document.getElementById("gp-p-notes")||{}).value||""};try{await gpSave("gp_pipeline",row,id||null);delete _GP.pipeline;closeModal();APP.va.tab="pipeline";toast("Saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function gpDelPipeline(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_pipeline",id);delete _GP.pipeline;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-function gpIdeas(){return gpLazy("ideas","gp_ideas",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Ideas & Initiatives</div><button class="btn btn-sm btn-primary" onclick="gpOpenIdea()">+ Add Idea</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Capture growth ideas before they become full strategies.</div>${items.length===0?`<div class="empty"><div class="empty-text">No ideas logged yet.</div></div>`:items.map(idea=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${idea.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:4px"><span class="tag ${idea.status==="Approved"?"t-green":idea.status==="Testing"?"t-navy":"t-gray"}">${idea.status||"Pending"}</span> · ${idea.impact||""} impact</div>${idea.description?`<div style="font-size:13px;color:var(--text2)">${idea.description}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="gpOpenIdea('${idea.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="gpDelIdea('${idea.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function gpOpenIdea(id){const idea=id?(_GP.ideas||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Idea":"Add Idea",`<div class="form-row"><div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="gp-i-title" value="${idea.title||""}" placeholder="e.g. Referral Program"></div><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="gp-i-status"><option${idea.status==="Pending"?" selected":""}>Pending</option><option${idea.status==="Approved"?" selected":""}>Approved</option><option${idea.status==="Testing"?" selected":""}>Testing</option><option${idea.status==="Implemented"?" selected":""}>Implemented</option><option${idea.status==="Rejected"?" selected":""}>Rejected</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Est. Impact</label><select class="form-control" id="gp-i-impact"><option${idea.impact==="High"?" selected":""}>High</option><option${idea.impact==="Medium"?" selected":""}>Medium</option><option${idea.impact==="Low"?" selected":""}>Low</option></select></div></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="gp-i-desc" rows="4" placeholder="What is the idea? Why might it work?">${idea.description||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="gpSaveIdea('${id||""}')">Save</button>`);}
-async function gpSaveIdea(id){const title=(document.getElementById("gp-i-title")||{}).value||"";if(!title.trim()){toast("Title required.","error");return;}const row={title:title.trim(),status:(document.getElementById("gp-i-status")||{}).value||"Pending",impact:(document.getElementById("gp-i-impact")||{}).value||"Medium",description:(document.getElementById("gp-i-desc")||{}).value||""};try{await gpSave("gp_ideas",row,id||null);delete _GP.ideas;closeModal();APP.va.tab="ideas";toast("Saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function gpDelIdea(id){if(!confirm("Delete?"))return;try{await gpDelete("gp_ideas",id);delete _GP.ideas;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-
-/* ══ OPS PORTAL ══ */
-function renderOpsPortal(){const va=APP.data.team.find(v=>v.id===APP.va.vaId);if(!APP.va.loggedIn||!va||va.role!=="ops_manager")return`<div class="empty"><div class="empty-icon">🔒</div><div class="empty-text">Access restricted to Operations Manager.</div></div>`;const tab=APP.va.tab||"dashboard";const tabs=[["dashboard","⚙️","Dashboard"],["processes","📋","Processes"],["incidents","🚨","Incidents"],["reports","📊","Reports"],["team_notes","👥","Team Notes"],["sops","📖","SOP Tracker"],["improvements","🔧","Improvements"]];const tabBar=`<div style="display:flex;gap:4px;flex-wrap:wrap;margin-bottom:20px;border-bottom:1px solid var(--border);padding-bottom:12px">${tabs.map(([id,e,l])=>`<button onclick="APP.va.tab='${id}';renderCurrentPage()" class="btn btn-sm ${tab===id?'btn-primary':'btn-secondary'}">${e} ${l}</button>`).join("")}<button class="btn btn-sm btn-secondary" style="margin-left:auto" onclick="vaLogout()">Sign Out</button></div>`;const renders={dashboard:opDash,processes:opProcesses,incidents:opIncidents,reports:opReports,team_notes:opTeamNotes,sops:opSops,improvements:opImprovements};const body=renders[tab]?renders[tab]():"";return`<div style="padding:0 0 40px"><div style="display:flex;align-items:center;gap:14px;padding:20px 0 16px;border-bottom:1px solid var(--border);margin-bottom:20px"><div class="av av-lg av-purple">AV</div><div><div class="page-title" style="margin:0">Operations Portal</div><div style="font-size:13px;color:var(--text3);margin-top:2px">Alvin Valdez &middot; Operations Manager &middot; ${new Date().toLocaleDateString("en-PH",{weekday:"long",month:"long",day:"numeric"})}</div></div></div>${tabBar}${body}</div>`;}
-function opLazy(key,table,renderFn){if(!_OP[key]){gpLoad(table).then(r=>{_OP[key]=r;renderCurrentPage();});return`<div class="empty"><div class="empty-text">Loading…</div></div>`;}return renderFn(_OP[key]);}
-function opDash(){const needed={processes:"op_processes",incidents:"op_incidents",reports:"op_reports",improvements:"op_improvements"};let allLoaded=true;Object.entries(needed).forEach(([k,t])=>{if(!_OP[k]){allLoaded=false;gpLoad(t).then(r=>{_OP[k]=r;if(Object.keys(needed).every(x=>_OP[x]))renderCurrentPage();});}});if(!allLoaded)return`<div class="empty"><div class="empty-text">Loading dashboard…</div></div>`;const p=_OP.processes,inc=_OP.incidents,r=_OP.reports,imp=_OP.improvements;const aP=p.filter(x=>x.status==="Active").length,oI=inc.filter(x=>x.status==="Open"||x.status==="In Progress").length,pImp=imp.filter(x=>x.status==="Pending"||x.status==="In Progress").length;const recInc=inc.filter(x=>x.status==="Open"||x.status==="In Progress").slice(0,3),recR=r.slice(0,3);return`<div class="kpi-grid" style="grid-template-columns:repeat(4,1fr);gap:14px;margin-bottom:24px"><div class="kpi-card"><div class="kpi-icon">⚙️</div><div class="kpi-val" style="color:var(--navy)">${aP}</div><div class="kpi-label">Active Processes</div></div><div class="kpi-card"><div class="kpi-icon">🚨</div><div class="kpi-val" style="color:${oI>0?'var(--red)':'var(--green)'}">${oI}</div><div class="kpi-label">Open Incidents</div></div><div class="kpi-card"><div class="kpi-icon">📊</div><div class="kpi-val" style="color:var(--gold)">${r.length}</div><div class="kpi-label">Reports Filed</div></div><div class="kpi-card"><div class="kpi-icon">🔧</div><div class="kpi-val" style="color:var(--purple)">${pImp}</div><div class="kpi-label">Pending Improvements</div></div></div><div style="display:grid;grid-template-columns:1fr 1fr;gap:16px"><div class="card card-pad"><div class="sec-head" style="margin-bottom:12px"><div class="sec-title">Open Incidents</div><span class="sec-action" onclick="APP.va.tab='incidents';renderCurrentPage()">View all →</span></div>${recInc.length===0?`<div class="empty" style="padding:20px 0"><div class="empty-text" style="color:var(--green)">✅ No open incidents.</div></div>`:recInc.map(x=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:14px;font-weight:600">${x.title}</div><div style="font-size:12.5px;color:var(--text3);margin-top:2px"><span class="tag ${x.severity==="Critical"?"t-red":x.severity==="High"?"t-amber":"t-gray"}">${x.severity||"Low"}</span> · ${x.status||""}</div></div>`).join("")}</div><div class="card card-pad"><div class="sec-head" style="margin-bottom:12px"><div class="sec-title">Recent Reports</div><span class="sec-action" onclick="APP.va.tab='reports';renderCurrentPage()">View all →</span></div>${recR.length===0?`<div class="empty" style="padding:20px 0"><div class="empty-text">No reports yet.</div></div>`:recR.map(x=>`<div style="padding:10px 0;border-bottom:1px solid var(--border)"><div style="font-size:14px;font-weight:600">${x.title}</div><div style="font-size:12.5px;color:var(--text3);margin-top:2px">${x.type||"Report"} · ${x.period||""}</div></div>`).join("")}</div></div>`;}
-function opProcesses(){return opLazy("processes","op_processes",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Process Registry</div><button class="btn btn-sm btn-primary" onclick="opOpenProcess()">+ Add Process</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Document and track operational processes. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No processes logged yet.</div></div>`:items.map(p=>`<div class="card" style="padding:16px 20px;border-left:3px solid ${{Active:"var(--green)",Review:"var(--amber)",Draft:"var(--text3)",Deprecated:"var(--red)"}[p.status]||"var(--border2)"};margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${p.name}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px">${p.category||"—"} · Owner: ${p.owner||"—"} · <span class="tag ${p.status==="Active"?"t-green":p.status==="Review"?"t-amber":"t-gray"}">${p.status||"Draft"}</span></div>${p.description?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px">${p.description}</div>`:""} ${p.notes?`<div style="font-size:13px;color:var(--text3)"><b>Notes:</b> ${p.notes}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenProcess('${p.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelProcess('${p.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function opOpenProcess(id){const p=id?(_OP.processes||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Process":"Add Process",`<div class="form-row"><div class="form-group"><label class="form-label">Process Name *</label><input class="form-control" id="op-pr-name" value="${p.name||""}" placeholder="e.g. Client Onboarding Flow"></div><div class="form-group"><label class="form-label">Category</label><select class="form-control" id="op-pr-cat"><option${p.category==="Client Management"?" selected":""}>Client Management</option><option${p.category==="Team Operations"?" selected":""}>Team Operations</option><option${p.category==="Finance"?" selected":""}>Finance</option><option${p.category==="Recruitment"?" selected":""}>Recruitment</option><option${p.category==="Quality Control"?" selected":""}>Quality Control</option><option${p.category==="Communication"?" selected":""}>Communication</option><option${p.category==="Technology"?" selected":""}>Technology</option><option>Other</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Process Owner</label><input class="form-control" id="op-pr-owner" value="${p.owner||""}" placeholder="e.g. Alvin, Maria"></div><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="op-pr-status"><option${p.status==="Draft"?" selected":""}>Draft</option><option${p.status==="Active"?" selected":""}>Active</option><option${p.status==="Review"?" selected":""}>Review</option><option${p.status==="Deprecated"?" selected":""}>Deprecated</option></select></div></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="op-pr-desc" rows="3" placeholder="What does this process cover?">${p.description||""}</textarea></div><div class="form-group"><label class="form-label">Notes / Dependencies</label><textarea class="form-control" id="op-pr-notes" rows="2" placeholder="Tools, SOPs, dependencies...">${p.notes||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveProcess('${id||""}')">Save</button>`);}
-async function opSaveProcess(id){const name=(document.getElementById("op-pr-name")||{}).value||"";if(!name.trim()){toast("Name required.","error");return;}const row={name:name.trim(),category:(document.getElementById("op-pr-cat")||{}).value||"",owner:(document.getElementById("op-pr-owner")||{}).value||"",status:(document.getElementById("op-pr-status")||{}).value||"Draft",description:(document.getElementById("op-pr-desc")||{}).value||"",notes:(document.getElementById("op-pr-notes")||{}).value||""};try{await gpSave("op_processes",row,id||null);delete _OP.processes;closeModal();APP.va.tab="processes";toast("Process saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function opDelProcess(id){if(!confirm("Delete?"))return;try{await gpDelete("op_processes",id);delete _OP.processes;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-function opIncidents(){return opLazy("incidents","op_incidents",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Incident Log</div><button class="btn btn-sm btn-primary" onclick="opOpenIncident()">+ Log Incident</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Log operational issues and resolutions. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-icon">✅</div><div class="empty-text">No incidents on record.</div></div>`:items.map(inc=>`<div class="card" style="padding:16px 20px;border-left:3px solid ${{Critical:"var(--red)",High:"var(--amber)",Medium:"var(--navy)",Low:"var(--text3)"}[inc.severity]||"var(--text3)"};margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${inc.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px"><span class="tag ${inc.severity==="Critical"?"t-red":inc.severity==="High"?"t-amber":"t-gray"}">${inc.severity||"Low"}</span> · <span class="tag ${inc.status==="Resolved"?"t-green":inc.status==="In Progress"?"t-navy":"t-red"}">${inc.status||"Open"}</span></div>${inc.description?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>What happened:</b> ${inc.description}</div>`:""} ${inc.impact?`<div style="font-size:13px;color:var(--red);margin-bottom:2px"><b>Impact:</b> ${inc.impact}</div>`:""} ${inc.resolution?`<div style="font-size:13px;color:var(--green);margin-bottom:2px"><b>Resolution:</b> ${inc.resolution}</div>`:""} ${inc.learnings?`<div style="font-size:13px;color:var(--navy)"><b>Learnings:</b> ${inc.learnings}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenIncident('${inc.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelIncident('${inc.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function opOpenIncident(id){const inc=id?(_OP.incidents||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Incident":"Log Incident",`<div class="form-row"><div class="form-group"><label class="form-label">Incident Title *</label><input class="form-control" id="op-inc-title" value="${inc.title||""}" placeholder="e.g. SLA breach - BrandX Week 18"></div><div class="form-group"><label class="form-label">Severity</label><select class="form-control" id="op-inc-sev"><option${inc.severity==="Low"?" selected":""}>Low</option><option${inc.severity==="Medium"?" selected":""}>Medium</option><option${inc.severity==="High"?" selected":""}>High</option><option${inc.severity==="Critical"?" selected":""}>Critical</option></select></div></div><div class="form-row"><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="op-inc-status"><option${inc.status==="Open"?" selected":""}>Open</option><option${inc.status==="In Progress"?" selected":""}>In Progress</option><option${inc.status==="Resolved"?" selected":""}>Resolved</option></select></div><div class="form-group"><label class="form-label">Affected Area</label><input class="form-control" id="op-inc-area" value="${inc.area||""}" placeholder="e.g. Client Delivery, Team, Finance"></div></div><div class="form-group"><label class="form-label">What Happened</label><textarea class="form-control" id="op-inc-desc" rows="3" placeholder="Describe the incident...">${inc.description||""}</textarea></div><div class="form-group"><label class="form-label">Impact</label><textarea class="form-control" id="op-inc-impact" rows="2" placeholder="Who/what was affected?">${inc.impact||""}</textarea></div><div class="form-group"><label class="form-label">Resolution</label><textarea class="form-control" id="op-inc-res" rows="2" placeholder="What was done to fix it?">${inc.resolution||""}</textarea></div><div class="form-group"><label class="form-label">Learnings / Preventive Actions</label><textarea class="form-control" id="op-inc-learn" rows="2" placeholder="What do we do differently next time?">${inc.learnings||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveIncident('${id||""}')">Log Incident</button>`);}
-async function opSaveIncident(id){const title=(document.getElementById("op-inc-title")||{}).value||"";if(!title.trim()){toast("Title required.","error");return;}const row={title:title.trim(),severity:(document.getElementById("op-inc-sev")||{}).value||"Low",status:(document.getElementById("op-inc-status")||{}).value||"Open",area:(document.getElementById("op-inc-area")||{}).value||"",description:(document.getElementById("op-inc-desc")||{}).value||"",impact:(document.getElementById("op-inc-impact")||{}).value||"",resolution:(document.getElementById("op-inc-res")||{}).value||"",learnings:(document.getElementById("op-inc-learn")||{}).value||""};try{await gpSave("op_incidents",row,id||null);delete _OP.incidents;closeModal();APP.va.tab="incidents";toast("Incident logged.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function opDelIncident(id){if(!confirm("Delete?"))return;try{await gpDelete("op_incidents",id);delete _OP.incidents;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-function opReports(){return opLazy("reports","op_reports",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Operations Reports</div><button class="btn btn-sm btn-primary" onclick="opOpenReport()">+ Add Report</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Weekly, monthly, and quarterly ops reports. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No ops reports yet.</div></div>`:items.map(r=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${r.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px"><span class="tag t-navy">${r.type||"Report"}</span> · ${r.period||""}</div>${r.summary?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>Summary:</b> ${r.summary}</div>`:""} ${r.metrics?`<div style="font-size:13px;color:var(--text2);margin-bottom:2px"><b>Metrics:</b> ${r.metrics}</div>`:""} ${r.issues?`<div style="font-size:13px;color:var(--red);margin-bottom:2px">⚠️ <b>Issues:</b> ${r.issues}</div>":""} ${r.actions?`<div style="font-size:13px;color:var(--navy)">🔧 <b>Actions:</b> ${r.actions}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenReport('${r.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelReport('${r.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function opOpenReport(id){const r=id?(_OP.reports||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Ops Report":"Add Ops Report",`<div class="form-row"><div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="op-r-title" value="${r.title||""}" placeholder="e.g. Week 23 Operations Report"></div><div class="form-group"><label class="form-label">Type</label><select class="form-control" id="op-r-type"><option${r.type==="Weekly"?" selected":""}>Weekly</option><option${r.type==="Monthly"?" selected":""}>Monthly</option><option${r.type==="Quarterly"?" selected":""}>Quarterly</option><option${r.type==="Ad Hoc"?" selected":""}>Ad Hoc</option></select></div></div><div class="form-group"><label class="form-label">Period Covered</label><input class="form-control" id="op-r-period" value="${r.period||""}" placeholder="e.g. Jun 9-15, 2025"></div><div class="form-group"><label class="form-label">Summary</label><textarea class="form-control" id="op-r-summary" rows="3" placeholder="Overall operational status...">${r.summary||""}</textarea></div><div class="form-group"><label class="form-label">Key Metrics</label><textarea class="form-control" id="op-r-metrics" rows="3" placeholder="Task completion: 94% | SLA: 91% | Active clients: 4...">${r.metrics||""}</textarea></div><div class="form-group"><label class="form-label">Issues / Risks</label><textarea class="form-control" id="op-r-issues" rows="2" placeholder="Any operational issues this period?">${r.issues||""}</textarea></div><div class="form-group"><label class="form-label">Actions / Next Steps</label><textarea class="form-control" id="op-r-actions" rows="2" placeholder="What was done? What is planned?">${r.actions||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveReport('${id||""}')">Save Report</button>`);}
-async function opSaveReport(id){const title=(document.getElementById("op-r-title")||{}).value||"";if(!title.trim()){toast("Title required.","error");return;}const row={title:title.trim(),type:(document.getElementById("op-r-type")||{}).value||"",period:(document.getElementById("op-r-period")||{}).value||"",summary:(document.getElementById("op-r-summary")||{}).value||"",metrics:(document.getElementById("op-r-metrics")||{}).value||"",issues:(document.getElementById("op-r-issues")||{}).value||"",actions:(document.getElementById("op-r-actions")||{}).value||""};try{await gpSave("op_reports",row,id||null);delete _OP.reports;closeModal();APP.va.tab="reports";toast("Report saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function opDelReport(id){if(!confirm("Delete?"))return;try{await gpDelete("op_reports",id);delete _OP.reports;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-function opTeamNotes(){return opLazy("team_notes","op_team_notes",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Team Notes</div><button class="btn btn-sm btn-primary" onclick="opOpenTeamNote()">+ Add Note</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Performance observations, 1:1 notes, coaching points. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No team notes yet.</div></div>`:items.map(n=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:14.5px;font-weight:700;margin-bottom:2px">${n.person||"Team"} <span style="font-weight:400;color:var(--text3)">· ${n.type||"Note"}</span></div>${n.note?`<div style="font-size:13px;color:var(--text2);margin-top:4px">${n.note}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenTeamNote('${n.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelTeamNote('${n.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function opOpenTeamNote(id){const n=id?(_OP.team_notes||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Team Note":"Add Team Note",`<div class="form-row"><div class="form-group"><label class="form-label">Person / Team</label><input class="form-control" id="op-tn-person" value="${n.person||""}" placeholder="e.g. Maria, Entire Team"></div><div class="form-group"><label class="form-label">Type</label><select class="form-control" id="op-tn-type"><option${n.type==="Performance Note"?" selected":""}>Performance Note</option><option${n.type==="1:1 Observation"?" selected":""}>1:1 Observation</option><option${n.type==="Coaching Point"?" selected":""}>Coaching Point</option><option${n.type==="Recognition"?" selected":""}>Recognition</option><option${n.type==="Concern"?" selected":""}>Concern</option><option${n.type==="General"?" selected":""}>General</option></select></div></div><div class="form-group"><label class="form-label">Note *</label><textarea class="form-control" id="op-tn-note" rows="5" placeholder="What happened? What was observed?">${n.note||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveTeamNote('${id||""}')">Save Note</button>`);}
-async function opSaveTeamNote(id){const note=(document.getElementById("op-tn-note")||{}).value||"";if(!note.trim()){toast("Note required.","error");return;}const row={person:(document.getElementById("op-tn-person")||{}).value||"",type:(document.getElementById("op-tn-type")||{}).value||"General",note:note.trim()};try{await gpSave("op_team_notes",row,id||null);delete _OP.team_notes;closeModal();APP.va.tab="team_notes";toast("Note saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function opDelTeamNote(id){if(!confirm("Delete?"))return;try{await gpDelete("op_team_notes",id);delete _OP.team_notes;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-function opSops(){return opLazy("sop_tracker","op_sop_tracker",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">SOP Compliance Tracker</div><button class="btn btn-sm btn-primary" onclick="opOpenSop()">+ Add Entry</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Track SOP adherence per team member and flag gaps or breaches.</div>${items.length===0?`<div class="empty"><div class="empty-text">No SOP compliance entries yet.</div></div>`:items.map(s=>`<div class="card" style="padding:16px 20px;margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:14.5px;font-weight:700;margin-bottom:2px">${s.sop||"—"} <span style="font-weight:400;color:var(--text3)">— ${s.person||""}</span></div><div style="font-size:12.5px;color:var(--text3);margin-bottom:4px"><span class="tag ${s.result==="Pass"?"t-green":s.result==="Fail"?"t-red":"t-amber"}">${s.result||"Review"}</span></div>${s.notes?`<div style="font-size:13px;color:var(--text2)">${s.notes}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenSop('${s.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelSop('${s.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function opOpenSop(id){const s=id?(_OP.sop_tracker||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit SOP Entry":"Add SOP Entry",`<div class="form-row"><div class="form-group"><label class="form-label">SOP Name</label><input class="form-control" id="op-sop-name" value="${s.sop||""}" placeholder="e.g. SLA and Response Protocol"></div><div class="form-group"><label class="form-label">Team Member</label><input class="form-control" id="op-sop-person" value="${s.person||""}" placeholder="e.g. Maria Reyes"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Result</label><select class="form-control" id="op-sop-result"><option${s.result==="Pass"?" selected":""}>Pass</option><option${s.result==="Needs Review"?" selected":""}>Needs Review</option><option${s.result==="Fail"?" selected":""}>Fail</option></select></div></div><div class="form-group"><label class="form-label">Notes</label><textarea class="form-control" id="op-sop-notes" rows="3" placeholder="Observations, breaches, or commendations...">${s.notes||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveSop('${id||""}')">Save</button>`);}
-async function opSaveSop(id){const row={sop:(document.getElementById("op-sop-name")||{}).value||"",person:(document.getElementById("op-sop-person")||{}).value||"",result:(document.getElementById("op-sop-result")||{}).value||"Pass",notes:(document.getElementById("op-sop-notes")||{}).value||""};try{await gpSave("op_sop_tracker",row,id||null);delete _OP.sop_tracker;closeModal();APP.va.tab="sops";toast("Saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function opDelSop(id){if(!confirm("Delete?"))return;try{await gpDelete("op_sop_tracker",id);delete _OP.sop_tracker;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-function opImprovements(){return opLazy("improvements","op_improvements",items=>`<div class="card card-pad"><div class="sec-head"><div class="sec-title">Process Improvements</div><button class="btn btn-sm btn-primary" onclick="opOpenImprovement()">+ Add Item</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:16px">Log improvement ideas and track implementation. Saved to Supabase.</div>${items.length===0?`<div class="empty"><div class="empty-text">No improvement items yet.</div></div>`:items.map(imp=>`<div class="card" style="padding:16px 20px;border-left:3px solid ${{Pending:"var(--amber)","In Progress":"var(--navy)",Implemented:"var(--green)",Rejected:"var(--red)"}[imp.status]||"var(--border2)"};margin-bottom:10px"><div style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><div style="flex:1"><div style="font-size:15px;font-weight:700;margin-bottom:2px">${imp.title}</div><div style="font-size:12.5px;color:var(--text3);margin-bottom:6px">${imp.area||"—"} · <span class="tag ${imp.status==="Implemented"?"t-green":imp.status==="In Progress"?"t-navy":"t-gray"}">${imp.status||"Pending"}</span></div>${imp.description?`<div style="font-size:13px;color:var(--text2)">${imp.description}</div>`:""}</div><div style="display:flex;gap:6px;flex-shrink:0"><button class="btn btn-sm btn-secondary" onclick="opOpenImprovement('${imp.id}')">Edit</button><button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="opDelImprovement('${imp.id}')">Del</button></div></div></div>`).join("")}</div>`);}
-function opOpenImprovement(id){const imp=id?(_OP.improvements||[]).find(x=>x.id===id)||{}:{};openModal(id?"Edit Improvement":"Add Improvement",`<div class="form-row"><div class="form-group"><label class="form-label">Title *</label><input class="form-control" id="op-imp-title" value="${imp.title||""}" placeholder="e.g. Automate weekly client reports"></div><div class="form-group"><label class="form-label">Status</label><select class="form-control" id="op-imp-status"><option${imp.status==="Pending"?" selected":""}>Pending</option><option${imp.status==="In Progress"?" selected":""}>In Progress</option><option${imp.status==="Implemented"?" selected":""}>Implemented</option><option${imp.status==="Rejected"?" selected":""}>Rejected</option></select></div></div><div class="form-group"><label class="form-label">Area / Process</label><input class="form-control" id="op-imp-area" value="${imp.area||""}" placeholder="e.g. Reporting, Client Onboarding, SLA Monitoring"></div><div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="op-imp-desc" rows="4" placeholder="What needs improving and why? Proposed solution?">${imp.description||""}</textarea></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="opSaveImprovement('${id||""}')">Save</button>`);}
-async function opSaveImprovement(id){const title=(document.getElementById("op-imp-title")||{}).value||"";if(!title.trim()){toast("Title required.","error");return;}const row={title:title.trim(),status:(document.getElementById("op-imp-status")||{}).value||"Pending",area:(document.getElementById("op-imp-area")||{}).value||"",description:(document.getElementById("op-imp-desc")||{}).value||""};try{await gpSave("op_improvements",row,id||null);delete _OP.improvements;closeModal();APP.va.tab="improvements";toast("Saved.","success");renderCurrentPage();}catch(e){toast("Save failed: "+e.message,"error");}}
-async function opDelImprovement(id){if(!confirm("Delete?"))return;try{await gpDelete("op_improvements",id);delete _OP.improvements;renderCurrentPage();toast("Deleted.","success");}catch(e){}}
-
-/* ══ INCOME CALCULATOR ══ */
-const PH_DEDUCTIONS={sss(g){const MSC=Math.min(Math.max(Math.round(g/500)*500,4000),29750);return{ee:Math.round(MSC*0.045),msc:MSC};},philhealth(g){return{ee:Math.round(Math.min(Math.max(g*0.05,500),10000)/2)};},pagibig(g){return{ee:Math.min(Math.round(g*(g<=1500?0.01:0.02)),100)};},tax(a){if(a<=250000)return 0;if(a<=400000)return Math.round((a-250000)*0.15);if(a<=800000)return Math.round(22500+(a-400000)*0.20);if(a<=2000000)return Math.round(102500+(a-800000)*0.25);if(a<=8000000)return Math.round(402500+(a-2000000)*0.30);return Math.round(2202500+(a-8000000)*0.35);}};
-function icPeso(v){return"₱"+Number(v).toLocaleString("en-PH",{minimumFractionDigits:2,maximumFractionDigits:2});}
-function icHr(m){const h=Math.floor(m/60),mn=m%60;return h+"h"+(mn>0?" "+mn+"m":"");}
-function _incomeKey(id){return"tjc_income_cfg_"+id;}
-function _loadIncomeCfg(id){try{return JSON.parse(localStorage.getItem(_incomeKey(id))||"{}");}catch(e){return{};}}
-function _saveIncomeCfg(id,cfg){try{localStorage.setItem(_incomeKey(id),JSON.stringify(cfg));}catch(e){}}
-function renderVAIncomeCalculator(va){
-  const cfg=_loadIncomeCfg(va.id);
-  const hourlyRate=Number(cfg.hourlyRate||0);
-  const showDed=cfg.showDeductions===true;
-  const currency=cfg.currency||"PHP";
-  const usdRate=Number(cfg.usdRate||CFG.exchangeRate||56);
-  const workHrs=Number(cfg.workHrsPerDay||8);
-  const td=today();
-  const weekStart=getWeekStart();
-  const myLogs=APP.data.timelogs.filter(l=>l.vaUid===va.id);
-  const todayMins=myLogs.filter(l=>l.date===td).reduce((a,l)=>a+(l.minutes||0),0);
-  const weekMins=myLogs.filter(l=>l.date>=weekStart).reduce((a,l)=>a+(l.minutes||0),0);
-  const monthStr=td.slice(0,7);
-  const monthMins=myLogs.filter(l=>l.date.startsWith(monthStr)).reduce((a,l)=>a+(l.minutes||0),0);
-  const rpm=hourlyRate/60;
-  const gToday=todayMins*rpm,gWeek=weekMins*rpm,gMonth=monthMins*rpm;
-  let sssEE=0,phEE=0,piEE=0,taxM=0,totalDed=0,netMonth=gMonth;
-  if(showDed&&gMonth>0){const gPHP=currency==="USD"?gMonth*usdRate:gMonth;const{ee:s}=PH_DEDUCTIONS.sss(gPHP);const{ee:ph}=PH_DEDUCTIONS.philhealth(gPHP);const{ee:pi}=PH_DEDUCTIONS.pagibig(gPHP);sssEE=s;phEE=ph;piEE=pi;const td2=sssEE+phEE+piEE;taxM=Math.round(PH_DEDUCTIONS.tax((gPHP-td2)*12)/12);totalDed=td2+taxM;netMonth=currency==="USD"?(gPHP-totalDed)/usdRate:gPHP-totalDed;}
-  function fmt(a){if(currency==="USD")return"$"+a.toFixed(2);return icPeso(a);}
-  const last7=Array.from({length:7},(_,i)=>{const d=new Date();d.setDate(d.getDate()-(6-i));return d.toISOString().slice(0,10);});
-  const dailyData=last7.map(date=>{const mins=myLogs.filter(l=>l.date===date).reduce((a,l)=>a+(l.minutes||0),0);const gross=mins*rpm;const dayLabel=new Date(date+"T00:00:00").toLocaleDateString("en-PH",{weekday:"short",month:"short",day:"numeric"});return{date,mins,gross,dayLabel,isToday:date===td};});
-  const needsSetup=hourlyRate===0;
-  return`<div><div class="sec-head"><div class="sec-title">💰 Income Calculator</div><button class="btn btn-sm btn-secondary" onclick="vaIncomeOpenSettings('${va.id}')">⚙️ Settings</button></div><div style="font-size:13px;color:var(--text3);margin-bottom:18px">Your earnings calculated from actual logged time. Set your hourly rate to get started.</div>${needsSetup?`<div class="card card-pad" style="border:2px dashed var(--border2);text-align:center;padding:40px 24px"><div style="font-size:36px;margin-bottom:14px">⚙️</div><div style="font-size:17px;font-weight:700;margin-bottom:8px">Set your hourly rate to begin</div><div style="font-size:13px;color:var(--text3);margin-bottom:20px">Enter your agreed rate per hour with TJC to see your earnings from time logs.</div><button class="btn btn-primary" onclick="vaIncomeOpenSettings('${va.id}')">Set Up My Rate</button></div>`:`<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px"><div class="card" style="padding:20px;text-align:center;border-top:3px solid var(--teal)"><div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">Today · ${icHr(todayMins)}</div><div style="font-size:28px;font-weight:900;color:var(--teal)">${fmt(gToday)}</div><div style="font-size:12px;color:var(--text3);margin-top:4px">from ${todayMins} min logged</div></div><div class="card" style="padding:20px;text-align:center;border-top:3px solid var(--navy)"><div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">This Week · ${icHr(weekMins)}</div><div style="font-size:28px;font-weight:900;color:var(--navy)">${fmt(gWeek)}</div><div style="font-size:12px;color:var(--text3);margin-top:4px">from ${weekMins} min logged</div></div><div class="card" style="padding:20px;text-align:center;border-top:3px solid var(--gold)"><div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.5px;margin-bottom:6px">This Month · ${icHr(monthMins)}</div><div style="font-size:28px;font-weight:900;color:var(--gold-dark)">${fmt(gMonth)}</div><div style="font-size:12px;color:var(--text3);margin-top:4px">from ${monthMins} min logged</div></div></div><div style="background:var(--navy);border-radius:var(--r2);padding:12px 18px;display:flex;align-items:center;justify-content:space-between;margin-bottom:22px"><div style="font-size:13px;color:rgba(255,255,255,.7)">Rate: <b style="color:#fff">${currency==="USD"?"$":"₱"}${hourlyRate}/hr</b> &nbsp;·&nbsp; ${workHrs}h/day ${currency==="USD"?`&nbsp;·&nbsp; ₱${usdRate}/$1`:""}</div><button class="btn btn-sm" style="background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);color:#fff" onclick="vaIncomeOpenSettings('${va.id}')">Edit</button></div><div class="card card-pad" style="margin-bottom:16px"><div style="font-size:14px;font-weight:700;margin-bottom:16px">📅 Last 7 Days</div><div style="display:grid;grid-template-columns:repeat(7,1fr);gap:6px;align-items:end"><${dailyData.map(d=>{const maxM=Math.max(...dailyData.map(x=>x.mins),1);const pct=Math.round((d.mins/maxM)*100);const bc=d.isToday?"var(--teal)":d.mins>0?"var(--navy)":"var(--border2)";return`<div style="text-align:center"><div style="font-size:11.5px;font-weight:700;color:var(--text3);margin-bottom:4px">${d.mins>0?fmt(d.gross):"—"}</div><div style="background:${bc};height:${Math.max(pct*.8,d.mins>0?4:0)}px;border-radius:4px 4px 0 0;min-height:${d.mins>0?"4px":"0"}"></div><div style="font-size:10px;color:${d.isToday?"var(--teal)":"var(--text3)"};margin-top:4px;font-weight:${d.isToday?"700":"400"}">${d.dayLabel.split(",")[0]}</div><div style="font-size:10px;color:var(--text3)">${d.mins>0?icHr(d.mins):"—"}</div></div>`;}).join("")}></div></div><div class="card card-pad" style="margin-bottom:16px"><div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:16px"><div style="font-size:14px;font-weight:700">🧾 Net Pay Calculator (Philippines)</div><label style="display:flex;align-items:center;gap:8px;cursor:pointer;font-size:13px;color:var(--text2)"><div onclick="vaIncomeToggleDeductions('${va.id}')" style="width:40px;height:22px;background:${showDed?"var(--teal)":"var(--border2)"};border-radius:11px;position:relative;cursor:pointer;transition:background .2s"><div style="width:18px;height:18px;background:#fff;border-radius:50%;position:absolute;top:2px;left:${showDed?"20px":"2px"};transition:left .2s"></div></div><span>${showDed?"Deductions ON":"Show deductions"}</span></label></div>${showDed&&gMonth>0?`<div style="font-size:12.5px;color:var(--text3);margin-bottom:14px">Based on this month's gross (${icPeso(currency==="USD"?gMonth*usdRate:gMonth)} PHP). Using 2024 PH government rates.</div><div style="border:1px solid var(--border);border-radius:var(--r2);overflow:hidden"><div style="display:flex;justify-content:space-between;padding:12px 16px;border-bottom:1px solid var(--border)"><div style="font-size:14px;font-weight:600">Gross Monthly Pay</div><div style="font-size:15px;font-weight:700">${icPeso(currency==="USD"?gMonth*usdRate:gMonth)}</div></div><div style="padding:0 16px">${[["SSS","Employee share · 4.5% of MSC",sssEE],["PhilHealth","Employee share · 2.5% of salary",phEE],["Pag-IBIG (HDMF)","Employee share · 2%, max ₱100",piEE],["Withholding Tax (BIR)","2024 revised tax table · monthly estimate",taxM]].map(([name,sub,val])=>`<div style="padding:10px 0;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center"><div><div style="font-size:13.5px;font-weight:600">${name}</div><div style="font-size:12px;color:var(--text3)">${sub}</div></div><div style="font-size:13.5px;color:var(--red)">− ${icPeso(val)}</div></div>`).join("")}</div><div style="display:flex;justify-content:space-between;align-items:center;padding:14px 16px;background:var(--navy)"><div><div style="font-size:15px;font-weight:700;color:#fff">Estimated Net Pay</div><div style="font-size:11.5px;color:rgba(255,255,255,.5)">Total deductions: ${icPeso(totalDed)}</div></div><div style="font-size:22px;font-weight:900;color:var(--teal)">${icPeso(currency==="USD"?netMonth*usdRate:netMonth)}</div></div></div><div style="font-size:12px;color:var(--text3);margin-top:12px;padding:10px 14px;background:var(--surface);border-radius:var(--r);border:1px solid var(--border)">⚠️ <b>Disclaimer:</b> This is an estimate based on current logged hours and standard PH statutory deductions. Actual take-home pay may vary. Consult HR or a tax professional for exact figures.</div>`:showDed&&gMonth===0?`<div class="empty" style="padding:20px 0"><div class="empty-text">Log some time this month to see your net pay estimate.</div></div>`:`<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px">Toggle on to see your estimated take-home pay after SSS, PhilHealth, Pag-IBIG, and withholding tax deductions.</div>`}</div><div class="card card-pad"><div style="font-size:14px;font-weight:700;margin-bottom:14px">⏱️ Per-Hour & Per-Day Estimate</div><div style="display:grid;grid-template-columns:repeat(3,1fr);gap:12px"><div style="text-align:center;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2)"><div style="font-size:20px;font-weight:800;color:var(--text)">${fmt(hourlyRate)}</div><div style="font-size:12px;color:var(--text3);margin-top:3px;text-transform:uppercase">Per Hour</div></div><div style="text-align:center;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2)"><div style="font-size:20px;font-weight:800;color:var(--navy)">${fmt(hourlyRate*workHrs)}</div><div style="font-size:12px;color:var(--text3);margin-top:3px;text-transform:uppercase">Per Day (${workHrs}h)</div></div><div style="text-align:center;padding:14px;background:var(--surface);border:1px solid var(--border);border-radius:var(--r2)"><div style="font-size:20px;font-weight:800;color:var(--gold-dark)">${fmt(hourlyRate*workHrs*22)}</div><div style="font-size:12px;color:var(--text3);margin-top:3px;text-transform:uppercase">Per Month (22 days)</div></div></div></div>`}</div>`;
+/* ── Quick leave actions from dashboard ── */
+function hrApproveLeave(id) {
+  const leaves = hrLoad("leaves");
+  const l = leaves.find(x => x.id === id);
+  if (l) { l.status = "Approved"; l.updatedAt = new Date().toISOString(); }
+  hrSave("leaves", leaves);
+  toast("Leave approved.", "success");
+  renderCurrentPage();
 }
-function vaIncomeOpenSettings(vaId){const cfg=_loadIncomeCfg(vaId);openModal("⚙️ Income Calculator Settings",`<div style="font-size:13px;color:var(--text3);margin-bottom:16px">Configure your hourly rate and preferences. Data stays private on your device.</div><div class="form-row"><div class="form-group"><label class="form-label">Currency</label><select class="form-control" id="ic-currency"><option value="PHP" ${(cfg.currency||"PHP")==="PHP"?"selected":""}>₱ PHP (Philippine Peso)</option><option value="USD" ${cfg.currency==="USD"?"selected":""}>$ USD (US Dollar)</option></select></div><div class="form-group"><label class="form-label">Hourly Rate *</label><input class="form-control" id="ic-rate" type="number" min="0" step="0.01" value="${cfg.hourlyRate||""}" placeholder="e.g. 250 (PHP) or 4.50 (USD)"></div></div><div class="form-row"><div class="form-group"><label class="form-label">Working Hours Per Day</label><select class="form-control" id="ic-hrs">${[4,6,7,8,9,10].map(h=>`<option value="${h}" ${Number(cfg.workHrsPerDay||8)===h?"selected":""}>${h} hours</option>`).join("")}</select></div><div class="form-group"><label class="form-label">USD → PHP Exchange Rate</label><input class="form-control" id="ic-usd" type="number" min="1" step="0.01" value="${cfg.usdRate||CFG.exchangeRate||56}" placeholder="e.g. 56.50"></div></div><div class="form-group"><label class="form-label" style="display:flex;align-items:center;gap:8px"><input type="checkbox" id="ic-deductions" ${cfg.showDeductions?"checked":""} style="width:16px;height:16px;accent-color:var(--teal)"> Show net pay with PH statutory deductions (SSS, PhilHealth, Pag-IBIG, Tax)</label></div>`,`<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="vaIncomeSaveSettings('${vaId}')">Save Settings</button>`);}
-function vaIncomeSaveSettings(vaId){const rate=parseFloat(document.getElementById("ic-rate").value);if(!rate||rate<=0){toast("Please enter a valid hourly rate.","error");return;}const cfg={hourlyRate:rate,currency:document.getElementById("ic-currency").value,workHrsPerDay:parseInt(document.getElementById("ic-hrs").value),usdRate:parseFloat(document.getElementById("ic-usd").value)||CFG.exchangeRate||56,showDeductions:document.getElementById("ic-deductions").checked};_saveIncomeCfg(vaId,cfg);closeModal();toast("Settings saved.","success");renderCurrentPage();}
-function vaIncomeToggleDeductions(vaId){const cfg=_loadIncomeCfg(vaId);cfg.showDeductions=!cfg.showDeductions;_saveIncomeCfg(vaId,cfg);renderCurrentPage();}
+function hrRejectLeave(id) {
+  const leaves = hrLoad("leaves");
+  const l = leaves.find(x => x.id === id);
+  if (l) { l.status = "Rejected"; l.updatedAt = new Date().toISOString(); }
+  hrSave("leaves", leaves);
+  toast("Leave rejected.", "success");
+  renderCurrentPage();
+}
+
+/* ── SCHEDULES ─────────────────────────────────────── */
+function renderHRSchedules() {
+  const team = APP.data.team || [];
+  const schedules = hrLoad("hr_schedules");
+  return `<div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <h2 style="font-size:20px;font-weight:800">Work Schedules</h2>
+      <button class="btn btn-primary" onclick="hrOpenAddSchedule()">+ Add Schedule</button>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:14px">
+      ${team.map(v => {
+        const sched = schedules.find(s => s.vaId === v.id);
+        return `<div class="card" style="padding:16px">
+          <div style="display:flex;align-items:center;gap:10px;margin-bottom:10px">
+            <div class="av av-md ${v.avatarColor ? 'av-'+v.avatarColor : 'av-navy'}">${v.initials}</div>
+            <div><div style="font-weight:700;font-size:14px">${v.displayName}</div>
+            <div style="font-size:11px;color:var(--text3)">${v.role||"Partner"}</div></div>
+          </div>
+          ${sched ? `
+          <div style="font-size:12px;color:var(--text2);margin-bottom:6px"><b>Shift:</b> ${sched.shiftName||"Regular"}</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:6px"><b>Hours:</b> ${sched.timeIn||"—"} – ${sched.timeOut||"—"}</div>
+          <div style="font-size:12px;color:var(--text2);margin-bottom:10px"><b>Days:</b> ${sched.days||"Mon–Fri"}</div>
+          <div style="font-size:11px;color:var(--text3)">${sched.notes||""}</div>
+          <button class="btn btn-sm btn-secondary" style="margin-top:10px;width:100%" onclick="hrOpenAddSchedule('${v.id}')">Edit Schedule</button>
+          ` : `<div style="text-align:center;padding:16px 0;color:var(--text3);font-size:12px">No schedule set</div>
+          <button class="btn btn-sm btn-primary" style="width:100%" onclick="hrOpenAddSchedule('${v.id}')">Set Schedule</button>`}
+        </div>`;
+      }).join("")}
+    </div>
+  </div>`;
+}
+function hrOpenAddSchedule(vaId) {
+  const team = APP.data.team || [];
+  const schedules = hrLoad("hr_schedules");
+  const existing = vaId ? schedules.find(s=>s.vaId===vaId)||{} : {};
+  openModal("Set Work Schedule", `
+    <div class="form-group"><label class="form-label">Employee</label>
+      <select class="form-control" id="hr-sc-va" ${vaId?"disabled":""}>
+        <option value="">Select employee…</option>
+        ${team.map(v=>`<option value="${v.id}" ${v.id===vaId?"selected":""}>${v.displayName}</option>`).join("")}
+      </select></div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Shift Name</label>
+        <select class="form-control" id="hr-sc-shift">
+          <option ${existing.shiftName==="Regular"?"selected":""}>Regular</option>
+          <option ${existing.shiftName==="Morning"?"selected":""}>Morning</option>
+          <option ${existing.shiftName==="Afternoon"?"selected":""}>Afternoon</option>
+          <option ${existing.shiftName==="Night"?"selected":""}>Night</option>
+          <option ${existing.shiftName==="Flexible"?"selected":""}>Flexible</option>
+        </select></div>
+      <div class="form-group"><label class="form-label">Working Days</label>
+        <select class="form-control" id="hr-sc-days">
+          <option ${existing.days==="Mon–Fri"?"selected":""}>Mon–Fri</option>
+          <option ${existing.days==="Mon–Sat"?"selected":""}>Mon–Sat</option>
+          <option ${existing.days==="Tue–Sat"?"selected":""}>Tue–Sat</option>
+          <option ${existing.days==="Sun–Thu"?"selected":""}>Sun–Thu</option>
+          <option ${existing.days==="Custom"?"selected":""}>Custom</option>
+        </select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Time In</label><input class="form-control" id="hr-sc-in" type="time" value="${existing.timeIn||"09:00"}"></div>
+      <div class="form-group"><label class="form-label">Time Out</label><input class="form-control" id="hr-sc-out" type="time" value="${existing.timeOut||"18:00"}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Notes</label><input class="form-control" id="hr-sc-notes" value="${existing.notes||""}" placeholder="e.g. PH time, remote"></div>
+    <input type="hidden" id="hr-sc-editid" value="${existing.id||""}">`,
+    `<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="hrSaveScheduleNew('${vaId||""}')">Save Schedule</button>`);
+}
+function hrSaveScheduleNew(vaId) {
+  const empId = vaId || (document.getElementById("hr-sc-va")||{}).value;
+  if (!empId) { toast("Select an employee","error"); return; }
+  const v = (APP.data.team||[]).find(x=>x.id===empId);
+  const schedules = hrLoad("hr_schedules");
+  const editId = (document.getElementById("hr-sc-editid")||{}).value;
+  const entry = { id: editId||hrId(), vaId: empId, name: v?.displayName||"", shiftName:(document.getElementById("hr-sc-shift")||{}).value||"Regular", days:(document.getElementById("hr-sc-days")||{}).value||"Mon–Fri", timeIn:(document.getElementById("hr-sc-in")||{}).value||"09:00", timeOut:(document.getElementById("hr-sc-out")||{}).value||"18:00", notes:(document.getElementById("hr-sc-notes")||{}).value||"", updatedAt:new Date().toISOString() };
+  if (editId) { const i = schedules.findIndex(s=>s.id===editId); if(i>=0) schedules[i]=entry; else schedules.push(entry); }
+  else { const existing = schedules.findIndex(s=>s.vaId===empId); if(existing>=0) schedules[existing]=entry; else schedules.push(entry); }
+  hrSave("hr_schedules", schedules);
+  closeModal(); toast("Schedule saved.", "success"); renderCurrentPage();
+}
+
+/* ── PAYROLL ───────────────────────────────────────── */
+function renderHRPayroll() {
+  const team = APP.data.team || [];
+  const payroll = hrLoad("hr_payroll");
+  const rules = hrLoad("hr_payroll_rules");
+  const today2 = new Date();
+  const monthStr = today2.toISOString().slice(0,7);
+  const thisMonth = payroll.filter(p=>p.period===monthStr);
+  const totalGross = thisMonth.reduce((a,p)=>a+Number(p.grossPHP||0),0);
+  const totalNet = thisMonth.reduce((a,p)=>a+Number(p.netPHP||0),0);
+  return `<div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div><h2 style="font-size:20px;font-weight:800">Payroll</h2>
+      <div style="font-size:13px;color:var(--text3);margin-top:2px">Current period: ${today2.toLocaleDateString("en-PH",{month:"long",year:"numeric"})}</div></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" onclick="APP.hr.tab='payroll_rules';renderCurrentPage()">⚙️ Payroll Rules</button>
+        <button class="btn btn-primary" onclick="hrOpenAddPayroll()">+ Add Payroll Entry</button>
+      </div>
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:24px">
+      <div class="card" style="padding:16px;text-align:center;border-top:3px solid var(--navy)">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:6px">Total Employees Payrolled</div>
+        <div style="font-size:28px;font-weight:900;color:var(--navy)">${thisMonth.length}</div>
+        <div style="font-size:11px;color:var(--text3)">of ${team.length} team members</div>
+      </div>
+      <div class="card" style="padding:16px;text-align:center;border-top:3px solid var(--green)">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:6px">Total Gross (PHP)</div>
+        <div style="font-size:28px;font-weight:900;color:var(--green)">₱${totalGross.toLocaleString("en-PH")}</div>
+      </div>
+      <div class="card" style="padding:16px;text-align:center;border-top:3px solid var(--teal)">
+        <div style="font-size:11px;font-weight:700;color:var(--text3);text-transform:uppercase;margin-bottom:6px">Total Net (PHP)</div>
+        <div style="font-size:28px;font-weight:900;color:var(--teal)">₱${totalNet.toLocaleString("en-PH")}</div>
+      </div>
+    </div>
+    <div class="card" style="overflow:hidden">
+      <div style="padding:14px 18px;font-weight:700;font-size:14px;border-bottom:1px solid var(--border);display:flex;justify-content:space-between;align-items:center">
+        Payroll Records
+        <select class="form-control" style="width:180px" onchange="APP.hr._payrollMonth=this.value;renderCurrentPage()">
+          ${Array.from({length:6},(_,i)=>{const d=new Date(today2.getFullYear(),today2.getMonth()-i,1);const m=d.toISOString().slice(0,7);return`<option value="${m}" ${m===monthStr?"selected":""}>${d.toLocaleDateString("en-PH",{month:"long",year:"numeric"})}</option>`;}).join("")}
+        </select>
+      </div>
+      <div style="overflow-x:auto">
+        <table style="width:100%;border-collapse:collapse;font-size:13px">
+          <thead><tr style="background:var(--bg)">
+            <th style="padding:10px 14px;text-align:left;font-weight:600">Employee</th>
+            <th style="padding:10px 14px;text-align:left;font-weight:600">Period</th>
+            <th style="padding:10px 14px;text-align:right;font-weight:600">Gross (PHP)</th>
+            <th style="padding:10px 14px;text-align:right;font-weight:600">Deductions</th>
+            <th style="padding:10px 14px;text-align:right;font-weight:600">Net (PHP)</th>
+            <th style="padding:10px 14px;text-align:left;font-weight:600">Status</th>
+            <th style="padding:10px 14px;text-align:left;font-weight:600">Actions</th>
+          </tr></thead>
+          <tbody>
+            ${payroll.filter(p=>p.period===(APP.hr._payrollMonth||monthStr)).length ? payroll.filter(p=>p.period===(APP.hr._payrollMonth||monthStr)).map(p=>`<tr style="border-bottom:1px solid var(--border)">
+              <td style="padding:9px 14px;font-weight:600">${p.name||"—"}</td>
+              <td style="padding:9px 14px">${p.period||"—"}</td>
+              <td style="padding:9px 14px;text-align:right">₱${Number(p.grossPHP||0).toLocaleString()}</td>
+              <td style="padding:9px 14px;text-align:right;color:var(--red)">₱${Number(p.deductions||0).toLocaleString()}</td>
+              <td style="padding:9px 14px;text-align:right;font-weight:700;color:var(--teal)">₱${Number(p.netPHP||0).toLocaleString()}</td>
+              <td style="padding:9px 14px"><span class="tag ${p.status==="Paid"?"t-teal":p.status==="Processing"?"t-amber":"t-gray"}">${p.status||"Draft"}</span></td>
+              <td style="padding:9px 14px"><div style="display:flex;gap:4px">
+                <button class="btn btn-xs btn-secondary" onclick="hrOpenEditPayroll('${p.id}')">Edit</button>
+                <button class="btn btn-xs" style="background:var(--teal);color:#fff;border:none" onclick="hrMarkPayrollPaid('${p.id}')">Mark Paid</button>
+                <button class="btn btn-xs" style="background:var(--navy);color:#fff;border:none" onclick="hrGeneratePayslip('${p.id}')">Payslip</button>
+              </div></td>
+            </tr>`).join("") : `<tr><td colspan="7" style="padding:30px;text-align:center;color:var(--text3)">No payroll records for this period.</td></tr>`}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>`;
+}
+function hrOpenAddPayroll(editId) {
+  const team = APP.data.team || [];
+  const today2 = new Date();
+  const period = today2.toISOString().slice(0,7);
+  const existing = editId ? hrLoad("hr_payroll").find(p=>p.id===editId)||{} : {};
+  const va = existing.vaId ? (APP.data.team||[]).find(v=>v.id===existing.vaId) : null;
+  openModal(editId?"Edit Payroll Entry":"Add Payroll Entry", `
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Employee *</label>
+        <select class="form-control" id="hr-pay-va" ${editId?"disabled":""}>
+          <option value="">Select…</option>
+          ${team.map(v=>`<option value="${v.id}" data-name="${v.displayName}" ${v.id===existing.vaId?"selected":""}>${v.displayName}</option>`).join("")}
+        </select></div>
+      <div class="form-group"><label class="form-label">Pay Period</label>
+        <input class="form-control" id="hr-pay-period" type="month" value="${existing.period||period}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Gross Pay (PHP)</label><input class="form-control" id="hr-pay-gross" type="number" value="${existing.grossPHP||0}" placeholder="e.g. 25000"></div>
+      <div class="form-group"><label class="form-label">Total Deductions (PHP)</label><input class="form-control" id="hr-pay-ded" type="number" value="${existing.deductions||0}" placeholder="Auto from rules"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">SSS</label><input class="form-control" id="hr-pay-sss" type="number" value="${existing.sss||0}"></div>
+      <div class="form-group"><label class="form-label">PhilHealth</label><input class="form-control" id="hr-pay-ph" type="number" value="${existing.philhealth||0}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Pag-IBIG</label><input class="form-control" id="hr-pay-pi" type="number" value="${existing.pagibig||0}"></div>
+      <div class="form-group"><label class="form-label">Withholding Tax</label><input class="form-control" id="hr-pay-tax" type="number" value="${existing.tax||0}"></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Net Pay (PHP)</label><input class="form-control" id="hr-pay-net" type="number" value="${existing.netPHP||0}" placeholder="Gross minus deductions"></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-control" id="hr-pay-status">
+          <option ${existing.status==="Draft"?"selected":""}>Draft</option>
+          <option ${existing.status==="Pending"?"selected":""}>Pending</option>
+          <option ${existing.status==="Processing"?"selected":""}>Processing</option>
+          <option ${existing.status==="Paid"?"selected":""}>Paid</option>
+        </select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Notes / Adjustments</label><textarea class="form-control" id="hr-pay-notes" rows="2" placeholder="Allowances, bonuses, deductions...">${existing.notes||""}</textarea></div>
+    <input type="hidden" id="hr-pay-editid" value="${editId||""}">`,
+    `<button class="btn btn-secondary" onclick="closeModal()">Cancel</button>
+     <button class="btn btn-secondary" onclick="hrAutoCalcDeductions()">Auto-Calculate</button>
+     <button class="btn btn-primary" onclick="hrSavePayroll()">Save</button>`);
+}
+function hrAutoCalcDeductions() {
+  const gross = Number((document.getElementById("hr-pay-gross")||{}).value||0);
+  if (!gross) { toast("Enter gross pay first","error"); return; }
+  const MSC = Math.min(Math.max(Math.round(gross/500)*500,4000),29750);
+  const sss = Math.round(MSC*0.045);
+  const ph = Math.round(Math.min(Math.max(gross*0.05,500),10000)/2);
+  const pi = Math.min(Math.round(gross*(gross<=1500?0.01:0.02)),100);
+  const taxable = (gross-(sss+ph+pi))*12;
+  let tax = 0;
+  if(taxable>250000&&taxable<=400000) tax=Math.round((taxable-250000)*0.15/12);
+  else if(taxable>400000&&taxable<=800000) tax=Math.round((22500+(taxable-400000)*0.20)/12);
+  else if(taxable>800000) tax=Math.round((102500+(taxable-800000)*0.25)/12);
+  const totalDed = sss+ph+pi+tax;
+  const net = gross-totalDed;
+  document.getElementById("hr-pay-sss").value=sss;
+  document.getElementById("hr-pay-ph").value=ph;
+  document.getElementById("hr-pay-pi").value=pi;
+  document.getElementById("hr-pay-tax").value=tax;
+  document.getElementById("hr-pay-ded").value=totalDed;
+  document.getElementById("hr-pay-net").value=net;
+  toast("Deductions auto-calculated from 2024 PH rates.","success");
+}
+function hrSavePayroll() {
+  const sel = document.getElementById("hr-pay-va");
+  const vaId = sel.value, name = sel.options[sel.selectedIndex]?.dataset.name||"";
+  const editId = (document.getElementById("hr-pay-editid")||{}).value;
+  if (!vaId) { toast("Select employee","error"); return; }
+  const payroll = hrLoad("hr_payroll");
+  const entry = { id:editId||hrId(), vaId, name, period:(document.getElementById("hr-pay-period")||{}).value||"", grossPHP:Number((document.getElementById("hr-pay-gross")||{}).value||0), deductions:Number((document.getElementById("hr-pay-ded")||{}).value||0), sss:Number((document.getElementById("hr-pay-sss")||{}).value||0), philhealth:Number((document.getElementById("hr-pay-ph")||{}).value||0), pagibig:Number((document.getElementById("hr-pay-pi")||{}).value||0), tax:Number((document.getElementById("hr-pay-tax")||{}).value||0), netPHP:Number((document.getElementById("hr-pay-net")||{}).value||0), status:(document.getElementById("hr-pay-status")||{}).value||"Draft", notes:(document.getElementById("hr-pay-notes")||{}).value||"", updatedAt:new Date().toISOString() };
+  if (!entry.id) entry.id = hrId();
+  if (editId) { const i = payroll.findIndex(p=>p.id===editId); if(i>=0) payroll[i]=entry; else payroll.push(entry); }
+  else payroll.push(entry);
+  hrSave("hr_payroll", payroll);
+  closeModal(); toast("Payroll entry saved.","success"); renderCurrentPage();
+}
+function hrOpenEditPayroll(id) { hrOpenAddPayroll(id); }
+function hrMarkPayrollPaid(id) {
+  if (!confirm("Mark this payroll entry as Paid?")) return;
+  const payroll = hrLoad("hr_payroll");
+  const p = payroll.find(x=>x.id===id);
+  if (p) { p.status="Paid"; p.paidAt=new Date().toISOString(); }
+  hrSave("hr_payroll", payroll);
+  toast("Marked as paid.","success"); renderCurrentPage();
+}
+function hrGeneratePayslip(payId) {
+  const p = hrLoad("hr_payroll").find(x=>x.id===payId);
+  if (!p) return;
+  const v = (APP.data.team||[]).find(x=>x.id===p.vaId)||{};
+  const periodLabel = p.period ? new Date(p.period+"-01").toLocaleDateString("en-PH",{month:"long",year:"numeric"}) : p.period;
+  const payslips = hrLoad2("payslips_"+p.vaId);
+  const existing = payslips.find(x=>x.period===periodLabel);
+  if (!existing) {
+    payslips.push({ id:hrId(), period:periodLabel, gross:"₱"+Number(p.grossPHP||0).toLocaleString(), net:"₱"+Number(p.netPHP||0).toLocaleString(), status:"Paid", deductions:{sss:p.sss,philhealth:p.philhealth,pagibig:p.pagibig,tax:p.tax}, generatedAt:new Date().toISOString() });
+    hrSave2("payslips_"+p.vaId, payslips);
+  }
+  openModal(`Payslip — ${v.displayName||"Employee"}`, `
+    <div style="border:2px solid var(--navy);border-radius:12px;overflow:hidden">
+      <div style="background:var(--navy);color:#fff;padding:16px 20px;display:flex;justify-content:space-between;align-items:center">
+        <div><div style="font-weight:800;font-size:16px">THE JOB COLLECTIVES</div><div style="font-size:11px;opacity:.7">Official Payslip</div></div>
+        <div style="text-align:right"><div style="font-size:13px;font-weight:600">${periodLabel}</div><div style="font-size:11px;opacity:.7">Pay Period</div></div>
+      </div>
+      <div style="padding:16px 20px">
+        <div style="margin-bottom:14px;padding-bottom:14px;border-bottom:1px solid var(--border)">
+          <div style="font-weight:700;font-size:14px">${v.displayName||"—"}</div>
+          <div style="font-size:12px;color:var(--text3)">${v.role||"Partner"} · ${v.email||"—"}</div>
+        </div>
+        <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">
+          <div><div style="font-size:11px;color:var(--text3);text-transform:uppercase;font-weight:600;margin-bottom:2px">Gross Pay</div><div style="font-size:18px;font-weight:800;color:var(--navy)">₱${Number(p.grossPHP||0).toLocaleString()}</div></div>
+          <div><div style="font-size:11px;color:var(--text3);text-transform:uppercase;font-weight:600;margin-bottom:2px">Net Pay</div><div style="font-size:18px;font-weight:800;color:var(--teal)">₱${Number(p.netPHP||0).toLocaleString()}</div></div>
+        </div>
+        <div style="background:var(--bg);border-radius:8px;padding:12px 14px;margin-bottom:14px">
+          <div style="font-size:12px;font-weight:700;margin-bottom:8px;color:var(--text2)">DEDUCTIONS</div>
+          ${[["SSS",p.sss],["PhilHealth",p.philhealth],["Pag-IBIG",p.pagibig],["Withholding Tax",p.tax]].map(([name,val])=>`
+          <div style="display:flex;justify-content:space-between;font-size:12px;padding:3px 0">
+            <span style="color:var(--text2)">${name}</span><span style="color:var(--red)">− ₱${Number(val||0).toLocaleString()}</span>
+          </div>`).join("")}
+          <div style="border-top:1px solid var(--border);margin-top:6px;padding-top:6px;display:flex;justify-content:space-between;font-weight:700;font-size:12px">
+            <span>Total Deductions</span><span style="color:var(--red)">− ₱${Number(p.deductions||0).toLocaleString()}</span>
+          </div>
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--text3)">Status: <span class="tag t-teal">${p.status}</span> · Generated ${new Date().toLocaleDateString("en-PH")}</div>
+      </div>
+    </div>`,
+    `<button class="btn btn-secondary" onclick="closeModal()">Close</button>`);
+}
+
+/* ── PAYSLIPS ──────────────────────────────────────── */
+function renderHRPayslips() {
+  const team = APP.data.team || [];
+  const q = APP.hr._psSearch||"";
+  const filtered = q ? team.filter(v=>(v.displayName||"").toLowerCase().includes(q.toLowerCase())) : team;
+  return `<div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <h2 style="font-size:20px;font-weight:800">Payslips</h2>
+      <input class="form-control" style="width:220px" placeholder="Search employee…" value="${q}" oninput="APP.hr._psSearch=this.value;renderCurrentPage()">
+    </div>
+    <div style="display:grid;gap:12px">
+      ${filtered.map(v=>{
+        const payslips = hrLoad2("payslips_"+v.id);
+        return `<div class="card" style="padding:16px">
+          <div style="display:flex;align-items:center;gap:12px;margin-bottom:${payslips.length?"12px":"0"}">
+            <div class="av av-md ${v.avatarColor?'av-'+v.avatarColor:'av-navy'}">${v.initials}</div>
+            <div style="flex:1"><div style="font-weight:700;font-size:14px">${v.displayName}</div>
+            <div style="font-size:11px;color:var(--text3)">${payslips.length} payslip${payslips.length!==1?"s":""} on file</div></div>
+            <button class="btn btn-sm btn-primary" onclick="APP.hr.tab='payroll_hr';renderCurrentPage()">+ Generate</button>
+          </div>
+          ${payslips.length?`<div style="display:grid;gap:8px">${[...payslips].reverse().slice(0,3).map(ps=>`
+            <div style="display:flex;align-items:center;justify-content:space-between;padding:8px 12px;background:var(--bg);border-radius:8px">
+              <div><div style="font-size:13px;font-weight:600">${ps.period||"—"}</div>
+              <div style="font-size:11px;color:var(--text3)">Gross: ${ps.gross||"—"} · Net: ${ps.net||"—"}</div></div>
+              <span class="tag ${ps.status==="Paid"?"t-teal":"t-amber"}">${ps.status||"Pending"}</span>
+            </div>`).join("")}</div>`:""}
+        </div>`;
+      }).join("")}
+    </div>
+  </div>`;
+}
+
+/* ── PAYROLL RULES ─────────────────────────────────── */
+function renderHRPayrollRules() {
+  const rules = hrLoad("hr_payroll_rules");
+  const defaults = rules.length ? rules[0] : { sssRate:4.5, phRate:2.5, piRate:2, piCap:100, taxBracket:"2024 BIR Table", overtimeRate:1.25, nightDiffRate:0.10, holidayRate:2.0 };
+  return `<div style="max-width:700px">
+    <h2 style="font-size:20px;font-weight:800;margin-bottom:4px">Payroll Rules & Settings</h2>
+    <p style="font-size:13px;color:var(--text3);margin-bottom:24px">Configure statutory deduction rates and pay computation rules. Auto-Calculate in Payroll uses these values.</p>
+    <div class="card card-pad" style="margin-bottom:16px">
+      <div style="font-weight:700;font-size:14px;margin-bottom:14px">🇵🇭 Philippine Statutory Deductions (2024)</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group"><label class="form-label">SSS Employee Rate (%)</label><input class="form-control" id="pr-sss" type="number" step="0.1" value="${defaults.sssRate||4.5}"></div>
+        <div class="form-group"><label class="form-label">PhilHealth Employee Rate (%)</label><input class="form-control" id="pr-ph" type="number" step="0.1" value="${defaults.phRate||2.5}"></div>
+        <div class="form-group"><label class="form-label">Pag-IBIG Employee Rate (%)</label><input class="form-control" id="pr-pi" type="number" step="0.1" value="${defaults.piRate||2}"></div>
+        <div class="form-group"><label class="form-label">Pag-IBIG Monthly Cap (PHP)</label><input class="form-control" id="pr-pi-cap" type="number" value="${defaults.piCap||100}"></div>
+      </div>
+      <div class="form-group"><label class="form-label">Withholding Tax Table</label>
+        <select class="form-control" id="pr-tax">
+          <option ${defaults.taxBracket==="2024 BIR Table"?"selected":""}>2024 BIR Table</option>
+          <option ${defaults.taxBracket==="TRAIN Law (2023)"?"selected":""}>TRAIN Law (2023)</option>
+        </select></div>
+    </div>
+    <div class="card card-pad" style="margin-bottom:16px">
+      <div style="font-weight:700;font-size:14px;margin-bottom:14px">⏱️ Pay Computation Rules</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div class="form-group"><label class="form-label">Overtime Rate (multiplier)</label><input class="form-control" id="pr-ot" type="number" step="0.05" value="${defaults.overtimeRate||1.25}"></div>
+        <div class="form-group"><label class="form-label">Night Differential Rate</label><input class="form-control" id="pr-nd" type="number" step="0.01" value="${defaults.nightDiffRate||0.10}"></div>
+        <div class="form-group"><label class="form-label">Regular Holiday Rate</label><input class="form-control" id="pr-hol" type="number" step="0.05" value="${defaults.holidayRate||2.0}"></div>
+        <div class="form-group"><label class="form-label">Special Non-Working Holiday</label><input class="form-control" id="pr-snwh" type="number" step="0.05" value="${defaults.snwhRate||1.3}"></div>
+      </div>
+    </div>
+    <button class="btn btn-primary" onclick="hrSavePayrollRules()">Save Payroll Rules</button>
+  </div>`;
+}
+function hrSavePayrollRules() {
+  const rule = { id:"main", sssRate:Number((document.getElementById("pr-sss")||{}).value||4.5), phRate:Number((document.getElementById("pr-ph")||{}).value||2.5), piRate:Number((document.getElementById("pr-pi")||{}).value||2), piCap:Number((document.getElementById("pr-pi-cap")||{}).value||100), taxBracket:(document.getElementById("pr-tax")||{}).value||"2024 BIR Table", overtimeRate:Number((document.getElementById("pr-ot")||{}).value||1.25), nightDiffRate:Number((document.getElementById("pr-nd")||{}).value||0.10), holidayRate:Number((document.getElementById("pr-hol")||{}).value||2.0), snwhRate:Number((document.getElementById("pr-snwh")||{}).value||1.3), updatedAt:new Date().toISOString() };
+  hrSave("hr_payroll_rules",[rule]);
+  toast("Payroll rules saved.","success");
+}
+
+/* ── TRAINING & DEVELOPMENT ────────────────────────── */
+function renderHRTraining() {
+  const team = APP.data.team || [];
+  const training = hrLoad("hr_training");
+  const completions = hrLoad("hr_training_completions");
+  return `<div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <h2 style="font-size:20px;font-weight:800">Training & Development</h2>
+      <button class="btn btn-primary" onclick="hrOpenAddTraining()">+ Add Program</button>
+    </div>
+    ${training.length===0?`<div class="empty"><div class="empty-text">No training programs yet. Add your first one above.</div></div>`:`
+    <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:14px">
+      ${training.map(t=>{
+        const enrolled = completions.filter(c=>c.trainingId===t.id).length;
+        const completed = completions.filter(c=>c.trainingId===t.id&&c.status==="Completed").length;
+        return `<div class="card" style="padding:16px">
+          <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:8px;margin-bottom:10px">
+            <div style="flex:1"><div style="font-weight:700;font-size:14px;margin-bottom:3px">${t.title}</div>
+            <div style="font-size:11px;color:var(--text3)">${t.category||"General"} · ${t.duration||"—"}</div></div>
+            <span class="tag ${t.status==="Active"?"t-teal":t.status==="Completed"?"t-navy":"t-amber"}">${t.status||"Draft"}</span>
+          </div>
+          ${t.description?`<div style="font-size:12px;color:var(--text2);margin-bottom:10px">${t.description}</div>`:""}
+          <div style="display:flex;gap:10px;margin-bottom:10px">
+            <div style="text-align:center;flex:1;background:var(--bg);border-radius:6px;padding:8px">
+              <div style="font-size:18px;font-weight:800;color:var(--navy)">${enrolled}</div>
+              <div style="font-size:10px;color:var(--text3)">Enrolled</div>
+            </div>
+            <div style="text-align:center;flex:1;background:var(--bg);border-radius:6px;padding:8px">
+              <div style="font-size:18px;font-weight:800;color:var(--teal)">${completed}</div>
+              <div style="font-size:10px;color:var(--text3)">Completed</div>
+            </div>
+          </div>
+          <div style="display:flex;gap:6px">
+            <button class="btn btn-sm btn-secondary" style="flex:1" onclick="hrOpenTrainingDetail('${t.id}')">View Details</button>
+            <button class="btn btn-sm btn-primary" style="flex:1" onclick="hrOpenEnroll('${t.id}')">Enroll Team</button>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`}
+  </div>`;
+}
+function hrOpenAddTraining(editId) {
+  const existing = editId ? hrLoad("hr_training").find(t=>t.id===editId)||{} : {};
+  openModal(editId?"Edit Training Program":"Add Training Program", `
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Program Title *</label><input class="form-control" id="ht-title" value="${existing.title||""}" placeholder="e.g. Client Communication Mastery"></div>
+      <div class="form-group"><label class="form-label">Category</label>
+        <select class="form-control" id="ht-cat">
+          <option ${existing.category==="Technical Skills"?"selected":""}>Technical Skills</option>
+          <option ${existing.category==="Soft Skills"?"selected":""}>Soft Skills</option>
+          <option ${existing.category==="Compliance"?"selected":""}>Compliance</option>
+          <option ${existing.category==="Leadership"?"selected":""}>Leadership</option>
+          <option ${existing.category==="Client Management"?"selected":""}>Client Management</option>
+          <option ${existing.category==="Tools & Software"?"selected":""}>Tools & Software</option>
+          <option ${existing.category==="Onboarding"?"selected":""}>Onboarding</option>
+          <option>Other</option>
+        </select></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Duration</label><input class="form-control" id="ht-dur" value="${existing.duration||""}" placeholder="e.g. 2 hours, 3 days"></div>
+      <div class="form-group"><label class="form-label">Status</label>
+        <select class="form-control" id="ht-status">
+          <option ${existing.status==="Draft"?"selected":""}>Draft</option>
+          <option ${existing.status==="Active"?"selected":""}>Active</option>
+          <option ${existing.status==="Ongoing"?"selected":""}>Ongoing</option>
+          <option ${existing.status==="Completed"?"selected":""}>Completed</option>
+          <option ${existing.status==="Archived"?"selected":""}>Archived</option>
+        </select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Description</label><textarea class="form-control" id="ht-desc" rows="3" placeholder="What will employees learn? What tools or platforms are used?">${existing.description||""}</textarea></div>
+    <div class="form-group"><label class="form-label">Resource Link (optional)</label><input class="form-control" id="ht-link" type="url" value="${existing.link||""}" placeholder="https://"></div>
+    <input type="hidden" id="ht-editid" value="${editId||""}">`,
+    `<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="hrSaveTraining()">Save Program</button>`);
+}
+function hrSaveTraining() {
+  const title = (document.getElementById("ht-title")||{}).value||"";
+  if (!title.trim()) { toast("Title required","error"); return; }
+  const editId = (document.getElementById("ht-editid")||{}).value;
+  const training = hrLoad("hr_training");
+  const entry = { id:editId||hrId(), title:title.trim(), category:(document.getElementById("ht-cat")||{}).value||"General", duration:(document.getElementById("ht-dur")||{}).value||"", status:(document.getElementById("ht-status")||{}).value||"Active", description:(document.getElementById("ht-desc")||{}).value||"", link:(document.getElementById("ht-link")||{}).value||"", updatedAt:new Date().toISOString() };
+  if (editId) { const i=training.findIndex(t=>t.id===editId); if(i>=0) training[i]=entry; else training.push(entry); }
+  else training.push(entry);
+  hrSave("hr_training",training);
+  closeModal(); toast("Program saved.","success"); renderCurrentPage();
+}
+function hrOpenEnroll(trainingId) {
+  const team = APP.data.team || [];
+  const completions = hrLoad("hr_training_completions");
+  const t = hrLoad("hr_training").find(x=>x.id===trainingId)||{};
+  openModal(`Enroll — ${t.title||"Training"}`, `
+    <div style="font-size:13px;color:var(--text3);margin-bottom:14px">Check employees to enroll or mark completion. Saves immediately.</div>
+    ${team.map(v=>{
+      const c = completions.find(x=>x.trainingId===trainingId&&x.vaId===v.id);
+      return `<div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-bottom:1px solid var(--border)">
+        <div class="av av-sm ${v.avatarColor?'av-'+v.avatarColor:'av-navy'}">${v.initials}</div>
+        <div style="flex:1;font-size:13px;font-weight:600">${v.displayName}</div>
+        ${c ? `<span class="tag ${c.status==="Completed"?"t-teal":"t-amber"}">${c.status}</span>
+          ${c.status!=="Completed"?`<button class="btn btn-xs" style="background:var(--teal);color:#fff;border:none" onclick="hrMarkTrainingComplete('${trainingId}','${v.id}')">Mark Done</button>`:""}
+        ` : `<button class="btn btn-xs btn-primary" onclick="hrEnrollMember('${trainingId}','${v.id}')">Enroll</button>`}
+      </div>`;
+    }).join("")}`,
+    `<button class="btn btn-secondary" onclick="closeModal()">Close</button>`);
+}
+function hrEnrollMember(trainingId, vaId) {
+  const team = APP.data.team || [];
+  const v = team.find(x=>x.id===vaId)||{};
+  const completions = hrLoad("hr_training_completions");
+  if (completions.find(c=>c.trainingId===trainingId&&c.vaId===vaId)) { toast("Already enrolled","warning"); return; }
+  completions.push({ id:hrId(), trainingId, vaId, name:v.displayName||"", status:"Enrolled", enrolledAt:new Date().toISOString() });
+  hrSave("hr_training_completions",completions);
+  toast(v.displayName+" enrolled.","success"); hrOpenEnroll(trainingId);
+}
+function hrMarkTrainingComplete(trainingId, vaId) {
+  const completions = hrLoad("hr_training_completions");
+  const c = completions.find(x=>x.trainingId===trainingId&&x.vaId===vaId);
+  if (c) { c.status="Completed"; c.completedAt=new Date().toISOString(); }
+  hrSave("hr_training_completions",completions);
+  toast("Marked as complete.","success"); hrOpenEnroll(trainingId);
+}
+function hrOpenTrainingDetail(id) {
+  const t = hrLoad("hr_training").find(x=>x.id===id)||{};
+  const completions = hrLoad("hr_training_completions").filter(c=>c.trainingId===id);
+  openModal(t.title||"Training Detail", `
+    <div style="margin-bottom:12px"><span class="tag t-teal">${t.category||"—"}</span> <span class="tag t-gray">${t.status||"—"}</span> ${t.duration?`<span class="tag t-navy">${t.duration}</span>`:""}</div>
+    ${t.description?`<div style="font-size:13px;color:var(--text2);margin-bottom:14px">${t.description}</div>`:""}
+    ${t.link?`<div style="margin-bottom:14px"><a href="${t.link}" target="_blank" class="btn btn-sm btn-secondary">📎 Open Resource Link</a></div>`:""}
+    <div style="font-weight:700;font-size:13px;margin-bottom:8px">Enrollment Status</div>
+    ${completions.length ? completions.map(c=>`<div style="display:flex;justify-content:space-between;align-items:center;padding:6px 0;border-bottom:1px solid var(--border)">
+      <div style="font-size:13px">${c.name||"—"}</div>
+      <span class="tag ${c.status==="Completed"?"t-teal":"t-amber"}">${c.status}</span>
+    </div>`).join("") : `<div style="color:var(--text3);font-size:13px">No enrollments yet.</div>`}`,
+    `<button class="btn btn-secondary" onclick="closeModal()">Close</button><button class="btn btn-primary" onclick="closeModal();hrOpenAddTraining('${id}')">Edit Program</button>`);
+}
+
+/* ── DOCUMENT MANAGEMENT ───────────────────────────── */
+function renderHRDocuments() {
+  const docs = hrLoad("hr_documents");
+  const team = APP.data.team || [];
+  const categories = ["Policy", "Contract", "Certificate", "SOP", "ID & Compliance", "Announcement", "Other"];
+  const filter = APP.hr._docCat||"All";
+  const filtered = filter==="All" ? docs : docs.filter(d=>d.category===filter);
+  return `<div>
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <h2 style="font-size:20px;font-weight:800">Document Management</h2>
+      <button class="btn btn-primary" onclick="hrOpenAddDoc()">+ Upload Document</button>
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;margin-bottom:20px">
+      ${["All",...categories].map(c=>`<button class="btn btn-sm ${filter===c?"btn-primary":"btn-secondary"}" onclick="APP.hr._docCat='${c}';renderCurrentPage()">${c}</button>`).join("")}
+    </div>
+    ${filtered.length===0?`<div class="empty"><div class="empty-text">No documents ${filter!=="All"?"in this category ":""} yet.</div></div>`:`
+    <div style="display:grid;gap:10px">
+      ${filtered.map(doc=>{
+        const assignedTo = doc.vaIds?.length ? doc.vaIds.map(id=>(team.find(v=>v.id===id)||{}).displayName||id).join(", ") : "All Team";
+        return `<div class="card" style="padding:14px 18px;display:flex;align-items:center;gap:14px">
+          <div style="width:44px;height:44px;border-radius:10px;background:var(--navy-pale);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0">
+            ${{Policy:"📋",Contract:"📄",Certificate:"🏆",SOP:"📖","ID & Compliance":"🪪",Announcement:"📢",Other:"📁"}[doc.category]||"📁"}
+          </div>
+          <div style="flex:1;min-width:0">
+            <div style="font-weight:700;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">${doc.title}</div>
+            <div style="font-size:11px;color:var(--text3);margin-top:2px">${doc.category||"Other"} · ${assignedTo} · ${hrFmt(doc.createdAt)}</div>
+            ${doc.notes?`<div style="font-size:12px;color:var(--text2);margin-top:3px">${doc.notes}</div>`:""}
+          </div>
+          <div style="display:flex;gap:6px;flex-shrink:0;align-items:center">
+            ${doc.fileData?`<a class="btn btn-sm btn-secondary" href="${doc.fileData}" download="${doc.title}" target="_blank">⬇ Download</a>`:""}
+            ${doc.url?`<a class="btn btn-sm btn-secondary" href="${doc.url}" target="_blank">🔗 Open</a>`:""}
+            <button class="btn btn-sm" style="background:var(--red-pale);color:var(--red)" onclick="hrDeleteDoc('${doc.id}')">Del</button>
+          </div>
+        </div>`;
+      }).join("")}
+    </div>`}
+  </div>`;
+}
+function hrOpenAddDoc() {
+  const team = APP.data.team || [];
+  openModal("Upload / Add Document", `
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Document Title *</label><input class="form-control" id="hd-title" placeholder="e.g. Employee Handbook v3"></div>
+      <div class="form-group"><label class="form-label">Category</label>
+        <select class="form-control" id="hd-cat">
+          <option>Policy</option><option>Contract</option><option>Certificate</option><option>SOP</option><option>ID & Compliance</option><option>Announcement</option><option>Other</option>
+        </select></div>
+    </div>
+    <div class="form-group"><label class="form-label">Assigned To (leave blank for All)</label>
+      <select class="form-control" id="hd-assign" multiple style="height:80px">
+        ${team.map(v=>`<option value="${v.id}">${v.displayName}</option>`).join("")}
+      </select><div class="form-note">Hold Ctrl/Cmd to select multiple.</div></div>
+    <div class="form-group"><label class="form-label">Document URL (Google Drive, Notion, etc.)</label><input class="form-control" id="hd-url" type="url" placeholder="https://drive.google.com/…"></div>
+    <div class="form-group"><label class="form-label">Or Upload File (max 2MB)</label><input class="form-control" id="hd-file" type="file" accept=".pdf,.doc,.docx,.xlsx,.png,.jpg" style="padding:6px"></div>
+    <div class="form-group"><label class="form-label">Notes / Description</label><textarea class="form-control" id="hd-notes" rows="2" placeholder="What is this document for?"></textarea></div>`,
+    `<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="hrSaveDoc()">Save Document</button>`);
+}
+function hrSaveDoc() {
+  const title = (document.getElementById("hd-title")||{}).value||"";
+  if (!title.trim()) { toast("Title required","error"); return; }
+  const assignSel = document.getElementById("hd-assign");
+  const vaIds = assignSel ? Array.from(assignSel.selectedOptions).map(o=>o.value) : [];
+  const url = (document.getElementById("hd-url")||{}).value||"";
+  const notes = (document.getElementById("hd-notes")||{}).value||"";
+  const cat = (document.getElementById("hd-cat")||{}).value||"Other";
+  const file = (document.getElementById("hd-file")||{}).files?.[0];
+  const save = (fileData) => {
+    const docs = hrLoad("hr_documents");
+    docs.push({ id:hrId(), title:title.trim(), category:cat, vaIds, url, notes, fileData:fileData||null, createdAt:new Date().toISOString() });
+    hrSave("hr_documents",docs);
+    closeModal(); toast("Document saved.","success"); renderCurrentPage();
+  };
+  if (file) {
+    if (file.size > 2*1024*1024) { toast("File must be under 2MB","error"); return; }
+    const r = new FileReader();
+    r.onload = e => save(e.target.result);
+    r.readAsDataURL(file);
+  } else save(null);
+}
+function hrDeleteDoc(id) {
+  if (!confirm("Delete this document?")) return;
+  const docs = hrLoad("hr_documents").filter(d=>d.id!==id);
+  hrSave("hr_documents",docs);
+  toast("Deleted.","success"); renderCurrentPage();
+}
+
+/* ── HOLIDAY CALENDAR ──────────────────────────────── */
+function renderHRHolidays() {
+  const holidays = hrLoad("hr_holidays");
+  const today2 = new Date().toISOString().slice(0,10);
+  const upcoming = holidays.filter(h=>h.date>=today2).sort((a,b)=>a.date.localeCompare(b.date));
+  const past = holidays.filter(h=>h.date<today2).sort((a,b)=>b.date.localeCompare(a.date));
+  return `<div style="max-width:800px">
+    <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:20px">
+      <div><h2 style="font-size:20px;font-weight:800">Holiday Calendar</h2>
+      <div style="font-size:13px;color:var(--text3);margin-top:2px">Philippine public holidays + TJC company holidays</div></div>
+      <div style="display:flex;gap:8px">
+        <button class="btn btn-secondary" onclick="hrSeedPHHolidays()">🇵🇭 Import PH 2025</button>
+        <button class="btn btn-primary" onclick="hrOpenAddHoliday()">+ Add Holiday</button>
+      </div>
+    </div>
+    ${upcoming.length===0&&past.length===0?`<div class="empty"><div class="empty-text">No holidays set. Import PH holidays or add manually.</div></div>`:""}
+    ${upcoming.length?`<div class="card" style="margin-bottom:16px;overflow:hidden">
+      <div style="padding:12px 18px;font-weight:700;font-size:13px;border-bottom:1px solid var(--border);background:var(--teal-pale);color:var(--teal-dark)">Upcoming Holidays</div>
+      ${upcoming.map(h=>`<div style="display:flex;align-items:center;gap:14px;padding:12px 18px;border-bottom:1px solid var(--border)">
+        <div style="width:48px;text-align:center;flex-shrink:0">
+          <div style="font-size:18px;font-weight:900;color:var(--navy)">${new Date(h.date+"T00:00:00").getDate()}</div>
+          <div style="font-size:10px;color:var(--text3);text-transform:uppercase">${new Date(h.date+"T00:00:00").toLocaleDateString("en-PH",{month:"short"})}</div>
+        </div>
+        <div style="flex:1"><div style="font-weight:700;font-size:14px">${h.name}</div>
+        <div style="font-size:11px;color:var(--text3)">${h.date} · ${new Date(h.date+"T00:00:00").toLocaleDateString("en-PH",{weekday:"long"})}</div></div>
+        <div style="display:flex;gap:6px;align-items:center">
+          <span class="tag ${h.type==="Regular"?"t-red":h.type==="Special Non-Working"?"t-amber":"t-navy"}">${h.type||"Regular"}</span>
+          <button class="btn btn-xs" style="background:var(--red-pale);color:var(--red)" onclick="hrDeleteHoliday('${h.id}')">Del</button>
+        </div>
+      </div>`).join("")}
+    </div>`:""}
+    ${past.length?`<div class="card" style="overflow:hidden;opacity:.7">
+      <div style="padding:12px 18px;font-weight:700;font-size:13px;border-bottom:1px solid var(--border)">Past Holidays (${past.length})</div>
+      ${past.slice(0,6).map(h=>`<div style="display:flex;align-items:center;gap:14px;padding:10px 18px;border-bottom:1px solid var(--border)">
+        <div style="font-size:12px;color:var(--text3);width:90px">${hrFmt(h.date)}</div>
+        <div style="flex:1;font-size:13px;font-weight:500">${h.name}</div>
+        <span class="tag t-gray">${h.type||"Regular"}</span>
+      </div>`).join("")}
+    </div>`:""}
+  </div>`;
+}
+function hrOpenAddHoliday(editId) {
+  const existing = editId ? hrLoad("hr_holidays").find(h=>h.id===editId)||{} : {};
+  openModal(editId?"Edit Holiday":"Add Holiday", `
+    <div class="form-row">
+      <div class="form-group"><label class="form-label">Holiday Name *</label><input class="form-control" id="hh-name" value="${existing.name||""}" placeholder="e.g. National Heroes Day"></div>
+      <div class="form-group"><label class="form-label">Date *</label><input class="form-control" id="hh-date" type="date" value="${existing.date||new Date().toISOString().slice(0,10)}"></div>
+    </div>
+    <div class="form-group"><label class="form-label">Type</label>
+      <select class="form-control" id="hh-type">
+        <option ${existing.type==="Regular"?"selected":""}>Regular</option>
+        <option ${existing.type==="Special Non-Working"?"selected":""}>Special Non-Working</option>
+        <option ${existing.type==="Company Holiday"?"selected":""}>Company Holiday</option>
+      </select></div>
+    <input type="hidden" id="hh-editid" value="${editId||""}">`,
+    `<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="hrSaveHoliday()">Save</button>`);
+}
+function hrSaveHoliday() {
+  const name = (document.getElementById("hh-name")||{}).value||"";
+  const date = (document.getElementById("hh-date")||{}).value||"";
+  if (!name.trim()||!date) { toast("Name and date required","error"); return; }
+  const editId = (document.getElementById("hh-editid")||{}).value;
+  const holidays = hrLoad("hr_holidays");
+  const entry = { id:editId||hrId(), name:name.trim(), date, type:(document.getElementById("hh-type")||{}).value||"Regular", createdAt:new Date().toISOString() };
+  if (editId) { const i=holidays.findIndex(h=>h.id===editId); if(i>=0) holidays[i]=entry; else holidays.push(entry); }
+  else holidays.push(entry);
+  hrSave("hr_holidays",holidays);
+  closeModal(); toast("Holiday saved.","success"); renderCurrentPage();
+}
+function hrDeleteHoliday(id) {
+  if (!confirm("Delete this holiday?")) return;
+  hrSave("hr_holidays", hrLoad("hr_holidays").filter(h=>h.id!==id));
+  toast("Deleted.","success"); renderCurrentPage();
+}
+function hrSeedPHHolidays() {
+  if (!confirm("Import 2025 Philippine Public Holidays? Existing entries will be kept.")) return;
+  const existing = hrLoad("hr_holidays");
+  const ph2025 = [
+    {name:"New Year's Day",date:"2025-01-01",type:"Regular"},
+    {name:"Araw ng Kagitingan",date:"2025-04-09",type:"Regular"},
+    {name:"Maundy Thursday",date:"2025-04-17",type:"Regular"},
+    {name:"Good Friday",date:"2025-04-18",type:"Regular"},
+    {name:"Black Saturday",date:"2025-04-19",type:"Special Non-Working"},
+    {name:"Labor Day",date:"2025-05-01",type:"Regular"},
+    {name:"Independence Day",date:"2025-06-12",type:"Regular"},
+    {name:"Ninoy Aquino Day",date:"2025-08-21",type:"Special Non-Working"},
+    {name:"National Heroes Day",date:"2025-08-25",type:"Regular"},
+    {name:"Bonifacio Day",date:"2025-11-30",type:"Regular"},
+    {name:"Feast of the Immaculate Conception",date:"2025-12-08",type:"Special Non-Working"},
+    {name:"Christmas Eve",date:"2025-12-24",type:"Special Non-Working"},
+    {name:"Christmas Day",date:"2025-12-25",type:"Regular"},
+    {name:"Rizal Day",date:"2025-12-30",type:"Regular"},
+    {name:"Last Day of the Year",date:"2025-12-31",type:"Special Non-Working"},
+    {name:"Eid'l Fitr",date:"2025-03-31",type:"Regular"},
+    {name:"Eid'l Adha",date:"2025-06-07",type:"Regular"}
+  ];
+  ph2025.forEach(h=>{
+    if (!existing.find(e=>e.date===h.date&&e.name===h.name))
+      existing.push({id:hrId(),...h,createdAt:new Date().toISOString()});
+  });
+  hrSave("hr_holidays",existing);
+  toast("2025 PH holidays imported.","success"); renderCurrentPage();
+}
+
+/* ── HR REPORTS & ANALYTICS ────────────────────────── */
+function renderHRReports() {
+  const team = APP.data.team || [];
+  const attendance = hrLoad("attendance");
+  const leaves = hrLoad("leaves");
+  const payroll = hrLoad("hr_payroll");
+  const training = hrLoad("hr_training");
+  const completions = hrLoad("hr_training_completions");
+  const performance = hrLoad("performance");
+  const today2 = new Date();
+  const monthStr = today2.toISOString().slice(0,7);
+  const monthAtt = attendance.filter(a=>a.date?.startsWith(monthStr));
+  const monthLeaves = leaves.filter(l=>l.startDate?.startsWith(monthStr)||l.endDate?.startsWith(monthStr));
+  const monthPayroll = payroll.filter(p=>p.period===monthStr);
+  const totalGross = monthPayroll.reduce((a,p)=>a+Number(p.grossPHP||0),0);
+  const totalNet = monthPayroll.reduce((a,p)=>a+Number(p.netPHP||0),0);
+  const avgRating = performance.length ? (performance.reduce((a,p)=>a+Number(p.rating||0),0)/performance.length).toFixed(1) : "—";
+  const attendanceRate = team.length>0&&monthAtt.length>0 ? Math.round((monthAtt.filter(a=>a.type==="present").length/monthAtt.length)*100) : 0;
+  const leavesByType = {};
+  leaves.forEach(l=>{ leavesByType[l.type] = (leavesByType[l.type]||0)+1; });
+  const trainingCompletion = completions.length ? Math.round((completions.filter(c=>c.status==="Completed").length/completions.length)*100) : 0;
+  return `<div>
+    <div style="margin-bottom:20px"><h2 style="font-size:20px;font-weight:800">Reports & Analytics</h2>
+    <div style="font-size:13px;color:var(--text3);margin-top:2px">${today2.toLocaleDateString("en-PH",{month:"long",year:"numeric"})}</div></div>
+
+    <!-- Summary Cards -->
+    <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:24px">
+      ${[
+        {label:"Attendance Rate",val:attendanceRate+"%",sub:"This month",color:"var(--teal)"},
+        {label:"Total Gross Payroll",val:"₱"+totalGross.toLocaleString(),sub:"This month",color:"var(--navy)"},
+        {label:"Avg Performance Rating",val:avgRating+"/5",sub:"All reviews",color:"var(--gold)"},
+        {label:"Training Completion",val:trainingCompletion+"%",sub:"All programs",color:"#8B5CF6"}
+      ].map(k=>`<div class="card" style="padding:16px;text-align:center;border-top:3px solid ${k.color}">
+        <div style="font-size:22px;font-weight:900;color:${k.color}">${k.val}</div>
+        <div style="font-size:12px;font-weight:600;margin-top:4px">${k.label}</div>
+        <div style="font-size:10px;color:var(--text3)">${k.sub}</div>
+      </div>`).join("")}
+    </div>
+
+    <!-- Two column reports -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-bottom:20px">
+      <!-- Attendance this month per person -->
+      <div class="card" style="padding:18px">
+        <div style="font-weight:700;font-size:14px;margin-bottom:14px">📅 Attendance Summary — ${today2.toLocaleDateString("en-PH",{month:"long"})}</div>
+        ${team.map(v=>{
+          const va_att = monthAtt.filter(a=>a.vaId===v.id);
+          const present = va_att.filter(a=>a.type==="present").length;
+          const absent = va_att.filter(a=>a.type==="absent").length;
+          const late = va_att.filter(a=>a.type==="late").length;
+          return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+            <div class="av av-sm ${v.avatarColor?'av-'+v.avatarColor:'av-navy'}">${v.initials}</div>
+            <div style="flex:1;font-size:13px;font-weight:600">${v.displayName}</div>
+            <div style="display:flex;gap:6px;font-size:11px">
+              <span style="color:var(--teal)">✓ ${present}</span>
+              <span style="color:var(--red)">✗ ${absent}</span>
+              <span style="color:var(--amber)">⚡ ${late}</span>
+            </div>
+          </div>`;
+        }).join("")}
+      </div>
+
+      <!-- Leave Summary -->
+      <div class="card" style="padding:18px">
+        <div style="font-weight:700;font-size:14px;margin-bottom:14px">🏖️ Leave Summary</div>
+        <div style="margin-bottom:12px">
+          ${Object.entries(leavesByType).map(([type,count])=>`
+          <div style="display:flex;align-items:center;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border)">
+            <span style="font-size:13px">${type}</span>
+            <span style="font-size:13px;font-weight:700;color:var(--navy)">${count} request${count!==1?"s":""}</span>
+          </div>`).join("")||`<div style="color:var(--text3);font-size:13px">No leave data yet.</div>`}
+        </div>
+        <div style="padding-top:8px">
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+            <span>Pending</span><span style="font-weight:700;color:var(--amber)">${leaves.filter(l=>l.status==="Pending").length}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:4px">
+            <span>Approved</span><span style="font-weight:700;color:var(--teal)">${leaves.filter(l=>l.status==="Approved").length}</span>
+          </div>
+          <div style="display:flex;justify-content:space-between;font-size:13px">
+            <span>Rejected</span><span style="font-weight:700;color:var(--red)">${leaves.filter(l=>l.status==="Rejected").length}</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payroll + Performance -->
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px">
+      <div class="card" style="padding:18px">
+        <div style="font-weight:700;font-size:14px;margin-bottom:14px">💰 Payroll — ${today2.toLocaleDateString("en-PH",{month:"long"})}</div>
+        ${monthPayroll.length ? monthPayroll.map(p=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:7px 0;border-bottom:1px solid var(--border)">
+          <div style="font-size:13px;font-weight:600">${p.name||"—"}</div>
+          <div style="text-align:right"><div style="font-size:13px;font-weight:700;color:var(--teal)">₱${Number(p.netPHP||0).toLocaleString()}</div>
+          <div style="font-size:10px;color:var(--text3)">Gross: ₱${Number(p.grossPHP||0).toLocaleString()}</div></div>
+        </div>`).join("") : `<div style="color:var(--text3);font-size:13px;text-align:center;padding:20px">No payroll data this month.</div>`}
+        ${monthPayroll.length?`<div style="padding-top:10px;display:flex;justify-content:space-between;font-weight:700;border-top:2px solid var(--border)">
+          <span>Total Net Pay</span><span style="color:var(--teal)">₱${totalNet.toLocaleString()}</span>
+        </div>`:""}
+      </div>
+      <div class="card" style="padding:18px">
+        <div style="font-weight:700;font-size:14px;margin-bottom:14px">⭐ Performance Overview</div>
+        ${team.map(v=>{
+          const vRev = performance.filter(p=>p.vaId===v.id);
+          const avg = vRev.length ? (vRev.reduce((a,p)=>a+Number(p.rating||0),0)/vRev.length).toFixed(1) : null;
+          return `<div style="display:flex;align-items:center;gap:10px;padding:7px 0;border-bottom:1px solid var(--border)">
+            <div class="av av-sm ${v.avatarColor?'av-'+v.avatarColor:'av-navy'}">${v.initials}</div>
+            <div style="flex:1;font-size:13px;font-weight:600">${v.displayName}</div>
+            ${avg!==null?`<div style="display:flex;align-items:center;gap:4px"><span style="color:var(--gold);font-size:14px">${"★".repeat(Math.round(Number(avg)))}</span><span style="font-size:12px;font-weight:700">${avg}</span></div>`:`<span style="font-size:11px;color:var(--text3)">No reviews</span>`}
+          </div>`;
+        }).join("")}
+      </div>
+    </div>
+  </div>`;
+}
+
+/* ── hrLoad2 / hrSave2 shim if not defined ── */
+if (typeof hrLoad2 === "undefined") {
+  window.hrLoad2 = function(key) { try { return JSON.parse(localStorage.getItem("tjc_hr2_"+key)||"[]"); } catch(e) { return []; } };
+  window.hrSave2 = function(key,val) { try { localStorage.setItem("tjc_hr2_"+key,JSON.stringify(val)); } catch(e) {} };
+}
+if (typeof hrId2 === "undefined") {
+  window.hrId2 = function() { return "h2_"+Date.now()+"_"+Math.random().toString(36).slice(2,7); };
+}
 </script>
