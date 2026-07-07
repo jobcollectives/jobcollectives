@@ -1,0 +1,21 @@
+# ── Secrets — never commit these ──
+.env
+.env.*
+!.env.example
+*.pem
+*.key
+*secret*
+*service_role*
+supabase/.temp/
+supabase/.branches/
+
+# ── OS / editor cruft ──
+.DS_Store
+Thumbs.db
+*.swp
+.vscode/
+.idea/
+
+# ── Local scratch ──
+*.local.html
+/tmp/

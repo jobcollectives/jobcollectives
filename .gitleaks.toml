@@ -1,0 +1,12 @@
+title = "gitleaks config for jobcollectives/jobcollectives"
+
+[extend]
+useDefault = true
+
+# sb_publishable_... keys are meant to be public (client-safe, RLS-gated).
+# Only sb_secret_... keys and Supabase service_role JWTs are real leaks.
+[allowlist]
+description = "Known-public Supabase publishable keys"
+regexes = [
+  '''sb_publishable_[A-Za-z0-9_-]+''',
+]
