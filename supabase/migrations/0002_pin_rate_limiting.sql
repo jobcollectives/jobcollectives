@@ -83,6 +83,12 @@ end;
 $$;
 
 -- 3. Re-create verify_login_pin with the lockout gate ---------------------------
+-- Must drop first: the return shape (OUT columns) is changing from
+-- 0001's (ok, id, display_name, role, initials, color) to add
+-- (locked, retry_after), and Postgres does not allow CREATE OR REPLACE
+-- to change a function's return type.
+drop function if exists public.verify_login_pin(text, text, text);
+
 create or replace function public.verify_login_pin(p_table text, p_row_id text, p_pin text)
 returns table(ok boolean, id text, display_name text, role text, initials text, color text,
               locked boolean, retry_after timestamptz)
@@ -132,6 +138,11 @@ $$;
 grant execute on function public.verify_login_pin(text, text, text) to anon, authenticated;
 
 -- 4. Re-create set_login_pin with the same lockout gate --------------------------
+-- Must drop first: 0001 returned a bare boolean, this version returns
+-- a table(ok, locked, retry_after) — again, not a compatible in-place
+-- return-type change for CREATE OR REPLACE.
+drop function if exists public.set_login_pin(text, text, text, text);
+
 create or replace function public.set_login_pin(p_table text, p_row_id text, p_old_pin text, p_new_pin text)
 returns table(ok boolean, locked boolean, retry_after timestamptz)
 language plpgsql
