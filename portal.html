@@ -10395,10 +10395,19 @@ async function sbSetPin(table, rowId, oldPin, newPin) {
       body: JSON.stringify({ p_table: table, p_row_id: rowId, p_old_pin: oldPin, p_new_pin: newPin })
     });
     if (!resp.ok) return null;
-    return await resp.json();
+    const rows = await resp.json();
+    return Array.isArray(rows) && rows.length ? rows[0] : { ok: false };
   } catch (e) {
     return null;
   }
+}
+function pinLockMessage(retryAfter) {
+  var mins = 15;
+  if (retryAfter) {
+    var ms = new Date(retryAfter).getTime() - Date.now();
+    mins = Math.max(1, Math.ceil(ms / 60000));
+  }
+  return "Too many incorrect attempts. Try again in " + mins + " minute" + (mins === 1 ? "" : "s") + ".";
 }
 function ownerUsernameSubmit() {
   const input = document.getElementById("owner-uname-input");
@@ -10427,6 +10436,12 @@ async function ownerPinSubmit2() {
   }
   const enteredPin = APP.ownerAuth.pinEntry;
   const serverResult = await sbVerifyPin("mgmt_users", acct.id, enteredPin);
+  if (serverResult && serverResult.locked) {
+    APP.ownerAuth.pinEntry = "";
+    toast(pinLockMessage(serverResult.retry_after), "error");
+    renderCurrentPage();
+    return;
+  }
   const ok = serverResult ? serverResult.ok : enteredPin === acct.pin;
   if (ok) {
     APP.user.uid = acct.id;
@@ -10531,6 +10546,12 @@ async function hrPinSubmit2() {
   }
   const enteredPin = auth.pinEntry;
   const serverResult = await sbVerifyPin("hr_accounts", acct.id, enteredPin);
+  if (serverResult && serverResult.locked) {
+    APP.hrAuth.pinEntry = "";
+    toast(pinLockMessage(serverResult.retry_after), "error");
+    renderCurrentPage();
+    return;
+  }
   const ok = serverResult ? serverResult.ok : enteredPin === acct.pin;
   if (ok) {
     APP.hr = APP.hr || {};
@@ -12047,7 +12068,10 @@ async function saveFounderPIN(id, currentPin){
   const serverResult = await sbSetPin('mgmt_users', id, oldVal, newVal);
   if (serverResult === null) {
     if (oldVal !== currentPin) { toast('Current PIN is incorrect', 'error'); return; }
-  } else if (serverResult !== true) {
+  } else if (serverResult.locked) {
+    toast(pinLockMessage(serverResult.retry_after), 'error');
+    return;
+  } else if (!serverResult.ok) {
     toast('Current PIN is incorrect', 'error');
     return;
   }
