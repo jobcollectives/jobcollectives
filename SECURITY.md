@@ -39,17 +39,17 @@ Settings → Developer settings → revoke the token) rather than relying on
 `git revert` — the value is already in history and public forever once
 pushed to a public repo.
 
-## Known residual risk
+## Rate limiting / brute-force protection
 
-`verify_login_pin` / `set_login_pin` are callable with just the public
+`verify_login_pin` and `set_login_pin` are callable with just the public
 `anon`/publishable key (there's no full user-session layer in this app),
-so they should be rate-limited to prevent PIN brute-forcing:
-
-- Supabase Dashboard → API → enable rate limiting on
-  `/rest/v1/rpc/verify_login_pin` and `/rest/v1/rpc/set_login_pin`, or
-- Add an attempts/lockout table and check it inside the functions.
-
-This has not been implemented yet — treat it as an open item.
+so both are protected by a server-side lockout:
+[`supabase/migrations/0002_pin_rate_limiting.sql`](supabase/migrations/0002_pin_rate_limiting.sql)
+adds a `login_attempts` table — **5 failed attempts on an account locks it
+for 15 minutes**, tracked per account (`mgmt_users`/`hr_accounts` row),
+shared between the login check and the "current PIN" check when changing
+a PIN. A successful check resets the counter. The client surfaces this as
+a "Too many incorrect attempts, try again in N minutes" message.
 
 ## Reporting a vulnerability
 
