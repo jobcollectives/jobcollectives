@@ -5722,11 +5722,6 @@ function renderAuthChooser() {
         <div class="auth-title">Job Collectives</div>
         <div class="auth-sub">Business OS \xB7 Choose how you'd like to sign in</div>
         <div class="auth-role-grid">
-          <div class="auth-role-btn" onclick="APP.authStep='owner-pin';APP.ownerPinEntry='';renderCurrentPage()">
-            <div class="auth-role-icon">${ic("briefcase", 22)}</div>
-            <div class="auth-role-label">Management</div>
-            <div class="auth-role-sub">Owner / HR</div>
-          </div>
           <div class="auth-role-btn" onclick="APP.authStep='va-select';APP.va.vaId=null;APP.va.pinEntry='';renderCurrentPage()">
             <div class="auth-role-icon">${ic("users", 22)}</div>
             <div class="auth-role-label">Partner / Staff</div>
@@ -5740,18 +5735,6 @@ function renderAuthChooser() {
         </div>
         <div style="font-size:11px;color:var(--text3)">Secure \xB7 Role-based access control</div>
       </div>
-    </div></div>`;
-  }
-  if (step === "owner-pin") {
-    const filled = APP.ownerPinEntry.length;
-    return `<div class="auth-wrap"><div class="auth-card">
-      <div style="margin-bottom:12px;color:var(--navy)">${ic("lock", 28)}</div>
-      <div class="auth-title">Management Login</div>
-      <div class="auth-sub">Enter your 6-digit PIN to access the full dashboard</div>
-      ${pinDotsWrap(`<div class="pin-row">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}" id="opd-${i}"></div>`).join("")}</div>`, pinTypeInputHtml(filled, "ownerPinPress", "checkOwnerPin"))}
-      <div class="pin-pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, "\u2190", 0, ""].map((k) => `<button class="pin-key" onclick="ownerPinPress('${k}')">${k}</button>`).join("")}</div>
-      <button class="btn btn-secondary w-full" style="margin-top:8px" onclick="APP.authStep='choose';renderCurrentPage()">\u2190 Back</button>
-      <div style="font-size:11px;color:var(--text3);margin-top:10px">Default PIN: 000000 \xB7 Change in Settings</div>
     </div></div>`;
   }
   if (step === "va-select") {
@@ -5858,36 +5841,6 @@ function renderAuthChooser() {
     </div></div>`;
   }
   return "";
-}
-function ownerPinPress(k) {
-  if (k === "\u2190") {
-    APP.ownerPinEntry = APP.ownerPinEntry.slice(0, -1);
-    renderCurrentPage();
-    return;
-  }
-  if (k === "" || APP.ownerPinEntry.length >= 6) {
-    checkOwnerPin();
-    return;
-  }
-  APP.ownerPinEntry += k;
-  renderCurrentPage();
-  if (APP.ownerPinEntry.length === 6) setTimeout(checkOwnerPin, 180);
-}
-function checkOwnerPin() {
-  if (APP.ownerPinEntry === CFG.ownerPin) {
-    APP.authMode = "owner";
-    APP.authStep = "choose";
-    buildNav();
-    buildTopbarActions();
-    buildBottomNav();
-    updateUserInfo();
-    navigate("home");
-    toast("Welcome back, TJC HQ! ", "success");
-  } else {
-    APP.ownerPinEntry = "";
-    renderCurrentPage();
-    toast("Incorrect PIN.", "error");
-  }
 }
 function ownerLogout() {
   APP.authMode = null;
@@ -6432,36 +6385,6 @@ function renderClientFacingPortal() {
     </div>`;
   }
   return `<div style="display:flex;flex-direction:column;height:100vh;overflow:hidden">${topbar}<div class="portal-layout" style="display:flex;flex:1;overflow:hidden">${tabBar}<div class="cp-portal-body">${body}</div></div></div>`;
-}
-function openChangeOwnerPin() {
-  openModal(
-    "Change Owner PIN",
-    `
-    <div class="form-group"><label class="form-label">Current PIN</label><input type="password" class="form-control" id="f-pin-old" maxlength="6" placeholder="\u2022\u2022\u2022\u2022\u2022\u2022"></div>
-    <div class="form-group"><label class="form-label">New PIN (6 digits)</label><input type="password" class="form-control" id="f-pin-new" maxlength="6" placeholder="\u2022\u2022\u2022\u2022\u2022\u2022"></div>
-    <div class="form-group"><label class="form-label">Confirm New PIN</label><input type="password" class="form-control" id="f-pin-confirm" maxlength="6" placeholder="\u2022\u2022\u2022\u2022\u2022\u2022"></div>`,
-    `<button class="btn btn-secondary" onclick="closeModal()">Cancel</button><button class="btn btn-primary" onclick="saveOwnerPin()">Save PIN</button>`
-  );
-}
-function saveOwnerPin() {
-  const old = document.getElementById("f-pin-old").value;
-  const n = document.getElementById("f-pin-new").value;
-  const c = document.getElementById("f-pin-confirm").value;
-  if (old !== CFG.ownerPin) {
-    toast("Current PIN is incorrect.", "error");
-    return;
-  }
-  if (n.length !== 6 || !/^\d+$/.test(n)) {
-    toast("PIN must be exactly 6 digits.", "error");
-    return;
-  }
-  if (n !== c) {
-    toast("New PINs do not match.", "error");
-    return;
-  }
-  CFG.ownerPin = n;
-  closeModal();
-  toast("Owner PIN updated successfully!", "success");
 }
 function openSetClientPin(clientId) {
   const c = APP.data.clients.find((x) => x.id === clientId);
