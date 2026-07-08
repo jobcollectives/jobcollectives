@@ -295,11 +295,11 @@ html,body{height:100%;font-family:var(--font);font-size:14px;color:var(--text);b
 .data-table th{text-align:left;padding:7px 12px;font-size:10px;font-weight:600;color:var(--text3);border-bottom:1px solid var(--border);text-transform:uppercase;letter-spacing:.04em;white-space:nowrap}
 .data-table td{padding:8px 12px;border-bottom:1px solid var(--border);vertical-align:middle;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .data-table tr:last-child td{border-bottom:none}
-.data-table tbody tr:hover td{background:#FAFBFE;cursor:pointer}
+.data-table tbody tr:hover td{background:var(--hover-row-bg);cursor:pointer}
 .task-row{display:flex;align-items:center;gap:8px;padding:8px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s}
 .task-row:last-child{border-bottom:none}
-.task-row:hover{background:#FAFBFE}
-.task-row.overdue-row{background:#FFF8F8}
+.task-row:hover{background:var(--hover-row-bg)}
+.task-row.overdue-row{background:var(--overdue-row-bg)}
 .chk{width:15px;height:15px;border-radius:4px;border:1.5px solid var(--border2);flex-shrink:0;position:relative;transition:all .15s;cursor:pointer}
 .chk.done{background:var(--teal);border-color:var(--teal)}
 .chk.done::after{content:'';position:absolute;left:3px;top:.5px;width:5px;height:8px;border:2px solid #fff;border-top:none;border-left:none;transform:rotate(45deg)}
@@ -550,7 +550,7 @@ select.form-control{cursor:pointer}
 .sp-view-btn.on{background:var(--surface);color:var(--text);font-weight:600;box-shadow:0 1px 3px rgba(0,0,0,.08)}
 .sp-date-range{font-size:11px;color:var(--text2);background:var(--bg);border:1px solid var(--border);border-radius:var(--r);padding:5px 10px}
 .sp-content-row{display:flex;align-items:center;gap:10px;padding:10px 12px;border-bottom:1px solid var(--border);cursor:pointer;transition:background .12s}
-.sp-content-row:hover{background:#FAFBFE}
+.sp-content-row:hover{background:var(--hover-row-bg)}
 .sp-content-row:last-child{border-bottom:none}
 .sp-platform-icon{width:28px;height:28px;border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;flex-shrink:0}
 .sp-thumb{width:44px;height:44px;border-radius:6px;object-fit:cover;background:var(--border);flex-shrink:0;display:block}
@@ -1760,7 +1760,16 @@ const PAGE_TITLES = {
   vaportal: "Partner Portal",
   clientportal: "Client Portal",
   sops: "SOP Library",
-  jobs: "Job Openings"
+  jobs: "Job Openings",
+  "growth-pipeline": "Sales & Deployment Pipeline",
+  "growth-channels": "Channel Performance Matrix",
+  "growth-funnel": "Client Base Funnel",
+  "growth-content-health": "Content Approval Health",
+  "growth-reach": "Aggregate Reach & Leads",
+  "growth-pillars": "Content Pillar Efficiency",
+  "growth-partnerships": "Strategic Partnerships",
+  "growth-workforce": "Workforce Supply Alignment",
+  "social-planner": "Social Planner"
 };
 const lsKey = (col) => "tjc_v3_" + col;
 function lsLoad(col) {
@@ -2131,6 +2140,7 @@ function buildNav() {
     { page: "clients", icon: "clients", label: "Pipeline" },
     { page: "tasks", icon: "tasks", label: "Tasks" },
     { page: "content", icon: "content", label: "Content Queue", badge: "content" },
+    { page: "social-planner", icon: "calendar", label: "Social Planner" },
     { page: "invoices", icon: "invoices", label: "Invoices", badge: "invoices" },
     { page: "onboarding", icon: "onboard", label: "Onboarding" },
     { sect: "Team & Company" },
@@ -2138,6 +2148,15 @@ function buildNav() {
     { page: "jobs", icon: "jobsicon", label: "Job Openings" },
     { page: "sops", icon: "sops", label: "SOP Library" },
     { page: "goals", icon: "goals", label: "OKR Goals" },
+    { sect: "Growth Analytics" },
+    { page: "growth-pipeline", icon: "kpi", label: "Sales Pipeline" },
+    { page: "growth-channels", icon: "activity", label: "Channel Matrix" },
+    { page: "growth-funnel", icon: "clients", label: "Client Funnel" },
+    { page: "growth-content-health", icon: "content", label: "Content Health" },
+    { page: "growth-reach", icon: "finance", label: "Reach & Leads" },
+    { page: "growth-pillars", icon: "sops", label: "Content Pillars" },
+    { page: "growth-partnerships", icon: "team", label: "Partnerships" },
+    { page: "growth-workforce", icon: "capacity", label: "Workforce Alignment" },
     { sect: "Communication" },
     { page: "conversations", icon: "conv", label: "Conversations", badge: "conversations" },
     { sect: "Portals & Calendar" },
@@ -2204,7 +2223,47 @@ function navigate(page, el) {
   document.querySelectorAll(".bn-item").forEach((i) => i.classList.toggle("on", i.dataset.page === page));
   renderCurrentPage();
   if (window.innerWidth <= 680) closeSidebar();
+  _tjcPushHistory("page", page);
 }
+// ── Keep the browser Back button inside the portal ──────────────────
+// In-app navigation (main sections, VA tabs, client-portal tabs) each
+// push a real history entry. Back/forward then move between those
+// views instead of the browser's default: leaving the document
+// entirely on the very first press. If Back is pressed enough times
+// to exhaust that in-app history while the user is still logged in,
+// the last view is re-anchored rather than letting the browser carry
+// on to whatever page was open before the portal.
+function _tjcPushHistory(kind, value) {
+  try {
+    var cur = history.state;
+    if (cur && cur.tjcNav && cur.kind === kind && cur.value === value) return;
+    history.pushState({ tjcNav: true, kind: kind, value: value }, "", "#" + kind + "-" + value);
+  } catch (e) {}
+}
+window.addEventListener("popstate", function(e) {
+  if (!APP.authMode) return;
+  var st = e.state;
+  if (st && st.tjcNav) {
+    if (st.kind === "page") {
+      APP.page = st.value;
+      var titleEl = document.getElementById("page-title");
+      if (titleEl) titleEl.textContent = PAGE_TITLES[st.value] || st.value;
+      document.querySelectorAll(".sb-item").forEach((i) => i.classList.toggle("on", i.dataset.page === st.value));
+      document.querySelectorAll(".bn-item").forEach((i) => i.classList.toggle("on", i.dataset.page === st.value));
+    } else if (st.kind === "vatab") {
+      APP.va.tab = st.value;
+    } else if (st.kind === "cptab") {
+      APP.cpTab = st.value;
+    }
+    renderCurrentPage();
+  } else {
+    // Ran out of in-app history while still logged in — stay put.
+    var marker = APP.authMode === "va" ? { kind: "vatab", value: APP.va.tab }
+               : APP.authMode === "client" ? { kind: "cptab", value: APP.cpTab }
+               : { kind: "page", value: APP.page || "home" };
+    _tjcPushHistory(marker.kind, marker.value);
+  }
+});
 function setAppShellMode(mode) {
   const shell = document.getElementById("app-shell");
   if (shell) shell.className = mode || "";
@@ -2251,7 +2310,16 @@ function renderCurrentPage() {
     clientportal: renderClientPortal,
     conversations: renderConversations,
     calendar: () => renderCalendarView("management", "all", "All Teams"),
-    sops: renderSOPLibrary
+    sops: renderSOPLibrary,
+    "growth-pipeline": renderGrowthPipeline,
+    "growth-channels": renderGrowthChannels,
+    "growth-funnel": renderGrowthFunnel,
+    "growth-content-health": renderGrowthContentHealth,
+    "growth-reach": renderGrowthReach,
+    "growth-pillars": renderGrowthPillars,
+    "growth-partnerships": renderGrowthPartnerships,
+    "growth-workforce": renderGrowthWorkforce,
+    "social-planner": renderSocialPlanner
   };
   const fn = pages[APP.page];
   ca.innerHTML = fn ? fn() : '<div class="empty"><div class="empty-text">Page not found.</div></div>';
@@ -2801,7 +2869,7 @@ function renderTasks() {
       <thead><tr><th></th><th>Task</th><th>Assignee</th><th>Priority</th><th>Due Date</th><th>Project</th><th>SLA</th><th></th></tr></thead>
       <tbody>${shown.map((t) => {
     const late = t.dueDate && t.dueDate < td && !t.done;
-    return `<tr style="background:${late ? "#FFF8F8" : t.requestedByClient ? "#FFFDF0" : ""}${t.isOos ? ";border-left:3px solid var(--purple)" : t.requestedByClient ? ";border-left:3px solid var(--gold)" : ""}" onclick="openTaskDetail('${t.id}')"><td onclick="event.stopPropagation();toggleTask('${t.id}')"><div class="chk${t.done ? " done" : ""}"></div></td><td style="font-weight:${t.done ? 400 : 500}" class="${t.done ? "task-name done" : ""}">${t.isOos ? `<span class="oos-badge">OOS</span> ` : ""}${t.requestedByClient ? `<span class="tag t-amber" style="font-size:9px;margin-right:4px">Client \u2191</span>` : ""}${t.title}</td><td><div style="display:flex;align-items:center;gap:4px">${t.assigneeInitials ? `<div class="av av-xs ${avColor(t.assigneeColor)}">${t.assigneeInitials}</div>` : ""}<span style="font-size:11px">${(t.assigneeName || "").split(" ")[0] || "\u2014"}</span></div></td><td>${tagHtml(t.priority)}</td><td style="font-size:11px;color:${late ? "var(--red)" : "var(--text3)"}">${late ? " Overdue" : t.dueDate || "\u2014"}</td><td style="font-size:11px;color:var(--text3)">${t.project || "\u2014"}</td><td>${SLA.badge(t)}</td><td onclick="event.stopPropagation()"><button class="btn-icon" onclick="archiveDoc('tasks','${t.id}','${t.title.slice(0, 30)}')" style="opacity:0" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0" title="Archive">${ic("archive", 13)}</button></td></tr>`;
+    return `<tr style="background:${late ? "var(--overdue-row-bg)" : t.requestedByClient ? "var(--client-row-bg)" : ""}${t.isOos ? ";border-left:3px solid var(--purple)" : t.requestedByClient ? ";border-left:3px solid var(--gold)" : ""}" onclick="openTaskDetail('${t.id}')"><td onclick="event.stopPropagation();toggleTask('${t.id}')"><div class="chk${t.done ? " done" : ""}"></div></td><td style="font-weight:${t.done ? 400 : 500}" class="${t.done ? "task-name done" : ""}">${t.isOos ? `<span class="oos-badge">OOS</span> ` : ""}${t.requestedByClient ? `<span class="tag t-amber" style="font-size:9px;margin-right:4px">Client \u2191</span>` : ""}${t.title}</td><td><div style="display:flex;align-items:center;gap:4px">${t.assigneeInitials ? `<div class="av av-xs ${avColor(t.assigneeColor)}">${t.assigneeInitials}</div>` : ""}<span style="font-size:11px">${(t.assigneeName || "").split(" ")[0] || "\u2014"}</span></div></td><td>${tagHtml(t.priority)}</td><td style="font-size:11px;color:${late ? "var(--red)" : "var(--text3)"}">${late ? " Overdue" : t.dueDate || "\u2014"}</td><td style="font-size:11px;color:var(--text3)">${t.project || "\u2014"}</td><td>${SLA.badge(t)}</td><td onclick="event.stopPropagation()"><button class="btn-icon" onclick="archiveDoc('tasks','${t.id}','${t.title.slice(0, 30)}')" style="opacity:0" onmouseenter="this.style.opacity=1" onmouseleave="this.style.opacity=0" title="Archive">${ic("archive", 13)}</button></td></tr>`;
   }).join("")}</tbody>
     </table>
     ${shown.length === 0 ? emptyState("No tasks in this view.") : ""}
@@ -3010,7 +3078,7 @@ function renderInvoices() {
   </div>
   <div class="card">
     ${invs.map((inv) => `
-    <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);background:${inv.status === "Overdue" ? "#FFF8F8" : ""};transition:background .1s" onmouseover="this.style.background='var(--hover-row-bg)'" onmouseout="this.style.background='${inv.status === "Overdue" ? "#FFF8F8" : ""}'" onclick="openInvoiceDetail('${inv.id}')">
+    <div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);background:${inv.status === "Overdue" ? "var(--overdue-row-bg)" : ""};transition:background .1s" onmouseover="this.style.background='var(--hover-row-bg)'" onmouseout="this.style.background='${inv.status === "Overdue" ? "var(--overdue-row-bg)" : ""}'" onclick="openInvoiceDetail('${inv.id}')">
       <span style="font-size:11px;color:var(--text3);min-width:80px;font-weight:500">${inv.number}</span>
       <span style="font-size:13px;font-weight:500;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">${inv.client}</span>
       <span class="tag ${invoiceTag(inv.status)}">${inv.status}</span>
@@ -3084,7 +3152,7 @@ function renderVALogin() {
   }
   const va = APP.data.team.find((v) => v.id === APP.va.vaId);
   const filled = APP.va.pinEntry.length;
-  return `<div class="login-wrap"><div class="login-card"><div class="av av-lg ${avColor(va.avatarColor)}" style="margin:0 auto 10px">${va.initials}</div><div style="font-size:17px;font-weight:700;margin-bottom:3px">Hi, ${va.displayName.split(" ")[0]}! </div><div style="font-size:12px;color:var(--text3);margin-bottom:4px">Enter your 6-digit PIN</div><div class="pin-row">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}" id="pd-${i}"></div>`).join("")}</div>${pinTypeInputHtml(filled, "pinPress", "checkPin")}<div class="pin-pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, "\u2190", 0, ""].map((k) => `<button class="pin-key" onclick="pinPress('${k}')">${k}</button>`).join("")}</div><button class="btn btn-secondary w-full" onclick="APP.va.vaId=null;APP.va.pinEntry='';renderCurrentPage()">\u2190 Back</button><div style="font-size:10px;color:var(--text3);margin-top:10px">Default PIN: 123456</div></div></div>`;
+  return `<div class="login-wrap"><div class="login-card"><div class="av av-lg ${avColor(va.avatarColor)}" style="margin:0 auto 10px">${va.initials}</div><div style="font-size:17px;font-weight:700;margin-bottom:3px">Hi, ${va.displayName.split(" ")[0]}! </div><div style="font-size:12px;color:var(--text3);margin-bottom:4px">Enter your 6-digit PIN</div>${pinDotsWrap(`<div class="pin-row">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}" id="pd-${i}"></div>`).join("")}</div>`, pinTypeInputHtml(filled, "pinPress", "checkPin"))}<div class="pin-pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, "\u2190", 0, ""].map((k) => `<button class="pin-key" onclick="pinPress('${k}')">${k}</button>`).join("")}</div><button class="btn btn-secondary w-full" onclick="APP.va.vaId=null;APP.va.pinEntry='';renderCurrentPage()">\u2190 Back</button><div style="font-size:10px;color:var(--text3);margin-top:10px">Default PIN: 123456</div></div></div>`;
 }
 function selectVA(id) {
   APP.va.vaId = id;
@@ -3098,7 +3166,10 @@ function updatePinDots() {
     if (d) d.className = "pin-dot" + (i < filled ? " filled" : "");
   });
 }
-// ── Typed-PIN support: lets any pin-pad screen also accept keyboard input ──
+// ── Typed-PIN support: lets any pin-pad screen also accept keyboard input.
+// No visible textbox — an invisible input sits exactly over the dots row,
+// so tapping/typing on the dots themselves is what accepts input. The
+// dots remain the only thing the user sees update. ──
 function handlePinTypedInput(inputEl, prevLen, pressFnName) {
   var digits = inputEl.value.replace(/\D/g, '').slice(0, 6);
   var fn = window[pressFnName];
@@ -3111,8 +3182,8 @@ function handlePinTypedInput(inputEl, prevLen, pressFnName) {
 }
 function pinTypeInputHtml(prevLen, pressFnName, submitFnName){
   return '<input type="tel" inputmode="numeric" autocomplete="one-time-code" maxlength="6" ' +
-    'class="form-control" placeholder="Or type your 6-digit PIN" autofocus ' +
-    'style="text-align:center;letter-spacing:6px;font-size:16px;margin-bottom:10px" ' +
+    'aria-label="Type your PIN" autofocus ' +
+    'style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0;margin:0;cursor:pointer;background:transparent" ' +
     'oninput="handlePinTypedInput(this,' + prevLen + ',\'' + pressFnName + '\')" ' +
     (submitFnName ? 'onkeydown="if(event.key===\'Enter\'){' + submitFnName + '();}" ' : '') +
     '>';
@@ -3120,12 +3191,17 @@ function pinTypeInputHtml(prevLen, pressFnName, submitFnName){
 function pinTypeInputHtmlPath(prevLen, statePathExpr, submitFnName){
   // For screens without a dedicated pressFn (e.g. mgmt/HR auth), write straight to the state path
   return '<input type="tel" inputmode="numeric" autocomplete="one-time-code" maxlength="6" ' +
-    'class="form-control" placeholder="Or type your 6-digit PIN" autofocus ' +
-    'style="text-align:center;letter-spacing:6px;font-size:16px;margin-bottom:10px" ' +
+    'aria-label="Type your PIN" autofocus ' +
+    'style="position:absolute;inset:0;width:100%;height:100%;opacity:0;border:0;padding:0;margin:0;cursor:pointer;background:transparent" ' +
     'oninput="' + statePathExpr + '=this.value.replace(/\\D/g,\'\').slice(0,6);' +
       'if(' + statePathExpr + '.length===6){' + submitFnName + '();}else{renderCurrentPage();}" ' +
     'onkeydown="if(event.key===\'Enter\'){if(' + statePathExpr + '.length===6){' + submitFnName + '();}else{toast(\'Enter all 6 digits\',\'error\');}}" ' +
     '>';
+}
+// Wraps a dots-row block + its overlay input together with a generous
+// invisible tap target (44px+ tall, per mobile accessibility guidelines).
+function pinDotsWrap(dotsHtml, overlayInputHtml){
+  return '<div style="position:relative;display:inline-block;padding:16px 22px;margin:0 auto 6px">' + dotsHtml + overlayInputHtml + '</div>';
 }
 function pinPress(k) {
   if (k === "\u2190") {
@@ -3171,6 +3247,7 @@ function setVATab(t) {
   APP.va.tab = t;
   renderCurrentPage();
   updateFloatingTimer();
+  _tjcPushHistory("vatab", t);
 }
 function renderVADashboard() {
   const va = APP.data.team.find((v) => v.id === APP.va.vaId);
@@ -3842,7 +3919,7 @@ function renderCPContacts(c) {
 }
 function renderCPTasksBody(myTasks) {
   const td = today();
-  return myTasks.map((t) => `<tr style="background:${t.dueDate && t.dueDate < td && !t.done ? "#FFF8F8" : ""}" onclick="toggleTask('${t.id}')"><td onclick="event.stopPropagation();toggleTask('${t.id}')"><div class="chk${t.done ? " done" : ""}"></div></td><td style="font-weight:${t.done ? 400 : 500}" class="${t.done ? "task-name done" : ""}">${t.isOos ? `<span class="oos-badge">OOS</span> ` : ""}${t.title}</td><td><div style="display:flex;align-items:center;gap:4px">${t.assigneeInitials ? `<div class="av av-xs ${avColor(t.assigneeColor)}">${t.assigneeInitials}</div>` : ""}<span style="font-size:11px">${(t.assigneeName || "").split(" ")[0] || "\u2014"}</span></div></td><td>${tagHtml(t.priority)}</td><td style="font-size:11px;color:${t.dueDate && t.dueDate < td && !t.done ? "var(--red)" : "var(--text3)"}">${t.dueDate && t.dueDate < td && !t.done ? " Overdue" : t.dueDate || "\u2014"}</td><td>${SLA.badge(t)}</td></tr>`).join("");
+  return myTasks.map((t) => `<tr style="background:${t.dueDate && t.dueDate < td && !t.done ? "var(--overdue-row-bg)" : ""}" onclick="toggleTask('${t.id}')"><td onclick="event.stopPropagation();toggleTask('${t.id}')"><div class="chk${t.done ? " done" : ""}"></div></td><td style="font-weight:${t.done ? 400 : 500}" class="${t.done ? "task-name done" : ""}">${t.isOos ? `<span class="oos-badge">OOS</span> ` : ""}${t.title}</td><td><div style="display:flex;align-items:center;gap:4px">${t.assigneeInitials ? `<div class="av av-xs ${avColor(t.assigneeColor)}">${t.assigneeInitials}</div>` : ""}<span style="font-size:11px">${(t.assigneeName || "").split(" ")[0] || "\u2014"}</span></div></td><td>${tagHtml(t.priority)}</td><td style="font-size:11px;color:${t.dueDate && t.dueDate < td && !t.done ? "var(--red)" : "var(--text3)"}">${t.dueDate && t.dueDate < td && !t.done ? " Overdue" : t.dueDate || "\u2014"}</td><td>${SLA.badge(t)}</td></tr>`).join("");
 }
 function renderCPTasks(c, myTasks) {
   const td = today();
@@ -3850,7 +3927,7 @@ function renderCPTasks(c, myTasks) {
 }
 function renderCPFinance(c, myInvs, totalBilledUsd, totalPaidUsd, margin) {
   const outUsd = myInvs.filter((i) => ["Sent", "Overdue"].includes(i.status)).reduce((a, i) => a + i.amountUsd, 0);
-  return `<div class="fin-summary" style="margin-bottom:16px"><div class="fin-box"><div class="fin-box-label">Monthly Rate</div><div class="fin-box-usd">$${c.rateUsd}/mo</div><div class="fin-box-php">\u20B1${FIN.toPhp(c.rateUsd).toLocaleString()}/mo</div></div><div class="fin-box"><div class="fin-box-label">Partner Cost</div><div class="fin-box-usd" style="color:var(--red)">\u20B1${c.vaCostPhp.toLocaleString()}/mo</div><div class="fin-box-php">~$${Math.round(c.vaCostPhp / FIN.rate())}/mo</div></div><div class="fin-box"><div class="fin-box-label">Gross Margin</div><div class="fin-box-usd" style="color:${FIN.marginStatus(margin) === "green" ? "var(--green)" : FIN.marginStatus(margin) === "yellow" ? "var(--gold-dark)" : "var(--red)"}">${margin !== null ? margin + "%" : "N/A"}</div><div class="fin-box-php">Target: ${CFG.marginTarget}%</div></div><div class="fin-box"><div class="fin-box-label">Total Billed</div><div class="fin-box-usd">$${totalBilledUsd.toLocaleString()}</div><div class="fin-box-php">\u20B1${FIN.toPhp(totalBilledUsd).toLocaleString()}</div></div><div class="fin-box"><div class="fin-box-label">Total Paid</div><div class="fin-box-usd" style="color:var(--green)">$${totalPaidUsd.toLocaleString()}</div><div class="fin-box-php">\u20B1${FIN.toPhp(totalPaidUsd).toLocaleString()}</div></div><div class="fin-box"><div class="fin-box-label">Outstanding</div><div class="fin-box-usd" style="color:${outUsd ? "var(--red)" : "var(--green)"}">$${outUsd.toLocaleString()}</div><div class="fin-box-php">\u20B1${FIN.toPhp(outUsd).toLocaleString()}</div></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="sec-title">Invoice History</div><button class="btn btn-sm btn-primary" onclick="openAddInvoiceForClient('${c.id}','${c.name}')">+ New Invoice</button></div><div class="card">${myInvs.map((inv) => `<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;background:${inv.status === "Overdue" ? "#FFF8F8" : ""}" onclick="openInvoiceDetail('${inv.id}')" onmouseover="this.style.background='var(--hover-row-bg)'" onmouseout="this.style.background='${inv.status === "Overdue" ? "#FFF8F8" : ""}'"><span style="font-size:10px;color:var(--text3);min-width:70px;font-weight:500">${inv.number}</span><span class="tag ${invoiceTag(inv.status)}">${inv.status}</span><span style="font-size:10px;color:var(--text3);flex:1">Due ${inv.dueDate || "\u2014"}</span><div class="dual-currency" style="text-align:right"><span class="dc-primary currency-usd" style="font-size:13px">$${inv.amountUsd.toLocaleString()}</span><span class="dc-secondary">\u20B1${FIN.toPhp(inv.amountUsd).toLocaleString()}</span></div>${inv.status !== "Paid" ? `<button class="btn btn-xs" style="background:var(--green-pale);color:var(--green);border:1px solid #a7d9bb;flex-shrink:0" onclick="event.stopPropagation();markPaid('${inv.id}')">Mark Paid</button>` : `<span style="font-size:10px;color:var(--green);font-weight:600;flex-shrink:0"> ${inv.paidAt}</span>`}</div>`).join("")}${myInvs.length === 0 ? emptyState("No invoices for this client.") : ""}</div>`;
+  return `<div class="fin-summary" style="margin-bottom:16px"><div class="fin-box"><div class="fin-box-label">Monthly Rate</div><div class="fin-box-usd">$${c.rateUsd}/mo</div><div class="fin-box-php">\u20B1${FIN.toPhp(c.rateUsd).toLocaleString()}/mo</div></div><div class="fin-box"><div class="fin-box-label">Partner Cost</div><div class="fin-box-usd" style="color:var(--red)">\u20B1${c.vaCostPhp.toLocaleString()}/mo</div><div class="fin-box-php">~$${Math.round(c.vaCostPhp / FIN.rate())}/mo</div></div><div class="fin-box"><div class="fin-box-label">Gross Margin</div><div class="fin-box-usd" style="color:${FIN.marginStatus(margin) === "green" ? "var(--green)" : FIN.marginStatus(margin) === "yellow" ? "var(--gold-dark)" : "var(--red)"}">${margin !== null ? margin + "%" : "N/A"}</div><div class="fin-box-php">Target: ${CFG.marginTarget}%</div></div><div class="fin-box"><div class="fin-box-label">Total Billed</div><div class="fin-box-usd">$${totalBilledUsd.toLocaleString()}</div><div class="fin-box-php">\u20B1${FIN.toPhp(totalBilledUsd).toLocaleString()}</div></div><div class="fin-box"><div class="fin-box-label">Total Paid</div><div class="fin-box-usd" style="color:var(--green)">$${totalPaidUsd.toLocaleString()}</div><div class="fin-box-php">\u20B1${FIN.toPhp(totalPaidUsd).toLocaleString()}</div></div><div class="fin-box"><div class="fin-box-label">Outstanding</div><div class="fin-box-usd" style="color:${outUsd ? "var(--red)" : "var(--green)"}">$${outUsd.toLocaleString()}</div><div class="fin-box-php">\u20B1${FIN.toPhp(outUsd).toLocaleString()}</div></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px"><div class="sec-title">Invoice History</div><button class="btn btn-sm btn-primary" onclick="openAddInvoiceForClient('${c.id}','${c.name}')">+ New Invoice</button></div><div class="card">${myInvs.map((inv) => `<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;background:${inv.status === "Overdue" ? "var(--overdue-row-bg)" : ""}" onclick="openInvoiceDetail('${inv.id}')" onmouseover="this.style.background='var(--hover-row-bg)'" onmouseout="this.style.background='${inv.status === "Overdue" ? "var(--overdue-row-bg)" : ""}'"><span style="font-size:10px;color:var(--text3);min-width:70px;font-weight:500">${inv.number}</span><span class="tag ${invoiceTag(inv.status)}">${inv.status}</span><span style="font-size:10px;color:var(--text3);flex:1">Due ${inv.dueDate || "\u2014"}</span><div class="dual-currency" style="text-align:right"><span class="dc-primary currency-usd" style="font-size:13px">$${inv.amountUsd.toLocaleString()}</span><span class="dc-secondary">\u20B1${FIN.toPhp(inv.amountUsd).toLocaleString()}</span></div>${inv.status !== "Paid" ? `<button class="btn btn-xs" style="background:var(--green-pale);color:var(--green);border:1px solid #a7d9bb;flex-shrink:0" onclick="event.stopPropagation();markPaid('${inv.id}')">Mark Paid</button>` : `<span style="font-size:10px;color:var(--green);font-weight:600;flex-shrink:0"> ${inv.paidAt}</span>`}</div>`).join("")}${myInvs.length === 0 ? emptyState("No invoices for this client.") : ""}</div>`;
 }
 function renderCPDeliverables(c) {
   if (!c.deliverables) c.deliverables = [];
@@ -5190,7 +5267,7 @@ function renderFinance() {
   }).join("")}<tr style="background:var(--bg);font-weight:700"><td>TOTAL</td><td style="color:var(--teal)">${money(mrrUsd)}</td><td style="color:var(--red)">\u20B1${vaCostPhp.toLocaleString()}</td><td style="color:var(--green)">${money(collectedAmt)}</td><td style="color:${outstandingAmt ? "var(--red)" : "var(--green)"}">${money(outstandingAmt)}</td><td>${FIN.marginBadge(avgMargin)}</td><td></td></tr></tbody></table>${active.length === 0 ? emptyState("No active clients.") : ""}</div><div style="display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:14px"><div><div class="sec-head"><div class="sec-title">Invoices</div></div><div class="card">${invoices.map((inv) => {
     const paid = PAYMENT_ENGINE.totalPaidForInvoice(inv.id);
     const outstanding = PAYMENT_ENGINE.outstandingForInvoice(inv);
-    return `<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;background:${outstanding && inv.dueDate && new Date(inv.dueDate) < new Date(today()) ? "#FFF8F8" : ""}" onclick="openInvoiceDetail('${inv.id}')" onmouseover="this.style.background='var(--hover-row-bg)'" onmouseout="this.style.background='${outstanding && inv.dueDate && new Date(inv.dueDate) < new Date(today()) ? "#FFF8F8" : ""}'"><span style="font-size:10px;color:var(--text3);min-width:70px;font-weight:500">${inv.number}</span><span style="font-size:13px;font-weight:500;flex:1">${inv.client}</span><span class="tag ${invoiceTag(inv.status)}">${inv.status}</span><span style="font-size:10px;color:var(--text3)">Due ${inv.dueDate || "\u2014"}</span><div class="dual-currency" style="text-align:right;min-width:94px"><span class="dc-primary currency-usd" style="font-size:13px">${money(inv.amountUsd)}</span><span class="dc-secondary">Paid ${money(paid)} \xB7 Due ${money(outstanding)}</span></div><button class="btn btn-xs btn-secondary" onclick="event.stopPropagation();openAddPayment('${inv.clientId}','${inv.id}')">Add Payment</button>${outstanding > 0 ? `<button class="btn btn-xs" style="background:var(--green-pale);color:var(--green);border:1px solid #a7d9bb;flex-shrink:0" onclick="event.stopPropagation();markPaid('${inv.id}')">Mark Paid</button>` : `<span style="font-size:10px;color:var(--green);font-weight:600;flex-shrink:0"> Settled</span>`}</div>`;
+    return `<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;background:${outstanding && inv.dueDate && new Date(inv.dueDate) < new Date(today()) ? "var(--overdue-row-bg)" : ""}" onclick="openInvoiceDetail('${inv.id}')" onmouseover="this.style.background='var(--hover-row-bg)'" onmouseout="this.style.background='${outstanding && inv.dueDate && new Date(inv.dueDate) < new Date(today()) ? "var(--overdue-row-bg)" : ""}'"><span style="font-size:10px;color:var(--text3);min-width:70px;font-weight:500">${inv.number}</span><span style="font-size:13px;font-weight:500;flex:1">${inv.client}</span><span class="tag ${invoiceTag(inv.status)}">${inv.status}</span><span style="font-size:10px;color:var(--text3)">Due ${inv.dueDate || "\u2014"}</span><div class="dual-currency" style="text-align:right;min-width:94px"><span class="dc-primary currency-usd" style="font-size:13px">${money(inv.amountUsd)}</span><span class="dc-secondary">Paid ${money(paid)} \xB7 Due ${money(outstanding)}</span></div><button class="btn btn-xs btn-secondary" onclick="event.stopPropagation();openAddPayment('${inv.clientId}','${inv.id}')">Add Payment</button>${outstanding > 0 ? `<button class="btn btn-xs" style="background:var(--green-pale);color:var(--green);border:1px solid #a7d9bb;flex-shrink:0" onclick="event.stopPropagation();markPaid('${inv.id}')">Mark Paid</button>` : `<span style="font-size:10px;color:var(--green);font-weight:600;flex-shrink:0"> Settled</span>`}</div>`;
   }).join("")}${invoices.length === 0 ? emptyState("No invoices yet \u2014 create your first invoice to track client billing.") : ""}</div></div><div><div class="sec-head"><div class="sec-title">Payment History</div></div>${renderPaymentHistory(PAYMENT_ENGINE.all().slice(0, 10), "No payments recorded \u2014 add your first payment entry to start tracking cash collection.")}</div></div>`;
 }
 function renderCPFinance(c, myInvs, totalBilledUsd, totalPaidUsd, margin) {
@@ -5199,7 +5276,7 @@ function renderCPFinance(c, myInvs, totalBilledUsd, totalPaidUsd, margin) {
   return `<div class="fin-summary" style="margin-bottom:16px"><div class="fin-box"><div class="fin-box-label">Monthly Rate</div><div class="fin-box-usd">${money(c.rateUsd)}/mo</div><div class="fin-box-php">\u20B1${FIN.toPhp(c.rateUsd).toLocaleString()}/mo</div></div><div class="fin-box"><div class="fin-box-label">Partner Cost</div><div class="fin-box-usd" style="color:var(--red)">\u20B1${c.vaCostPhp.toLocaleString()}/mo</div><div class="fin-box-php">~${money(Math.round(c.vaCostPhp / FIN.rate()))}/mo</div></div><div class="fin-box"><div class="fin-box-label">Gross Margin</div><div class="fin-box-usd" style="color:${margin !== null ? HEALTH.color(Math.max(50, margin)) : "var(--text3)"}">${margin !== null ? margin + "%" : "N/A"}</div><div class="fin-box-php">Target: ${CFG.marginTarget}%</div></div><div class="fin-box"><div class="fin-box-label">Total Billed</div><div class="fin-box-usd">${money(totalBilledUsd)}</div><div class="fin-box-php">\u20B1${FIN.toPhp(totalBilledUsd).toLocaleString()}</div></div><div class="fin-box"><div class="fin-box-label">Total Paid</div><div class="fin-box-usd" style="color:var(--green)">${money(totalPaidUsd)}</div><div class="fin-box-php">\u20B1${FIN.toPhp(totalPaidUsd).toLocaleString()}</div></div><div class="fin-box"><div class="fin-box-label">Outstanding</div><div class="fin-box-usd" style="color:${outstandingUsd ? "var(--red)" : "var(--green)"}">${money(outstandingUsd)}</div><div class="fin-box-php">\u20B1${FIN.toPhp(outstandingUsd).toLocaleString()}</div></div></div><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px;flex-wrap:wrap"><div class="sec-title">Invoice History</div><div style="display:flex;gap:8px"><button class="btn btn-sm btn-primary" onclick="openAddInvoiceForClient('${c.id}','${c.name}')">+ New Invoice</button><button class="btn btn-sm btn-secondary" onclick="openAddPayment('${c.id}')">+ Add Payment</button></div></div><div class="card" style="margin-bottom:14px">${myInvs.map((inv) => {
     const paid = PAYMENT_ENGINE.totalPaidForInvoice(inv.id);
     const outstanding = PAYMENT_ENGINE.outstandingForInvoice(inv);
-    return `<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;background:${outstanding && inv.dueDate && new Date(inv.dueDate) < new Date(today()) ? "#FFF8F8" : ""}" onclick="openInvoiceDetail('${inv.id}')" onmouseover="this.style.background='var(--hover-row-bg)'" onmouseout="this.style.background='${outstanding && inv.dueDate && new Date(inv.dueDate) < new Date(today()) ? "#FFF8F8" : ""}'"><span style="font-size:10px;color:var(--text3);min-width:70px;font-weight:500">${inv.number}</span><span class="tag ${invoiceTag(inv.status)}">${inv.status}</span><span style="font-size:10px;color:var(--text3);flex:1">Due ${inv.dueDate || "\u2014"}</span><div class="dual-currency" style="text-align:right"><span class="dc-primary currency-usd" style="font-size:13px">${money(inv.amountUsd)}</span><span class="dc-secondary">Paid ${money(paid)} \xB7 Due ${money(outstanding)}</span></div><button class="btn btn-xs btn-secondary" onclick="event.stopPropagation();openAddPayment('${c.id}','${inv.id}')">Add Payment</button>${outstanding > 0 ? `<button class="btn btn-xs" style="background:var(--green-pale);color:var(--green);border:1px solid #a7d9bb;flex-shrink:0" onclick="event.stopPropagation();markPaid('${inv.id}')">Mark Paid</button>` : `<span style="font-size:10px;color:var(--green);font-weight:600;flex-shrink:0"> Settled</span>`}</div>`;
+    return `<div style="display:flex;align-items:center;gap:8px;padding:9px 12px;border-bottom:1px solid var(--border);cursor:pointer;background:${outstanding && inv.dueDate && new Date(inv.dueDate) < new Date(today()) ? "var(--overdue-row-bg)" : ""}" onclick="openInvoiceDetail('${inv.id}')" onmouseover="this.style.background='var(--hover-row-bg)'" onmouseout="this.style.background='${outstanding && inv.dueDate && new Date(inv.dueDate) < new Date(today()) ? "var(--overdue-row-bg)" : ""}'"><span style="font-size:10px;color:var(--text3);min-width:70px;font-weight:500">${inv.number}</span><span class="tag ${invoiceTag(inv.status)}">${inv.status}</span><span style="font-size:10px;color:var(--text3);flex:1">Due ${inv.dueDate || "\u2014"}</span><div class="dual-currency" style="text-align:right"><span class="dc-primary currency-usd" style="font-size:13px">${money(inv.amountUsd)}</span><span class="dc-secondary">Paid ${money(paid)} \xB7 Due ${money(outstanding)}</span></div><button class="btn btn-xs btn-secondary" onclick="event.stopPropagation();openAddPayment('${c.id}','${inv.id}')">Add Payment</button>${outstanding > 0 ? `<button class="btn btn-xs" style="background:var(--green-pale);color:var(--green);border:1px solid #a7d9bb;flex-shrink:0" onclick="event.stopPropagation();markPaid('${inv.id}')">Mark Paid</button>` : `<span style="font-size:10px;color:var(--green);font-weight:600;flex-shrink:0"> Settled</span>`}</div>`;
   }).join("")}${myInvs.length === 0 ? emptyState("No invoices yet \u2014 create your first invoice to start balance tracking.") : ""}</div><div class="sec-head"><div class="sec-title">Payment History</div></div>${renderPaymentHistory(payments, "No payments recorded \u2014 add your first payment to keep balances up to date.")}`;
 }
 function renderClientHealth() {
@@ -5288,7 +5365,7 @@ async function deleteTask(id) {
 async function openTaskDetail(id) {
   const task = APP.data.tasks.find((x) => x.id === id);
   if (!task) return;
-  openModal(task.title.slice(0, 50), `<div class="info-grid"><div class="info-box"><div class="info-label">Status</div><div class="info-val">${task.done ? '<span class="tag t-green">Done</span>' : '<span class="tag t-navy">Open</span>'}</div></div><div class="info-box"><div class="info-label">Priority</div><div class="info-val">${tagHtml(task.priority)}</div></div><div class="info-box"><div class="info-label">Assignee</div><div class="info-val">${task.assigneeName || "\u2014"}</div></div><div class="info-box"><div class="info-label">Due Date</div><div class="info-val">${task.dueDate || "\u2014"}</div></div><div class="info-box"><div class="info-label">Created</div><div class="info-val">${task.createdDate || dateOnly(task.createdAt)}</div></div><div class="info-box"><div class="info-label">Completed</div><div class="info-val">${task.completedDate || "Not yet"}</div></div><div class="info-box"><div class="info-label">SLA Status</div><div class="info-val">${SLA.badge(task)}</div></div><div class="info-box"><div class="info-label">Client / Project</div><div class="info-val">${task.project || "\u2014"}</div></div></div><div class="form-group"><label class="form-label">Description</label><div style="padding:11px 12px;border:1px solid var(--border);border-radius:var(--r);font-size:13px;line-height:1.6;background:#FAFBFE">${task.description || "No description provided."}</div></div>${!task.firstResponseAt ? `<div class="form-warn">No first response logged yet. SLA clock is running: ${SLA.elapsed(task).toFixed(1)}h elapsed.</div>` : ""}`, `<button class="btn btn-secondary" onclick="closeModal()">Close</button>${task.done ? `<button class="btn btn-secondary" onclick="toggleTask('${task.id}');closeModal()">Reopen</button>` : `<button class="btn btn-primary" onclick="toggleTask('${task.id}');closeModal()">Mark Done</button>`}<button class="btn btn-danger" onclick="deleteTask('${task.id}')">Delete</button>`);
+  openModal(task.title.slice(0, 50), `<div class="info-grid"><div class="info-box"><div class="info-label">Status</div><div class="info-val">${task.done ? '<span class="tag t-green">Done</span>' : '<span class="tag t-navy">Open</span>'}</div></div><div class="info-box"><div class="info-label">Priority</div><div class="info-val">${tagHtml(task.priority)}</div></div><div class="info-box"><div class="info-label">Assignee</div><div class="info-val">${task.assigneeName || "\u2014"}</div></div><div class="info-box"><div class="info-label">Due Date</div><div class="info-val">${task.dueDate || "\u2014"}</div></div><div class="info-box"><div class="info-label">Created</div><div class="info-val">${task.createdDate || dateOnly(task.createdAt)}</div></div><div class="info-box"><div class="info-label">Completed</div><div class="info-val">${task.completedDate || "Not yet"}</div></div><div class="info-box"><div class="info-label">SLA Status</div><div class="info-val">${SLA.badge(task)}</div></div><div class="info-box"><div class="info-label">Client / Project</div><div class="info-val">${task.project || "\u2014"}</div></div></div><div class="form-group"><label class="form-label">Description</label><div style="padding:11px 12px;border:1px solid var(--border);border-radius:var(--r);font-size:13px;line-height:1.6;background:var(--hover-row-bg)">${task.description || "No description provided."}</div></div>${!task.firstResponseAt ? `<div class="form-warn">No first response logged yet. SLA clock is running: ${SLA.elapsed(task).toFixed(1)}h elapsed.</div>` : ""}`, `<button class="btn btn-secondary" onclick="closeModal()">Close</button>${task.done ? `<button class="btn btn-secondary" onclick="toggleTask('${task.id}');closeModal()">Reopen</button>` : `<button class="btn btn-primary" onclick="toggleTask('${task.id}');closeModal()">Mark Done</button>`}<button class="btn btn-danger" onclick="deleteTask('${task.id}')">Delete</button>`);
 }
 function openAddPayment(clientId = "", invoiceId = "") {
   const selectedClientId = clientId || "";
@@ -5671,8 +5748,7 @@ function renderAuthChooser() {
       <div style="margin-bottom:12px;color:var(--navy)">${ic("lock", 28)}</div>
       <div class="auth-title">Management Login</div>
       <div class="auth-sub">Enter your 6-digit PIN to access the full dashboard</div>
-      <div class="pin-row">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}" id="opd-${i}"></div>`).join("")}</div>
-      ${pinTypeInputHtml(filled, "ownerPinPress", "checkOwnerPin")}
+      ${pinDotsWrap(`<div class="pin-row">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}" id="opd-${i}"></div>`).join("")}</div>`, pinTypeInputHtml(filled, "ownerPinPress", "checkOwnerPin"))}
       <div class="pin-pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, "\u2190", 0, ""].map((k) => `<button class="pin-key" onclick="ownerPinPress('${k}')">${k}</button>`).join("")}</div>
       <button class="btn btn-secondary w-full" style="margin-top:8px" onclick="APP.authStep='choose';renderCurrentPage()">\u2190 Back</button>
       <div style="font-size:11px;color:var(--text3);margin-top:10px">Default PIN: 000000 \xB7 Change in Settings</div>
@@ -5725,8 +5801,7 @@ function renderAuthChooser() {
       <div class="av av-lg ${avColor(va.avatarColor)}" style="margin:0 auto 12px">${va.initials}</div>
       <div class="auth-title">Hi, ${va.displayName.split(" ")[0]}! </div>
       <div class="auth-sub">Enter your 6-digit PIN</div>
-      <div class="pin-row">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}" id="pd-${i}"></div>`).join("")}</div>
-      ${pinTypeInputHtml(filled, "pinPress", "checkPin")}
+      ${pinDotsWrap(`<div class="pin-row">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}" id="pd-${i}"></div>`).join("")}</div>`, pinTypeInputHtml(filled, "pinPress", "checkPin"))}
       <div class="pin-pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, "\u2190", 0, ""].map((k) => `<button class="pin-key" onclick="pinPress('${k}')">${k}</button>`).join("")}</div>
       <button class="btn btn-secondary w-full" style="margin-top:8px" onclick="APP.authStep='va-select';APP.va.pinEntry='';renderCurrentPage()">\u2190 Back</button>
       <div style="font-size:11px;color:var(--text3);margin-top:10px">Default PIN: 123456</div>
@@ -5776,8 +5851,7 @@ function renderAuthChooser() {
       <div class="av av-lg ${avColor(c.assignedVaColor)}" style="margin:0 auto 12px">${c.assignedVaInitials}</div>
       <div class="auth-title">${c.name}</div>
       <div class="auth-sub">Enter your 6-digit PIN to access your portal</div>
-      <div class="pin-row">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}" id="cpd-${i}"></div>`).join("")}</div>
-      ${pinTypeInputHtml(filled, "clientPinPress", "checkClientPin")}
+      ${pinDotsWrap(`<div class="pin-row">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}" id="cpd-${i}"></div>`).join("")}</div>`, pinTypeInputHtml(filled, "clientPinPress", "checkClientPin"))}
       <div class="pin-pad">${[1, 2, 3, 4, 5, 6, 7, 8, 9, "\u2190", 0, ""].map((k) => `<button class="pin-key" onclick="clientPinPress('${k}')">${k}</button>`).join("")}</div>
       <button class="btn btn-secondary w-full" style="margin-top:8px" onclick="APP.authStep='client-select';APP.clientAuth.pinEntry='';renderCurrentPage()">\u2190 Back</button>
       <div style="font-size:11px;color:var(--text3);margin-top:10px">Default PIN: 123456 \xB7 Contact TJC to reset</div>
@@ -5905,6 +5979,7 @@ function checkClientPin() {
     APP.authStep = "choose";
     APP.cpTab = "overview";
     renderCurrentPage();
+    _tjcPushHistory("cptab", "overview");
     toast("Welcome, " + c.name + "!", "success");
   } else {
     APP.clientAuth.pinEntry = "";
@@ -5921,6 +5996,7 @@ function clientLogout() {
 function setClientTab(t) {
   APP.cpTab = t;
   renderCurrentPage();
+  _tjcPushHistory("cptab", t);
 }
 APP.cpMsgThread = "client-partner";
 function getOrCreateClientConv(clientId, type) {
@@ -8188,8 +8264,7 @@ function renderHRPinScreen() {
     <div style="margin-bottom:12px;color:var(--navy)">${ic("hr", 28)}</div>
     <div class="auth-title">HR Portal</div>
     <div class="auth-sub">Enter your HR PIN to continue</div>
-    <div class="pin-dots">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}"></div>`).join("")}</div>
-    ${pinTypeInputHtmlPath(filled, "APP.hr.pinEntry", "hrPinSubmit")}
+    ${pinDotsWrap(`<div class="pin-dots">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}"></div>`).join("")}</div>`, pinTypeInputHtmlPath(filled, "APP.hr.pinEntry", "hrPinSubmit"))}
     <div class="pin-pad">
       ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "", 0, "\u232B"].map((k) => `
         <button class="pin-key" onclick="${k === "" ? "" : k === "\u232B" ? "APP.hr.pinEntry=APP.hr.pinEntry.slice(0,-1);renderCurrentPage()" : `APP.hr.pinEntry+='${k}';if(APP.hr.pinEntry.length>=6){hrPinSubmit();}else{renderCurrentPage();}`}">${k}</button>`).join("")}
@@ -10348,10 +10423,10 @@ function renderOwnerAuthScreen() {
     <div style="margin-bottom:16px;color:var(--blue)">${ic("lock", 32)}</div>
     <div class="auth-title" style="margin-bottom:4px">Welcome, ${acct ? acct.displayName : auth.username}</div>
     <div style="font-size:13px;color:var(--text3);margin-bottom:24px">Enter your 6-digit PIN</div>
-    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:24px">
-      ${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}"></div>`).join("")}
-    </div>
-    ${pinTypeInputHtmlPath(filled, "APP.ownerAuth.pinEntry", "ownerPinSubmit2")}
+    ${pinDotsWrap(
+      `<div style="display:flex;justify-content:center;gap:10px">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}"></div>`).join("")}</div>`,
+      pinTypeInputHtmlPath(filled, "APP.ownerAuth.pinEntry", "ownerPinSubmit2")
+    )}
     <div class="pin-pad" style="margin-bottom:20px">
       ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "\u2190", 0, ""].map((k) => `
         <button class="pin-key" onclick="${k === "" ? "" : k === "\u2190" ? "APP.ownerAuth.pinEntry=APP.ownerAuth.pinEntry.slice(0,-1);renderCurrentPage()" : `APP.ownerAuth.pinEntry+='${k}';if(APP.ownerAuth.pinEntry.length>=6){ownerPinSubmit2();}else{renderCurrentPage();}`}">${k}</button>`).join("")}
@@ -10486,10 +10561,10 @@ renderHRPinScreen = function() {
     <div style="margin-bottom:16px;color:#8B5CF6">${ic("hr", 32)}</div>
     <div class="auth-title" style="margin-bottom:4px">Welcome, ${acct ? acct.displayName : auth.username}</div>
     <div style="font-size:13px;color:var(--text3);margin-bottom:24px">Enter your 6-digit PIN</div>
-    <div style="display:flex;justify-content:center;gap:10px;margin-bottom:24px">
-      ${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}"></div>`).join("")}
-    </div>
-    ${pinTypeInputHtmlPath(filled, "APP.hrAuth.pinEntry", "hrPinSubmit2")}
+    ${pinDotsWrap(
+      `<div style="display:flex;justify-content:center;gap:10px">${[0, 1, 2, 3, 4, 5].map((i) => `<div class="pin-dot${i < filled ? " filled" : ""}"></div>`).join("")}</div>`,
+      pinTypeInputHtmlPath(filled, "APP.hrAuth.pinEntry", "hrPinSubmit2")
+    )}
     <div class="pin-pad" style="margin-bottom:20px">
       ${[1, 2, 3, 4, 5, 6, 7, 8, 9, "\u2190", 0, ""].map((k) => `<button class="pin-key" onclick="hrPinKey('${k}')">${k}</button>`).join("")}
     </div>
@@ -11897,7 +11972,9 @@ const FOUNDER_ROLES = {
     name: "Art Teves",
     color: "#14D3C4",
     canView: ["director_growth"],
-    nav: ["home", "clients", "content", "conversations", "sops", "jobs", "calendar", "kpi", "health"]
+    nav: ["home", "clients", "content", "social-planner", "conversations", "sops", "jobs", "calendar", "kpi", "health",
+          "growth-pipeline", "growth-channels", "growth-funnel", "growth-content-health",
+          "growth-reach", "growth-pillars", "growth-partnerships", "growth-workforce"]
   },
   director_operations: {
     label: "Director of Operations & Co-Founder",
@@ -12279,6 +12356,24 @@ function sendGrowthWeeklySummary(summaryText){
 }
 
 // ── GROWTH DASHBOARD ICONS: minimal stroke-based SVGs (matches app icon language) ──
+function _clientFromTitle(title){
+  if(!title) return 'Unassigned';
+  var parts = title.split(/\s+\u2014\s+/);
+  return parts.length > 1 ? parts[0].trim() : 'Unassigned';
+}
+function _platformColor(p){
+  p = (p||'').toLowerCase();
+  if(p.indexOf('facebook') > -1 && p.indexOf('instagram') > -1) return '#8B5CF6';
+  if(p.indexOf('facebook') > -1) return '#1877F2';
+  if(p.indexOf('instagram') > -1) return '#E1306C';
+  if(p.indexOf('linkedin') > -1) return '#0A66C2';
+  if(p.indexOf('youtube') > -1) return '#FF0000';
+  if(p.indexOf('tiktok') > -1) return '#000000';
+  return '#566AE7';
+}
+function _urgencyDot(u){
+  return u === 'red' ? '#EF4444' : u === 'amber' ? '#F59E0B' : '#94A3B8';
+}
 function _gdIcon(name){
   var icons = {
     bell: '<svg viewBox="0 0 14 14" fill="none"><path d="M7 1.6c-.9 0-1.6.7-1.6 1.6v.25C3.9 4 2.9 5.4 2.9 7.1v2.3l-1 1.6h10.2l-1-1.6V7.1c0-1.7-1-3.1-2.5-3.65V3.2c0-.9-.7-1.6-1.6-1.6z" stroke="currentColor" stroke-width="1.1" stroke-linejoin="round"/><path d="M5.5 11.8a1.5 1.5 0 0 0 3 0" stroke="currentColor" stroke-width="1.1" stroke-linecap="round"/></svg>',
@@ -12299,7 +12394,7 @@ function _gdIconSpan(name, color, size){
   return '<span style="display:inline-flex;color:' + (color||'currentColor') + ';width:' + (size||14) + 'px;height:' + (size||14) + 'px;flex-shrink:0">' + _gdIcon(name) + '</span>';
 }
 
-function renderArtGrowthDashboard(){
+function _growthData(){
   var clients = APP.data.clients || [];
   var tasks = APP.data.tasks || [];
   var content = APP.data.content || [];
@@ -12374,25 +12469,6 @@ function renderArtGrowthDashboard(){
   // ── MARKETING OPS ADD-ON: helpers + computed data ─────────────
   var team = APP.data.team || [];
   var marketingTeam = team.filter(function(t){ return t.role !== 'owner'; });
-
-  function _clientFromTitle(title){
-    if(!title) return 'Unassigned';
-    var parts = title.split(/\s+\u2014\s+/);
-    return parts.length > 1 ? parts[0].trim() : 'Unassigned';
-  }
-  function _platformColor(p){
-    p = (p||'').toLowerCase();
-    if(p.indexOf('facebook') > -1 && p.indexOf('instagram') > -1) return '#8B5CF6';
-    if(p.indexOf('facebook') > -1) return '#1877F2';
-    if(p.indexOf('instagram') > -1) return '#E1306C';
-    if(p.indexOf('linkedin') > -1) return '#0A66C2';
-    if(p.indexOf('youtube') > -1) return '#FF0000';
-    if(p.indexOf('tiktok') > -1) return '#000000';
-    return '#566AE7';
-  }
-  function _urgencyDot(u){
-    return u === 'red' ? '#EF4444' : u === 'amber' ? '#F59E0B' : '#94A3B8';
-  }
 
   // Unified social calendar — real content queue (current range), grouped by due bucket, most urgent first
   var urgencyRank = { red:0, amber:1, gray:2 };
@@ -12479,6 +12555,35 @@ function renderArtGrowthDashboard(){
     'Content Queue: ' + pendingContentR.length + ' pending, ' + approvedContentR.length + ' approved (' + approvalRate + '% approval rate)\n' +
     'Open Alerts: ' + criticalAlertCount + ' needing attention\n\n' +
     (smartAlerts.slice(0,5).map(function(a){ return '- ' + a.text; }).join('\n') || '- No active alerts.');
+
+  return {
+    clients:clients, tasks:tasks, content:content, invoices:invoices, goals:goals,
+    _rangeLabels:_rangeLabels, rangeLabel:rangeLabel, filteredContent:filteredContent,
+    activeClients:activeClients, totalMRR:totalMRR, pendingContent:pendingContent, approvedContent:approvedContent,
+    pendingContentR:pendingContentR, approvedContentR:approvedContentR, pipeline:pipeline, channels:channels,
+    contentPillars:contentPillars, demands:demands, team:team, marketingTeam:marketingTeam,
+    calContent:calContent, calGroups:calGroups, calOrder:calOrder, clientsByStatus:clientsByStatus, statusOrder:statusOrder,
+    platformCounts:platformCounts, totalContentActive:totalContentActive, approvalRate:approvalRate,
+    aggImpressions:aggImpressions, aggLeads:aggLeads, clientContentMap:clientContentMap, pipelineClients:pipelineClients,
+    clientsWaiting:clientsWaiting, vasReady:vasReady, waitlistGap:waitlistGap, waitlistState:waitlistState,
+    smartAlerts:smartAlerts, criticalAlertCount:criticalAlertCount, spotlight:spotlight, spotlightImg:spotlightImg,
+    growthGoals:growthGoals, revenueGoal:revenueGoal
+  };
+}
+
+function renderArtGrowthDashboard(){
+  var G = _growthData();
+  var clients=G.clients, tasks=G.tasks, content=G.content, invoices=G.invoices, goals=G.goals,
+      _rangeLabels=G._rangeLabels, rangeLabel=G.rangeLabel, filteredContent=G.filteredContent,
+      activeClients=G.activeClients, totalMRR=G.totalMRR, pendingContent=G.pendingContent, approvedContent=G.approvedContent,
+      pendingContentR=G.pendingContentR, approvedContentR=G.approvedContentR, pipeline=G.pipeline, channels=G.channels,
+      contentPillars=G.contentPillars, demands=G.demands, team=G.team, marketingTeam=G.marketingTeam,
+      calContent=G.calContent, calGroups=G.calGroups, calOrder=G.calOrder, clientsByStatus=G.clientsByStatus, statusOrder=G.statusOrder,
+      platformCounts=G.platformCounts, totalContentActive=G.totalContentActive, approvalRate=G.approvalRate,
+      aggImpressions=G.aggImpressions, aggLeads=G.aggLeads, clientContentMap=G.clientContentMap, pipelineClients=G.pipelineClients,
+      clientsWaiting=G.clientsWaiting, vasReady=G.vasReady, waitlistGap=G.waitlistGap, waitlistState=G.waitlistState,
+      smartAlerts=G.smartAlerts, criticalAlertCount=G.criticalAlertCount, spotlight=G.spotlight, spotlightImg=G.spotlightImg,
+      growthGoals=G.growthGoals, revenueGoal=G.revenueGoal;
 
   return '<div style="max-width:1200px;margin:0 auto">' +
 
@@ -12646,201 +12751,28 @@ function renderArtGrowthDashboard(){
       : '<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px">No approved creative with attached media yet. Attach an Image / Media URL when submitting content to populate this spotlight.</div>') +
   '</div>' +
 
-  // ── Row 2: Pipeline Funnel + Channel Matrix ──
-  '<div style="display:grid;grid-template-columns:1fr 1.4fr;gap:16px;margin-bottom:16px">' +
-
-    // Pipeline funnel
-    '<div class="card" style="padding:18px">' +
-      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Sales & Deployment Pipeline</div>' +
-      '<div style="font-size:11px;color:var(--text3);margin-bottom:16px">Active B2B opportunities by stage</div>' +
-      pipeline.map(function(p){
-        return '<div style="margin-bottom:14px">' +
-          '<div style="display:flex;justify-content:space-between;margin-bottom:5px">' +
-            '<span style="font-size:12px;font-weight:600">' + p.label + '</span>' +
-            '<div style="display:flex;gap:10px">' +
-              '<span style="font-size:12px;font-weight:800;color:' + p.color + '">' + p.count + '</span>' +
-              (p.value !== '—' ? '<span style="font-size:11px;color:var(--text3)">' + p.value + '</span>' : '') +
-            '</div>' +
-          '</div>' +
-          '<div style="height:7px;background:var(--border);border-radius:4px;overflow:hidden">' +
-            '<div style="height:100%;width:' + p.pct + '%;background:' + p.color + ';border-radius:4px;transition:width .5s"></div>' +
-          '</div>' +
-        '</div>';
-      }).join('') +
-    '</div>' +
-
-    // Channel Performance Matrix
-    '<div class="card" style="padding:18px">' +
-      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Channel Performance Matrix</div>' +
-      '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Organic + paid social — current month</div>' +
-      '<table style="width:100%;border-collapse:collapse;font-size:12px">' +
-        '<thead><tr style="background:var(--surface2)">' +
-          ['Channel','Impressions','Inbound Leads','Conv. Rate'].map(function(h){
-            return '<th style="padding:8px 10px;text-align:left;font-weight:700;font-size:11px;color:var(--text3)">' + h + '</th>';
-          }).join('') +
-        '</tr></thead><tbody>' +
-        channels.map(function(c, i){
-          return '<tr style="border-bottom:1px solid var(--border);' + (i%2===0?'background:transparent':'background:var(--surface2)') + '">' +
-            '<td style="padding:9px 10px"><div style="display:flex;align-items:center;gap:6px"><div style="width:8px;height:8px;border-radius:50%;background:' + c.color + '"></div><span style="font-weight:600">' + c.name + '</span></div></td>' +
-            '<td style="padding:9px 10px;font-weight:600">' + c.impressions + '</td>' +
-            '<td style="padding:9px 10px">' +
-              '<div style="display:flex;align-items:center;gap:6px">' +
-                '<span style="font-weight:700;color:var(--blue)">' + c.leads + '</span>' +
-                '<span style="font-size:10px;color:var(--text3)">SQLs</span>' +
-              '</div>' +
-            '</td>' +
-            '<td style="padding:9px 10px"><span style="background:#10B98118;color:#10B981;padding:2px 8px;border-radius:20px;font-weight:700;font-size:11px">' + c.rate + '</span></td>' +
-          '</tr>';
-        }).join('') +
-      '</tbody></table>' +
-      '<div style="margin-top:12px;padding:10px;background:var(--surface2);border-radius:8px;font-size:11px;color:var(--text3)">' +
-        '<b style="color:var(--text2)">Social-Generated SQLs this month:</b> ' +
-        '<span style="font-size:14px;font-weight:800;color:var(--blue)">47</span> discovery calls booked from organic/paid social' +
-      '</div>' +
-    '</div>' +
-  '</div>' +
-
-  // ── Row 2.5: Unified Analytics (cross-client rollup) ──
-  '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">' +
-
-    // Client base funnel by lifecycle stage
-    '<div class="card" style="padding:18px">' +
-      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Client Base Funnel</div>' +
-      '<div style="font-size:11px;color:var(--text3);margin-bottom:16px">Accounts by lifecycle stage · all clients</div>' +
-      statusOrder.filter(function(s){ return clientsByStatus[s]; }).map(function(s){
-        var n = clientsByStatus[s];
-        var maxN = Math.max.apply(null, statusOrder.map(function(k){ return clientsByStatus[k]||0; }).concat([1]));
-        return '<div style="margin-bottom:11px">' +
-          '<div style="display:flex;justify-content:space-between;margin-bottom:5px">' +
-            '<span style="font-size:12px;font-weight:600">' + s + '</span>' +
-            '<span style="font-size:12px;font-weight:800;color:#131DBF">' + n + '</span>' +
-          '</div>' +
-          '<div style="height:7px;background:var(--border);border-radius:4px;overflow:hidden">' +
-            '<div style="height:100%;width:' + Math.round(n/maxN*100) + '%;background:#131DBF;border-radius:4px"></div>' +
-          '</div>' +
-        '</div>';
-      }).join('') +
-    '</div>' +
-
-    // Content approval + platform mix
-    '<div class="card" style="padding:18px">' +
-      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Content Approval Health</div>' +
-      '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Across every client, current queue</div>' +
-      '<div style="display:flex;align-items:center;gap:14px;margin-bottom:16px">' +
-        '<div style="font-size:32px;font-weight:900;color:' + (approvalRate>=70?'#10B981':approvalRate>=40?'#F59E0B':'#EF4444') + '">' + approvalRate + '%</div>' +
-        '<div style="font-size:11px;color:var(--text3)">approved on first pass<br>' + approvedContent.length + ' approved · ' + pendingContent.length + ' pending</div>' +
-      '</div>' +
-      '<div style="font-size:11px;font-weight:700;margin-bottom:8px">Platform Mix</div>' +
-      Object.keys(platformCounts).map(function(p){
-        var maxP = Math.max.apply(null, Object.keys(platformCounts).map(function(k){ return platformCounts[k]; }).concat([1]));
-        return '<div style="display:flex;align-items:center;gap:8px;margin-bottom:7px">' +
-          '<span style="font-size:10px;color:var(--text3);width:64px;flex-shrink:0">' + p + '</span>' +
-          '<div style="flex:1;height:6px;background:var(--border);border-radius:3px;overflow:hidden">' +
-            '<div style="height:100%;width:' + Math.round(platformCounts[p]/maxP*100) + '%;background:' + _platformColor(p) + ';border-radius:3px"></div>' +
-          '</div>' +
-          '<span style="font-size:11px;font-weight:700;width:14px;text-align:right">' + platformCounts[p] + '</span>' +
-        '</div>';
-      }).join('') +
-    '</div>' +
-
-    // Aggregate reach (rolled up from channel matrix)
-    '<div class="card" style="padding:18px">' +
-      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Aggregate Reach & Leads</div>' +
-      '<div style="font-size:11px;color:var(--text3);margin-bottom:16px">Combined organic + paid, current month</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:14px">' +
-        '<div style="padding:12px;background:var(--surface2);border-radius:10px;text-align:center">' +
-          '<div style="font-size:20px;font-weight:900;color:#131DBF">' + (aggImpressions>=1000?Math.round(aggImpressions)+'K':aggImpressions) + '</div>' +
-          '<div style="font-size:10px;font-weight:600;color:var(--text3);margin-top:3px">Total Impressions</div>' +
-        '</div>' +
-        '<div style="padding:12px;background:var(--surface2);border-radius:10px;text-align:center">' +
-          '<div style="font-size:20px;font-weight:900;color:#10B981">' + aggLeads + '</div>' +
-          '<div style="font-size:10px;font-weight:600;color:var(--text3);margin-top:3px">Inbound SQLs</div>' +
-        '</div>' +
-      '</div>' +
-      '<div style="padding:10px;background:var(--gold-pale);border-radius:8px;font-size:11px;color:var(--text2)">' +
-        'Awaiting native analytics/ad-platform integration for follower growth, reach & engagement trendlines.' +
-      '</div>' +
-    '</div>' +
-  '</div>' +
-
-  // ── Row 3: Content Pillars + Partnerships + Supply Alignment ──
-  '<div style="display:grid;grid-template-columns:1fr 1fr 1fr;gap:16px;margin-bottom:16px">' +
-
-    // Content Pillar Efficiency
-    '<div class="card" style="padding:18px">' +
-      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Content Pillar Efficiency</div>' +
-      '<div style="font-size:11px;color:var(--text3);margin-bottom:16px">Performance score by pillar</div>' +
-      contentPillars.map(function(p){
-        return '<div style="margin-bottom:16px">' +
-          '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:6px">' +
-            '<div style="display:flex;align-items:center;gap:6px">' +
-              _gdIconSpan(p.icon, p.color, 13) +
-              '<span style="font-size:13px;font-weight:700">' + p.label + '</span>' +
-            '</div>' +
-            '<span style="font-size:13px;font-weight:900;color:' + p.color + '">' + p.pct + '%</span>' +
-          '</div>' +
-          '<div style="height:6px;background:var(--border);border-radius:3px;overflow:hidden;margin-bottom:4px">' +
-            '<div style="height:100%;width:' + p.pct + '%;background:' + p.color + ';border-radius:3px"></div>' +
-          '</div>' +
-          '<div style="font-size:10px;color:var(--text3)">' + p.desc + '</div>' +
-        '</div>';
-      }).join('') +
-      '<div style="padding:10px 12px;background:var(--teal-pale);border-radius:8px;margin-top:4px">' +
-        '<div style="font-size:11px;font-weight:700;color:var(--teal);margin-bottom:2px">Content Queue</div>' +
-        '<div style="font-size:11px;color:var(--text2)">' + pendingContent.length + ' pending approval · ' + approvedContent.length + ' approved</div>' +
-      '</div>' +
-    '</div>' +
-
-    // Strategic Partnerships
-    '<div class="card" style="padding:18px">' +
-      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Strategic Partnerships</div>' +
-      '<div style="font-size:11px;color:var(--text3);margin-bottom:16px">Referral network performance</div>' +
-      '<div style="display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px">' +
-      [
-        { label:'Active Referral Nodes', val:'6',    color:'#131DBF' },
-        { label:'Partner MRR',           val:'$2,100', color:'#10B981' },
-        { label:'Deals from Referrals',  val:'3',    color:'#F59E0B' },
-        { label:'Avg. Partner Deal Size', val:'$700',  color:'#8B5CF6' },
-      ].map(function(m){
-        return '<div style="padding:12px;background:var(--surface2);border-radius:10px;text-align:center">' +
-          '<div style="font-size:20px;font-weight:900;color:' + m.color + '">' + m.val + '</div>' +
-          '<div style="font-size:10px;font-weight:600;color:var(--text3);margin-top:3px">' + m.label + '</div>' +
-        '</div>';
-      }).join('') +
-      '</div>' +
-      '<div style="font-size:11px;font-weight:700;margin-bottom:8px">Recent Referral Activity</div>' +
-      ['DigitalOps Agency → 1 new client', 'Creatives Co. → Proposal sent', 'StartupHR → Discovery call'].map(function(item){
-        return '<div style="font-size:11px;color:var(--text2);padding:5px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:6px">' +
-          '<div style="width:5px;height:5px;border-radius:50%;background:var(--teal);flex-shrink:0"></div>' + item +
-        '</div>';
-      }).join('') +
-    '</div>' +
-
-    // Workforce Supply Alignment
-    '<div class="card" style="padding:18px">' +
-      '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Workforce Supply Alignment</div>' +
-      '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Market demand vs. available bench</div>' +
-      demands.map(function(d){
-        var maxPct = Math.max(d.demand, d.bench) + 2;
-        return '<div style="margin-bottom:11px">' +
-          '<div style="font-size:11px;font-weight:600;margin-bottom:4px">' + d.skill + '</div>' +
-          '<div style="display:flex;align-items:center;gap:6px;margin-bottom:3px">' +
-            '<span style="font-size:9px;color:var(--text3);width:46px">Demand</span>' +
-            '<div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden">' +
-              '<div style="height:100%;width:' + Math.round(d.demand/maxPct*100) + '%;background:#131DBF;border-radius:3px"></div>' +
-            '</div>' +
-            '<span style="font-size:11px;font-weight:700;color:#131DBF;width:14px;text-align:right">' + d.demand + '</span>' +
-          '</div>' +
-          '<div style="display:flex;align-items:center;gap:6px">' +
-            '<span style="font-size:9px;color:var(--text3);width:46px">Bench</span>' +
-            '<div style="flex:1;height:5px;background:var(--border);border-radius:3px;overflow:hidden">' +
-              '<div style="height:100%;width:' + Math.round(d.bench/maxPct*100) + '%;background:' + (d.bench < d.demand ? '#EF4444' : '#10B981') + ';border-radius:3px"></div>' +
-            '</div>' +
-            '<span style="font-size:11px;font-weight:700;color:' + (d.bench < d.demand ? '#EF4444' : '#10B981') + ';width:14px;text-align:right">' + d.bench + '</span>' +
-          '</div>' +
-          (d.bench < d.demand ? '<div style="display:flex;align-items:center;gap:4px;font-size:9px;color:#EF4444;margin-top:2px">' + _gdIconSpan('warning','#EF4444',10) + 'Gap: ' + (d.demand-d.bench) + ' needed</div>' : '') +
-        '</div>';
-      }).join('') +
+  // ── Growth Analytics — quick-nav to dedicated pages ──
+  '<div class="card" style="padding:18px;margin-bottom:16px">' +
+    '<div style="font-weight:800;font-size:14px;margin-bottom:4px">Growth Analytics</div>' +
+    '<div style="font-size:11px;color:var(--text3);margin-bottom:14px">Full breakdowns \u2014 tap any card to open its dedicated page</div>' +
+    '<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(210px,1fr));gap:12px">' +
+    [
+      { page:'growth-pipeline', label:'Sales & Deployment Pipeline', val: pipeline[0].count + ' discovery calls', sub: pipeline.length + ' stages tracked', color:'#131DBF' },
+      { page:'growth-channels', label:'Channel Performance Matrix', val: channels.length + ' channels', sub: 'Organic + paid social', color:'#0A66C2' },
+      { page:'growth-funnel', label:'Client Base Funnel', val: clients.filter(function(c){return !c.archived;}).length + ' total clients', sub: statusOrder.filter(function(s){return clientsByStatus[s];}).length + ' lifecycle stages', color:'#131DBF' },
+      { page:'growth-content-health', label:'Content Approval Health', val: approvalRate + '% approved', sub: pendingContentR.length + ' pending review', color: approvalRate>=70?'#10B981':approvalRate>=40?'#F59E0B':'#EF4444' },
+      { page:'growth-reach', label:'Aggregate Reach & Leads', val: (aggImpressions>=1000?Math.round(aggImpressions)+'K':aggImpressions) + ' impressions', sub: aggLeads + ' inbound SQLs', color:'#131DBF' },
+      { page:'growth-pillars', label:'Content Pillar Efficiency', val: Math.round(contentPillars.reduce(function(a,p){return a+p.pct;},0)/contentPillars.length) + '% avg score', sub: contentPillars.length + ' pillars tracked', color:'#14D3C4' },
+      { page:'growth-partnerships', label:'Strategic Partnerships', val: '6 referral nodes', sub: '3 deals from referrals', color:'#8B5CF6' },
+      { page:'growth-workforce', label:'Workforce Supply Alignment', val: demands.filter(function(d){return d.bench<d.demand;}).length + ' skill gaps', sub: demands.length + ' skills tracked', color:'#F59E0B' },
+    ].map(function(t){
+      return '<div class="card card-hover" style="padding:14px;cursor:pointer" onclick="navigate(\'' + t.page + '\')">' +
+        '<div style="width:8px;height:8px;border-radius:50%;background:' + t.color + ';margin-bottom:8px"></div>' +
+        '<div style="font-size:12px;font-weight:700;margin-bottom:6px">' + t.label + '</div>' +
+        '<div style="font-size:16px;font-weight:900;color:' + t.color + '">' + t.val + '</div>' +
+        '<div style="font-size:10px;color:var(--text3);margin-top:2px">' + t.sub + '</div>' +
+      '</div>';
+    }).join('') +
     '</div>' +
   '</div>' +
 
@@ -12956,6 +12888,328 @@ function renderArtGrowthDashboard(){
 
   '</div>';
 }
+// ── Growth Analytics standalone pages (drill-down from the quick-nav grid) ──
+function _growthPageShell(title, subtitle, bodyHtml){
+  return '<div style="max-width:900px;margin:0 auto">' +
+    '<button class="btn btn-sm btn-secondary" style="margin-bottom:14px" onclick="navigate(\'home\')">\u2190 Back to Growth Dashboard</button>' +
+    '<div style="margin-bottom:18px">' +
+      '<h1 style="font-size:20px;font-weight:900;margin-bottom:2px">' + title + '</h1>' +
+      '<p style="font-size:12px;color:var(--text3)">' + subtitle + '</p>' +
+    '</div>' +
+    bodyHtml +
+  '</div>';
+}
+
+function renderGrowthPipeline(){
+  var G = _growthData();
+  var pipeline = G.pipeline;
+  var body = '<div class="card" style="padding:20px">' +
+    pipeline.map(function(p){
+      return '<div style="margin-bottom:20px">' +
+        '<div style="display:flex;justify-content:space-between;margin-bottom:6px">' +
+          '<span style="font-size:14px;font-weight:700">' + p.label + '</span>' +
+          '<div style="display:flex;gap:12px">' +
+            '<span style="font-size:14px;font-weight:800;color:' + p.color + '">' + p.count + '</span>' +
+            (p.value !== '\u2014' ? '<span style="font-size:12px;color:var(--text3)">' + p.value + '</span>' : '') +
+          '</div>' +
+        '</div>' +
+        '<div style="height:9px;background:var(--border);border-radius:5px;overflow:hidden">' +
+          '<div style="height:100%;width:' + p.pct + '%;background:' + p.color + ';border-radius:5px;transition:width .5s"></div>' +
+        '</div>' +
+      '</div>';
+    }).join('') +
+    '<div style="padding:12px;background:var(--surface2);border-radius:8px;font-size:11px;color:var(--text3);margin-top:6px">Placeholder pipeline data \u2014 connect a CRM integration for live discovery-call and deal-stage counts.</div>' +
+  '</div>';
+  return _growthPageShell('Sales & Deployment Pipeline', 'Active B2B opportunities by stage', body);
+}
+
+function renderGrowthChannels(){
+  var G = _growthData();
+  var channels = G.channels;
+  var body = '<div class="card" style="padding:20px">' +
+    '<table style="width:100%;border-collapse:collapse;font-size:13px">' +
+      '<thead><tr style="background:var(--surface2)">' +
+        ['Channel','Impressions','Inbound Leads','Conv. Rate'].map(function(h){
+          return '<th style="padding:10px 12px;text-align:left;font-weight:700;font-size:11px;color:var(--text3)">' + h + '</th>';
+        }).join('') +
+      '</tr></thead><tbody>' +
+      channels.map(function(c, i){
+        return '<tr style="border-bottom:1px solid var(--border);' + (i%2===0?'background:transparent':'background:var(--surface2)') + '">' +
+          '<td style="padding:11px 12px"><div style="display:flex;align-items:center;gap:8px"><div style="width:9px;height:9px;border-radius:50%;background:' + c.color + '"></div><span style="font-weight:700">' + c.name + '</span></div></td>' +
+          '<td style="padding:11px 12px;font-weight:600">' + c.impressions + '</td>' +
+          '<td style="padding:11px 12px"><span style="font-weight:700;color:var(--blue)">' + c.leads + '</span> <span style="font-size:10px;color:var(--text3)">SQLs</span></td>' +
+          '<td style="padding:11px 12px"><span style="background:#10B98118;color:#10B981;padding:3px 10px;border-radius:20px;font-weight:700;font-size:12px">' + c.rate + '</span></td>' +
+        '</tr>';
+      }).join('') +
+    '</tbody></table>' +
+    '<div style="margin-top:14px;padding:12px;background:var(--surface2);border-radius:8px;font-size:12px;color:var(--text3)">' +
+      '<b style="color:var(--text2)">Social-Generated SQLs this month:</b> <span style="font-size:15px;font-weight:800;color:var(--blue)">47</span> discovery calls booked from organic/paid social' +
+    '</div>' +
+  '</div>';
+  return _growthPageShell('Channel Performance Matrix', 'Organic + paid social \u2014 current month', body);
+}
+
+function renderGrowthFunnel(){
+  var G = _growthData();
+  var clientsByStatus = G.clientsByStatus, statusOrder = G.statusOrder;
+  var body = '<div class="card" style="padding:20px">' +
+    statusOrder.filter(function(s){ return clientsByStatus[s]; }).map(function(s){
+      var n = clientsByStatus[s];
+      var maxN = Math.max.apply(null, statusOrder.map(function(k){ return clientsByStatus[k]||0; }).concat([1]));
+      return '<div style="margin-bottom:16px">' +
+        '<div style="display:flex;justify-content:space-between;margin-bottom:6px">' +
+          '<span style="font-size:14px;font-weight:700">' + s + '</span>' +
+          '<span style="font-size:14px;font-weight:800;color:#131DBF">' + n + '</span>' +
+        '</div>' +
+        '<div style="height:9px;background:var(--border);border-radius:5px;overflow:hidden">' +
+          '<div style="height:100%;width:' + Math.round(n/maxN*100) + '%;background:#131DBF;border-radius:5px"></div>' +
+        '</div>' +
+      '</div>';
+    }).join('') +
+  '</div>';
+  return _growthPageShell('Client Base Funnel', 'Accounts by lifecycle stage \u00b7 all clients', body);
+}
+
+function renderGrowthContentHealth(){
+  var G = _growthData();
+  var approvalRate = G.approvalRate, approvedContentR = G.approvedContentR, pendingContentR = G.pendingContentR, platformCounts = G.platformCounts;
+  var body = '<div class="card" style="padding:20px">' +
+    '<div style="display:flex;align-items:center;gap:18px;margin-bottom:22px">' +
+      '<div style="font-size:44px;font-weight:900;color:' + (approvalRate>=70?'#10B981':approvalRate>=40?'#F59E0B':'#EF4444') + '">' + approvalRate + '%</div>' +
+      '<div style="font-size:13px;color:var(--text3)">approved on first pass<br>' + approvedContentR.length + ' approved \u00b7 ' + pendingContentR.length + ' pending</div>' +
+    '</div>' +
+    '<div style="font-size:12px;font-weight:700;margin-bottom:10px">Platform Mix</div>' +
+    Object.keys(platformCounts).map(function(p){
+      var maxP = Math.max.apply(null, Object.keys(platformCounts).map(function(k){ return platformCounts[k]; }).concat([1]));
+      return '<div style="display:flex;align-items:center;gap:10px;margin-bottom:9px">' +
+        '<span style="font-size:11px;color:var(--text3);width:80px;flex-shrink:0">' + p + '</span>' +
+        '<div style="flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden">' +
+          '<div style="height:100%;width:' + Math.round(platformCounts[p]/maxP*100) + '%;background:' + _platformColor(p) + ';border-radius:4px"></div>' +
+        '</div>' +
+        '<span style="font-size:12px;font-weight:700;width:18px;text-align:right">' + platformCounts[p] + '</span>' +
+      '</div>';
+    }).join('') +
+  '</div>';
+  return _growthPageShell('Content Approval Health', 'Across every client, current queue', body);
+}
+
+function renderGrowthReach(){
+  var G = _growthData();
+  var aggImpressions = G.aggImpressions, aggLeads = G.aggLeads;
+  var body = '<div class="card" style="padding:20px">' +
+    '<div style="display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:18px">' +
+      '<div style="padding:18px;background:var(--surface2);border-radius:12px;text-align:center">' +
+        '<div style="font-size:28px;font-weight:900;color:#131DBF">' + (aggImpressions>=1000?Math.round(aggImpressions)+'K':aggImpressions) + '</div>' +
+        '<div style="font-size:11px;font-weight:600;color:var(--text3);margin-top:4px">Total Impressions</div>' +
+      '</div>' +
+      '<div style="padding:18px;background:var(--surface2);border-radius:12px;text-align:center">' +
+        '<div style="font-size:28px;font-weight:900;color:#10B981">' + aggLeads + '</div>' +
+        '<div style="font-size:11px;font-weight:600;color:var(--text3);margin-top:4px">Inbound SQLs</div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="padding:12px;background:var(--gold-pale);border-radius:8px;font-size:12px;color:var(--text2)">' +
+      'Awaiting native analytics/ad-platform integration for follower growth, reach & engagement trendlines.' +
+    '</div>' +
+  '</div>';
+  return _growthPageShell('Aggregate Reach & Leads', 'Combined organic + paid, current month', body);
+}
+
+function renderGrowthPillars(){
+  var G = _growthData();
+  var contentPillars = G.contentPillars, pendingContent = G.pendingContent, approvedContent = G.approvedContent;
+  var body = '<div class="card" style="padding:20px">' +
+    contentPillars.map(function(p){
+      return '<div style="margin-bottom:20px">' +
+        '<div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:8px">' +
+          '<div style="display:flex;align-items:center;gap:8px">' +
+            _gdIconSpan(p.icon, p.color, 16) +
+            '<span style="font-size:15px;font-weight:700">' + p.label + '</span>' +
+          '</div>' +
+          '<span style="font-size:15px;font-weight:900;color:' + p.color + '">' + p.pct + '%</span>' +
+        '</div>' +
+        '<div style="height:8px;background:var(--border);border-radius:4px;overflow:hidden;margin-bottom:5px">' +
+          '<div style="height:100%;width:' + p.pct + '%;background:' + p.color + ';border-radius:4px"></div>' +
+        '</div>' +
+        '<div style="font-size:11px;color:var(--text3)">' + p.desc + '</div>' +
+      '</div>';
+    }).join('') +
+    '<div style="padding:12px 14px;background:var(--teal-pale);border-radius:8px;margin-top:8px">' +
+      '<div style="font-size:12px;font-weight:700;color:var(--teal);margin-bottom:3px">Content Queue</div>' +
+      '<div style="font-size:12px;color:var(--text2)">' + pendingContent.length + ' pending approval \u00b7 ' + approvedContent.length + ' approved</div>' +
+    '</div>' +
+  '</div>';
+  return _growthPageShell('Content Pillar Efficiency', 'Performance score by pillar', body);
+}
+
+function renderGrowthPartnerships(){
+  var body = '<div class="card" style="padding:20px">' +
+    '<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:14px;margin-bottom:20px">' +
+    [
+      { label:'Active Referral Nodes', val:'6',    color:'#131DBF' },
+      { label:'Partner MRR',           val:'$2,100', color:'#10B981' },
+      { label:'Deals from Referrals',  val:'3',    color:'#F59E0B' },
+      { label:'Avg. Partner Deal Size', val:'$700',  color:'#8B5CF6' },
+    ].map(function(m){
+      return '<div style="padding:16px;background:var(--surface2);border-radius:12px;text-align:center">' +
+        '<div style="font-size:24px;font-weight:900;color:' + m.color + '">' + m.val + '</div>' +
+        '<div style="font-size:11px;font-weight:600;color:var(--text3);margin-top:4px">' + m.label + '</div>' +
+      '</div>';
+    }).join('') +
+    '</div>' +
+    '<div style="font-size:12px;font-weight:700;margin-bottom:10px">Recent Referral Activity</div>' +
+    ['DigitalOps Agency \u2192 1 new client', 'Creatives Co. \u2192 Proposal sent', 'StartupHR \u2192 Discovery call'].map(function(item){
+      return '<div style="font-size:12px;color:var(--text2);padding:8px 0;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:8px">' +
+        '<div style="width:6px;height:6px;border-radius:50%;background:var(--teal);flex-shrink:0"></div>' + item +
+      '</div>';
+    }).join('') +
+  '</div>';
+  return _growthPageShell('Strategic Partnerships', 'Referral network performance', body);
+}
+
+function renderGrowthWorkforce(){
+  var G = _growthData();
+  var demands = G.demands;
+  var body = '<div class="card" style="padding:20px">' +
+    demands.map(function(d){
+      var maxPct = Math.max(d.demand, d.bench) + 2;
+      return '<div style="margin-bottom:18px">' +
+        '<div style="font-size:13px;font-weight:700;margin-bottom:6px">' + d.skill + '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px;margin-bottom:5px">' +
+          '<span style="font-size:10px;color:var(--text3);width:56px">Demand</span>' +
+          '<div style="flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden">' +
+            '<div style="height:100%;width:' + Math.round(d.demand/maxPct*100) + '%;background:#131DBF;border-radius:4px"></div>' +
+          '</div>' +
+          '<span style="font-size:12px;font-weight:700;color:#131DBF;width:18px;text-align:right">' + d.demand + '</span>' +
+        '</div>' +
+        '<div style="display:flex;align-items:center;gap:8px">' +
+          '<span style="font-size:10px;color:var(--text3);width:56px">Bench</span>' +
+          '<div style="flex:1;height:7px;background:var(--border);border-radius:4px;overflow:hidden">' +
+            '<div style="height:100%;width:' + Math.round(d.bench/maxPct*100) + '%;background:' + (d.bench < d.demand ? '#EF4444' : '#10B981') + ';border-radius:4px"></div>' +
+          '</div>' +
+          '<span style="font-size:12px;font-weight:700;color:' + (d.bench < d.demand ? '#EF4444' : '#10B981') + ';width:18px;text-align:right">' + d.bench + '</span>' +
+        '</div>' +
+        (d.bench < d.demand ? '<div style="display:flex;align-items:center;gap:5px;font-size:10px;color:#EF4444;margin-top:4px">' + _gdIconSpan('warning','#EF4444',11) + 'Gap: ' + (d.demand-d.bench) + ' needed</div>' : '') +
+      '</div>';
+    }).join('') +
+  '</div>';
+  return _growthPageShell('Workforce Supply Alignment', 'Market demand vs. available bench', body);
+}
+// ── Social Planner — scheduler/table view across all platforms, using real content data ──
+function _spInitState(){
+  if(!APP.socialPlanner){
+    var content = APP.data.content || [];
+    var maxTs = 0;
+    content.forEach(function(c){ var t = Date.parse(c.createdAt||''); if(t && t > maxTs) maxTs = t; });
+    var anchor = maxTs ? new Date(maxTs) : new Date();
+    var d1 = new Date(anchor); d1.setDate(d1.getDate()-30);
+    var d2 = new Date(anchor); d2.setDate(d2.getDate()+14);
+    APP.socialPlanner = { dateFrom: d1.toISOString().slice(0,10), dateTo: d2.toISOString().slice(0,10), search:'', page:1, pageSize:10 };
+  }
+  return APP.socialPlanner;
+}
+function spSetDate(field, val){ _spInitState()[field] = val; APP.socialPlanner.page = 1; renderCurrentPage(); }
+function spSetSearch(val){ _spInitState().search = val; APP.socialPlanner.page = 1; renderCurrentPage(); }
+function spSetPage(p){ _spInitState().page = p; renderCurrentPage(); }
+function spSetPageSize(n){ _spInitState().pageSize = parseInt(n,10); APP.socialPlanner.page = 1; renderCurrentPage(); }
+
+function renderSocialPlanner(){
+  var st = _spInitState();
+  var all = (APP.data.content || []).filter(function(c){ return !c.archived; });
+
+  var from = st.dateFrom ? new Date(st.dateFrom).getTime() : null;
+  var to = st.dateTo ? new Date(st.dateTo).getTime() + 24*3600*1000 - 1 : null;
+  var rows = all.filter(function(c){
+    if(st.search && (c.title||'').toLowerCase().indexOf(st.search.toLowerCase()) === -1) return false;
+    var t = Date.parse(c.createdAt||'');
+    if(!t) return true; // undated items always shown, can't be date-filtered out
+    if(from && t < from) return false;
+    if(to && t > to) return false;
+    return true;
+  }).sort(function(a,b){ return Date.parse(b.createdAt||0) - Date.parse(a.createdAt||0); });
+
+  var total = rows.length;
+  var pageSize = st.pageSize || 10;
+  var totalPages = Math.max(1, Math.ceil(total / pageSize));
+  if(st.page > totalPages) st.page = totalPages;
+  var startIdx = (st.page - 1) * pageSize;
+  var pageRows = rows.slice(startIdx, startIdx + pageSize);
+
+  var statusMap = {
+    pending:  { label:'Scheduled', tag:'t-navy' },
+    approved: { label:'Published', tag:'t-green' },
+    revision: { label:'Draft',     tag:'t-amber' }
+  };
+
+  var controls = '<div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:14px">' +
+    '<div style="display:flex;align-items:center;gap:6px">' +
+      '<input type="date" class="form-control" style="font-size:11px;padding:6px 8px;width:auto" value="' + st.dateFrom + '" onchange="spSetDate(\'dateFrom\',this.value)">' +
+      '<span style="font-size:11px;color:var(--text3)">to</span>' +
+      '<input type="date" class="form-control" style="font-size:11px;padding:6px 8px;width:auto" value="' + st.dateTo + '" onchange="spSetDate(\'dateTo\',this.value)">' +
+    '</div>' +
+    '<input class="form-control" style="max-width:220px;font-size:12px" placeholder="Search by caption" value="' + (st.search||'') + '" oninput="spSetSearch(this.value)">' +
+    '<button class="btn btn-sm btn-primary" style="margin-left:auto" onclick="openAddContent()">+ New Post</button>' +
+  '</div>';
+
+  var summary = '<div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:14px">' +
+    '<span class="tag t-navy">' + all.filter(function(c){return c.status==='pending';}).length + ' Scheduled</span>' +
+    '<span class="tag t-green">' + all.filter(function(c){return c.status==='approved';}).length + ' Published</span>' +
+    '<span class="tag t-amber">' + all.filter(function(c){return c.status==='revision';}).length + ' Draft</span>' +
+    '<span class="tag t-gray">' + all.length + ' Total</span>' +
+  '</div>';
+
+  var table = '<div class="card" style="overflow-x:auto">' +
+    '<table style="width:100%;border-collapse:collapse;font-size:12px;min-width:820px">' +
+      '<thead><tr style="background:var(--surface2)">' +
+        ['','Caption','Media','Status','Type','Date','Social'].map(function(h){
+          return '<th style="padding:9px 10px;text-align:left;font-weight:700;font-size:11px;color:var(--text3)">' + h + '</th>';
+        }).join('') +
+      '</tr></thead><tbody>' +
+      (pageRows.length ? pageRows.map(function(c){
+        var st2 = statusMap[c.status] || { label: c.status || '\u2014', tag:'t-gray' };
+        var dateStr = c.createdAt ? new Date(c.createdAt).toLocaleDateString('en-US',{month:'short',day:'numeric',year:'numeric'}) : (c.dueLabel || '\u2014');
+        var plats = (c.platform||'').split('+').map(function(p){ return p.trim(); }).filter(Boolean);
+        var thumb = c.imageUrl
+          ? '<img src="' + (typeof drivePreviewUrl==='function' ? (drivePreviewUrl(c.imageUrl)||c.imageUrl) : c.imageUrl) + '" style="width:36px;height:36px;border-radius:6px;object-fit:cover" onerror="this.style.display=\'none\'">'
+          : '<div style="width:36px;height:36px;border-radius:6px;background:var(--surface2);display:flex;align-items:center;justify-content:center">' + _gdIconSpan('image','var(--text3)',15) + '</div>';
+        return '<tr style="border-bottom:1px solid var(--border);cursor:pointer" onclick="openEditContent(\'' + c.id + '\')" onmouseover="this.style.background=\'var(--hover-row-bg)\'" onmouseout="this.style.background=\'\'">' +
+          '<td style="padding:9px 10px"><input type="checkbox" onclick="event.stopPropagation()"></td>' +
+          '<td style="padding:9px 10px;max-width:260px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:600">' + (c.title||'\u2014') + '</td>' +
+          '<td style="padding:9px 10px">' + thumb + '</td>' +
+          '<td style="padding:9px 10px"><span class="tag ' + st2.tag + '">' + st2.label + '</span></td>' +
+          '<td style="padding:9px 10px;color:var(--text3)">Post</td>' +
+          '<td style="padding:9px 10px;color:var(--text3);white-space:nowrap">' + dateStr + '</td>' +
+          '<td style="padding:9px 10px"><div style="display:flex;gap:4px">' + plats.map(function(p){ return platIcon(p); }).join('') + '</div></td>' +
+        '</tr>';
+      }).join('') : '<tr><td colspan="7" style="padding:24px;text-align:center;color:var(--text3)">No posts match this date range / search.</td></tr>') +
+      '</tbody></table>' +
+  '</div>';
+
+  var pagination = '<div style="display:flex;align-items:center;justify-content:space-between;margin-top:14px;flex-wrap:wrap;gap:10px">' +
+    '<div style="display:flex;align-items:center;gap:8px;font-size:11px;color:var(--text3)">' +
+      'Rows per page ' +
+      '<select class="form-control" style="font-size:11px;padding:4px 8px;width:auto" onchange="spSetPageSize(this.value)">' +
+        [10,25,50].map(function(n){ return '<option value="' + n + '"' + (pageSize===n?' selected':'') + '>' + n + '</option>'; }).join('') +
+      '</select>' +
+      (total ? (startIdx+1) + ' to ' + Math.min(startIdx+pageSize, total) + ' of ' + total + ' result' + (total===1?'':'s') : '0 results') +
+    '</div>' +
+    '<div style="display:flex;align-items:center;gap:6px">' +
+      '<button class="btn btn-xs btn-secondary" ' + (st.page<=1?'disabled':'') + ' onclick="spSetPage(' + (st.page-1) + ')">Previous</button>' +
+      '<span style="font-size:11px;color:var(--text3);padding:0 6px">Page ' + st.page + ' of ' + totalPages + '</span>' +
+      '<button class="btn btn-xs btn-secondary" ' + (st.page>=totalPages?'disabled':'') + ' onclick="spSetPage(' + (st.page+1) + ')">Next</button>' +
+    '</div>' +
+  '</div>';
+
+  return '<div>' +
+    '<div style="margin-bottom:16px">' +
+      '<h1 style="font-size:20px;font-weight:900;margin-bottom:2px">Social Planner</h1>' +
+      '<p style="font-size:12px;color:var(--text3)">Every scheduled and published post, across every connected platform \u2014 built from your content queue.</p>' +
+    '</div>' +
+    summary + controls + table + pagination +
+    '<div style="font-size:10px;color:var(--text3);margin-top:12px">Type and status are derived from your content queue, not a live scheduling API. Connect a social publishing integration to get exact post types, real publish confirmations, and engagement stats here.</div>' +
+  '</div>';
+}
+
+
 
 // ── 4. REGISTER Art's dashboard as HOME page ───────────────────────
 // Patch renderCurrentPage: if Art (director_growth) is on 'home', show growth dashboard
@@ -13161,6 +13415,22 @@ if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
       sbGet(APP_TABLES[col]).then(function(rows) {
         if (rows && rows.length) {
           if (typeof APP !== 'undefined' && APP.data) {
+            // team/clients hold locally-changed PIN fields (pin / clientPin).
+            // A blind overwrite here would silently revert a PIN change the
+            // moment this background fetch lands — merge by id instead,
+            // keeping whichever pin value is already in memory.
+            if ((col === 'team' || col === 'clients') && Array.isArray(APP.data[col]) && APP.data[col].length) {
+              var pinField = col === 'team' ? 'pin' : 'clientPin';
+              var localById = {};
+              APP.data[col].forEach(function(r) { if (r && r.id) localById[r.id] = r; });
+              rows = rows.map(function(r) {
+                var local = r && r.id ? localById[r.id] : null;
+                if (local && local[pinField] != null) {
+                  r[pinField] = local[pinField];
+                }
+                return r;
+              });
+            }
             APP.data[col] = rows;
             if (_ls) _ls(col, rows);
             updated = true;
