@@ -12458,6 +12458,23 @@ function _addFounderHeader(role, acct) {
       }).join("") + (APP.ownerViewAs ? '<button onclick="switchFounderView(null)" style="width:100%;padding:6px;border:none;background:none;color:var(--text3);font-size:12px;cursor:pointer;text-align:center">\u21A9 Back to full view</button>' : "");
       nav.appendChild(switcher);
     }
+  } else if (role === "director_growth" || role === "director_operations") {
+    const nav = document.getElementById("sb-nav");
+    if (nav && !document.getElementById("founder-switcher")) {
+      const otherRole = role === "director_growth" ? "director_operations" : "director_growth";
+      const d = FOUNDER_ROLES[otherRole];
+      const isActive = APP.ownerViewAs === otherRole;
+      const initials = otherRole === "director_growth" ? "AT" : "AV";
+      const otherName = otherRole === "director_growth" ? "Art" : "Alvin";
+      const otherDept = otherRole === "director_growth" ? "Growth" : "Operations";
+      const switcher = document.createElement("div");
+      switcher.id = "founder-switcher";
+      switcher.style.cssText = "padding:10px;border-top:1px solid var(--border);margin-top:6px";
+      switcher.innerHTML = '<div style="font-size:12px;font-weight:700;color:var(--text3);text-transform:uppercase;letter-spacing:.08em;padding:4px 2px;margin-bottom:6px">Partner View</div>' +
+        (`<button onclick="switchFounderView('` + otherRole + `')" style="display:flex;align-items:center;gap:8px;width:100%;padding:8px 10px;border-radius:8px;border:1.5px solid ` + (isActive ? d.color : "var(--border)") + ";background:" + (isActive ? d.color + "1a" : "transparent") + ';color:var(--text);cursor:pointer;font-size:12px;font-weight:600;margin-bottom:4px;transition:all .15s"><div style="width:24px;height:24px;border-radius:50%;background:' + d.color + ';color:#fff;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:800;flex-shrink:0">' + initials + '</div><div style="text-align:left"><div>' + otherName + "'s View</div><div style='font-size:12px;color:var(--text3)'>" + otherDept + "</div></div></button>") +
+        (APP.ownerViewAs ? '<button onclick="switchFounderView(null)" style="width:100%;padding:6px;border:none;background:none;color:var(--text3);font-size:12px;cursor:pointer;text-align:center">\u21A9 Back to my view</button>' : "");
+      nav.appendChild(switcher);
+    }
   }
 }
 APP.ownerViewAs = APP.ownerViewAs || null;
@@ -12984,6 +13001,27 @@ function _growthData(){
   };
 }
 
+function renderCompanySnapshotStrip(){
+  var clients = (APP.data && APP.data.clients) || [];
+  var team = (APP.data && APP.data.team) || [];
+  var tasks = (APP.data && APP.data.tasks) || [];
+  var activeClients = clients.filter(function(c){ return c.status === 'Active' && !c.archived; }).length;
+  var activeTeam = team.filter(function(v){ return v.status === 'Active'; }).length;
+  var openTasks = tasks.filter(function(t){ return !t.done && !t.archived; }).length;
+  var mrrUsd = (typeof FIN !== 'undefined' && FIN.totalMrrUsd) ? FIN.totalMrrUsd() : clients.reduce(function(a,c){ return a + (parseFloat(c.rateUsd)||0); }, 0);
+  var stats = [
+    { num: '$' + Math.round(mrrUsd).toLocaleString(), label: 'Total MRR' },
+    { num: String(activeClients), label: 'Active Clients' },
+    { num: String(activeTeam), label: 'Team Members' },
+    { num: String(openTasks), label: 'Open Tasks' }
+  ];
+  return '<div style="display:flex;flex-wrap:wrap;margin-bottom:18px;padding:14px 18px;background:var(--navy);border-radius:12px;color:#fff">' +
+    '<div style="width:100%;font-size:11px;font-weight:700;color:rgba(255,255,255,.6);text-transform:uppercase;letter-spacing:.08em;margin-bottom:10px">Company Snapshot \u00B7 All Departments</div>' +
+    stats.map(function(s){
+      return '<div style="flex:1;min-width:110px"><div style="font-size:19px;font-weight:800">' + s.num + '</div><div style="font-size:11px;color:rgba(255,255,255,.6)">' + s.label + '</div></div>';
+    }).join('') +
+  '</div>';
+}
 function renderArtGrowthDashboard(){
   var G = _growthData();
   var clients=G.clients, tasks=G.tasks, content=G.content, invoices=G.invoices, goals=G.goals,
@@ -13035,6 +13073,8 @@ function renderArtGrowthDashboard(){
       '<div style="width:8px;height:8px;border-radius:50%;background:#10B981;animation:pulse 2s infinite" title="Data synced"></div>' +
     '</div>' +
   '</div>' +
+
+  renderCompanySnapshotStrip() +
 
   // ── Waitlist Ticker ──
   '<div style="display:flex;align-items:center;gap:16px;flex-wrap:wrap;padding:14px 18px;border-radius:12px;background:var(--surface2);border-left:4px solid ' + waitlistState.color + ';margin-bottom:22px">' +
@@ -13986,6 +14026,8 @@ function renderAlvinOpsDashboard() {
     '</div>' +
   '</div>' +
 
+  renderCompanySnapshotStrip() +
+
   // ── SECTION 1: KPI Grid ──────────────────────────────────────
   '<div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin-bottom:20px">' +
   kpis.map(function(k){
@@ -14417,8 +14459,20 @@ window.exitFounderView = function() {
 
   // Render the logged-in founder's own home dashboard directly
   var ca = document.getElementById('content-area');
-  if (ca && typeof renderHome === 'function') {
-    ca.innerHTML = renderHome();
+  if (ca) {
+    var _exitAcct = APP.ownerAuth && APP.ownerAuth._sbAccount
+      ? APP.ownerAuth._sbAccount
+      : (typeof mgmtAccounts === 'function'
+          ? mgmtAccounts().find(function(a) { return a.username && a.username.toLowerCase() === ((APP.ownerAuth && APP.ownerAuth.username) || '').toLowerCase(); })
+          : null);
+    var _exitRole = (_exitAcct && _exitAcct.founderRole) || '';
+    if (_exitRole === 'director_growth' && typeof renderArtGrowthDashboard === 'function') {
+      ca.innerHTML = renderArtGrowthDashboard();
+    } else if (_exitRole === 'director_operations' && typeof renderAlvinOpsDashboard === 'function') {
+      ca.innerHTML = renderAlvinOpsDashboard();
+    } else if (typeof renderHome === 'function') {
+      ca.innerHTML = renderHome();
+    }
   }
 
   // Rebuild sidebar (re-adds founder-switcher, badge counts)
