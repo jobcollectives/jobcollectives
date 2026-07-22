@@ -6357,13 +6357,16 @@ function toggleTheme() {
   document.documentElement.setAttribute("data-theme", next);
   localStorage.setItem("tjc-theme", next);
 }
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   var _a, _b;
   (function initTheme() {
     const stored = localStorage.getItem("tjc-theme");
     document.documentElement.setAttribute("data-theme", stored || "light");
   })();
-  loadAllData();
+  document.body.insertAdjacentHTML("beforeend", '<div id="tjc-boot-loading" style="position:fixed;inset:0;background:var(--navy,#0A0F3C);color:#fff;display:flex;align-items:center;justify-content:center;font-family:sans-serif;font-size:14px;z-index:99999">Loading your data\u2026</div>');
+  await loadAllData();
+  const bootEl = document.getElementById("tjc-boot-loading");
+  if (bootEl) bootEl.remove();
   APP.cal = { view: "month", year: (/* @__PURE__ */ new Date()).getFullYear(), month: (/* @__PURE__ */ new Date()).getMonth(), selDate: null };
   APP.profile = ((_b = (_a = APP.data) == null ? void 0 : _a.team) != null ? _b : []).find((v) => v.id === "u1") || SEED.team[0];
   if (APP.profile) {
@@ -12144,15 +12147,11 @@ if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
     recognition:'recognition', feedback:'feedback', milestones:'milestones'
   };
 
-  // ── Patch lsSave to push to Supabase in background ───────────────
-  var _ls = typeof lsSave === 'function' ? lsSave : null;
-  if (_ls) {
-    lsSave = function(col, data) {
-      _ls(col, data);
-      var t = APP_TABLES[col];
-      if (t && Array.isArray(data) && data.length) sbUpsert(t, data);
-    };
-  }
+  // ── lsSave now writes to Supabase ONLY — localStorage persistence removed ─
+  lsSave = function(col, data) {
+    var t = APP_TABLES[col];
+    if (t && Array.isArray(data)) sbUpsert(t, data);
+  };
 
   // ── Patch HR save ─────────────────────────────────────────────────
   function patchHR(fn) {
@@ -12166,53 +12165,38 @@ if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
   if (typeof hrSave  === 'function') hrSave  = patchHR(hrSave);
 
   // ── Hydrate from Supabase on first load (background, non-blocking) ─
-  var _origLoad = typeof loadAllData === 'function' ? loadAllData : null;
-  loadAllData = function() {
-    // Run original synchronously first (seeds localStorage, renders immediately)
-    if (_origLoad) _origLoad();
-
-    // Then hydrate from Supabase in background — one table at a time
+  // ── loadAllData is now Supabase-first: the app waits for real data ─
+  // before rendering anything, instead of flashing local/seed data and
+  // correcting it afterward. No more localStorage read/write here.
+  loadAllData = async function() {
     var cols = Object.keys(APP_TABLES);
-    var i = 0;
-    var updated = false;
-    function next() {
-      if (i >= cols.length) {
-        if (updated) {
-          // Re-render once after all tables loaded
-          try { renderCurrentPage(); } catch(e) {}
-        }
-        return;
+    var failed = [];
+    for (var i = 0; i < cols.length; i++) {
+      var col = cols[i];
+      try {
+        var rows = await sbGet(APP_TABLES[col]);
+        APP.data[col] = rows || [];
+      } catch (e) {
+        failed.push(col);
+        APP.data[col] = APP.data[col] || [];
       }
-      var col = cols[i++];
-      sbGet(APP_TABLES[col]).then(function(rows) {
-        if (rows && rows.length) {
-          if (typeof APP !== 'undefined' && APP.data) {
-            // team/clients hold locally-changed PIN fields (pin / clientPin).
-            // A blind overwrite here would silently revert a PIN change the
-            // moment this background fetch lands — merge by id instead,
-            // keeping whichever pin value is already in memory.
-            if ((col === 'team' || col === 'clients') && Array.isArray(APP.data[col]) && APP.data[col].length) {
-              var pinField = col === 'team' ? 'pin' : 'clientPin';
-              var localById = {};
-              APP.data[col].forEach(function(r) { if (r && r.id) localById[r.id] = r; });
-              rows = rows.map(function(r) {
-                var local = r && r.id ? localById[r.id] : null;
-                if (local && local[pinField] != null) {
-                  r[pinField] = local[pinField];
-                }
-                return r;
-              });
-            }
-            APP.data[col] = rows;
-            if (_ls) _ls(col, rows);
-            updated = true;
-          }
-        }
-        next();
-      });
     }
-    next();
+    try { APP._mgmtCache = (await sbGet('mgmt_users')) || []; } catch (e) { failed.push('mgmt_users'); APP._mgmtCache = APP._mgmtCache || []; }
+    try { APP._hrCache = (await sbGet('hr_accounts')) || []; } catch (e) { failed.push('hr_accounts'); APP._hrCache = APP._hrCache || []; }
+    if (failed.length) {
+      console.warn('[TJC] Could not load from Supabase:', failed.join(', '));
+      if (typeof toast === 'function') {
+        toast('Could not reach the database — check your connection and reload.', 'error');
+      }
+    }
   };
+
+  // ── Account lists are now Supabase-backed (cache populated at boot,
+  //    writes push straight to Supabase) instead of localStorage ────
+  mgmtAccounts = function() { return APP._mgmtCache || []; };
+  saveMgmtAccounts = function(arr) { APP._mgmtCache = arr; sbUpsert('mgmt_users', arr); };
+  hrAccounts = function() { return APP._hrCache || []; };
+  saveHrAccounts = function(arr) { APP._hrCache = arr; sbUpsert('hr_accounts', arr); };
 
   // ── Management login via Supabase ─────────────────────────────────
   var _origOwner = typeof ownerUsernameSubmit === 'function' ? ownerUsernameSubmit : null;
@@ -12243,7 +12227,7 @@ if(typeof FOUNDER_ROLES !== 'undefined' && FOUNDER_ROLES.director_growth){
       var input = document.getElementById('hr-uname-input');
       var val = ((input && input.value) || '').trim();
       if (!val) { if (typeof toast === 'function') toast('Enter your username', 'error'); return; }
-      sbGet('hr_users').then(function(accounts) {
+      sbGet('hr_accounts').then(function(accounts) {
         if (!accounts || !accounts.length) { _origHR(); return; }
         var found = accounts.find(function(a) {
           return a.username && a.username.toLowerCase() === val.toLowerCase();
