@@ -4397,7 +4397,7 @@ function rotateDailyVerse() {
 function renderAuthChooser() {
   const step = APP.authStep || "choose";
   if (step === "choose") {
-    return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:420px">
+    return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:520px">
       <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <a href="https://jobcollectives.github.io/" class="auth-back-web">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1L3 7l6 6"/></svg>
@@ -4431,7 +4431,7 @@ function renderAuthChooser() {
   if (step === "va-select") {
     const searchVal = APP.va.searchVal || "";
     const matched = searchVal.length >= 2 ? APP.data.team.filter((v) => (v.role === "va" || v.role === "ops_va") && v.displayName.toLowerCase().includes(searchVal.toLowerCase())) : [];
-    return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:420px">
+    return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:520px">
       <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <a href="https://jobcollectives.github.io/" class="auth-back-web">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1L3 7l6 6"/></svg>
@@ -4484,7 +4484,7 @@ function renderAuthChooser() {
   if (step === "client-select") {
     const searchVal = APP.clientAuth.searchVal || "";
     const matched = searchVal.length >= 2 ? APP.data.clients.filter((c) => !c.archived && ["Active", "Onboarding", "Completed"].includes(c.status) && c.name.toLowerCase().includes(searchVal.toLowerCase())) : [];
-    return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:420px">
+    return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:520px">
       <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
         <a href="https://jobcollectives.github.io/" class="auth-back-web">
           <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1L3 7l6 6"/></svg>
@@ -10089,12 +10089,13 @@ function authUnifiedSelect(kind, id) {
     return;
   }
 }
+const _origRACH6 = renderAuthChooser;
 renderAuthChooser = function() {
   const step = APP.authStep || "choose";
   if (step !== "choose") return _origRACH6();
   const results = authUnifiedResults();
   const q = APP.authSearch || "";
-  return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:420px">
+  return `<div class="auth-wrap"><div style="display:flex;flex-direction:column;align-items:center;width:100%;max-width:520px">
     <div style="width:100%;display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
       <a href="https://jobcollectives.github.io/" class="auth-back-web">
         <svg width="14" height="14" viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M9 1L3 7l6 6"/></svg>
