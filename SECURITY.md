@@ -1,58 +1,35 @@
 # Security Policy
 
-This repo hosts the public **job collectives™** marketing site (`index.html`) and
-the **TJC Business OS** portal (`portal.html`, plus the founder entry pages
-`justine.html`, `art.html`, `alvin.html`), backed by a Supabase project.
-
-## Architecture at a glance
-
-- `portal.html` is a static, client-side app. It talks to Supabase directly
-  over the REST API using a **publishable key** (`sb_publishable_...`).
-  Publishable keys are safe to ship in client code — they identify the
-  project, not a privileged account, and every table they can reach is
-  behind Row Level Security (RLS).
-- PIN-based login (Management and HR accounts) is verified **server-side**.
-  PINs are hashed with `pgcrypto` (bcrypt) and checked inside two
-  `SECURITY DEFINER` Postgres functions — `verify_login_pin` and
-  `set_login_pin` — defined in
-  [`supabase/migrations/0001_secure_pin_auth.sql`](supabase/migrations/0001_secure_pin_auth.sql).
-  The hash never leaves the database; the client only ever gets back a
-  boolean plus a few non-sensitive profile fields.
-- `mgmt_users` and `hr_accounts` have RLS enabled with **no policies** for
-  `anon`/`authenticated`, so direct REST reads of those tables (including
-  `pin_hash`) are denied by default. Only the two functions above, or a
-  `service_role` key, can touch them.
-
-## What must never be committed here
-
-- A Supabase **secret / service_role key** (`sb_secret_...` or a JWT with
-  `"role":"service_role"`). This bypasses RLS entirely — full read/write
-  on every table. It belongs in a server-side secret store only
-  (e.g. a Supabase Edge Function's environment), never in this repo.
-- Any GitHub personal access token, `.env` file, or other credential.
-  `.gitignore` in this repo blocks the common patterns, but it's not a
-  substitute for care — double-check `git diff` before pushing.
-
-If you ever paste a secret into a commit by accident: rotate it
-immediately (Supabase → Project Settings → API → reset key, or GitHub →
-Settings → Developer settings → revoke the token) rather than relying on
-`git revert` — the value is already in history and public forever once
-pushed to a public repo.
-
-## Rate limiting / brute-force protection
-
-`verify_login_pin` and `set_login_pin` are callable with just the public
-`anon`/publishable key (there's no full user-session layer in this app),
-so both are protected by a server-side lockout:
-[`supabase/migrations/0002_pin_rate_limiting.sql`](supabase/migrations/0002_pin_rate_limiting.sql)
-adds a `login_attempts` table — **5 failed attempts on an account locks it
-for 15 minutes**, tracked per account (`mgmt_users`/`hr_accounts` row),
-shared between the login check and the "current PIN" check when changing
-a PIN. A successful check resets the counter. The client surfaces this as
-a "Too many incorrect attempts, try again in N minutes" message.
+This is internal, proprietary software for The Job Collectives. It is not a public open-source project, but the practices below apply to anyone with repo or Supabase access (founders, contracted developers, HR).
 
 ## Reporting a vulnerability
 
-If you find a security issue in this project, please email
-**connect@jobcollectives.com** with details rather than opening a public
-issue. We'll acknowledge within a few days.
+If you find a security issue — exposed credentials, a way to bypass PIN login, access to another client's data, etc. — report it directly to **Justine Inacay** (Managing Director) or **hello@jobcollectives.com**. Do not open a public GitHub issue for security problems, since this repo (and any issue on it) is publicly readable.
+
+## Known considerations specific to this project
+
+### 1. Default PINs must be changed
+Every account is seeded with a default 6-digit PIN until changed. At minimum, before this touches real client or business data:
+- Change every founder PIN (`mgmt_users` table) from its seed value
+- Change the HR account PIN (`hr_accounts` table) from `000000`
+- Change default PINs (`123456`) on any newly created VA or client account before sharing login details
+
+PINs are 6 digits (1,000,000 combinations). Verification happens server-side via Supabase RPC (`verify_login_pin`) with rate limiting and lockout after repeated failed attempts — but a default/guessable PIN bypasses that protection entirely regardless of how well the verification itself is built.
+
+### 2. Client data isolation
+Clients must never see each other's data — names, tasks, invoices, or capacity logs. This is enforced by which data the client portal queries and renders, not by database-level row security alone. Any new client-facing feature should be checked against this before shipping: does it only fetch the logged-in client's own records?
+
+### 3. Supabase keys
+- Only the **publishable/anon key** belongs in client-side code (`app.js`). This key is safe to expose — it's designed to be public — but it only works because Row Level Security policies and PIN-gated RPC functions control what it can actually do.
+- The **service-role key** must never appear anywhere in this repo, in chat logs, or in any client-facing file. If it's ever pasted into a chat, treat it as compromised and rotate it immediately from the Supabase dashboard.
+- If a GitHub Personal Access Token is ever needed for automation, use a fine-grained PAT scoped to `Contents: Read/write` on this specific repo only — not a classic token with broad account access.
+
+### 4. No secrets in commits
+Don't commit `.env` files, service-role keys, or GitHub tokens. If a secret is ever committed by mistake, rotating it is not optional — removing it from a later commit does not remove it from git history.
+
+### 5. Financial data
+Margin, profit, and OKR data must stay out of any client-facing view. This is a deliberate product requirement, not just a nice-to-have — check any new Owner-side financial feature isn't accidentally reachable from the client or VA portal's navigation.
+
+## Scope
+
+This policy covers the portal (`jobcollectives/jobcollectives`) and the marketing website (`jobcollectives/jobcollectives.github.io`). It does not cover third-party services (Supabase, GitHub Pages) — report issues with those platforms directly to their respective security teams.
