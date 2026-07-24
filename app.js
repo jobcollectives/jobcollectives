@@ -10112,17 +10112,17 @@ renderAuthChooser = function() {
       <div class="auth-sub">Sign in with your name or username</div>
       <input class="form-control" id="auth-unified-input" placeholder="Start typing your name..." value="${q}"
         oninput="authUnifiedType(this)" onkeydown="authUnifiedKey(event)"
-        style="margin-bottom:12px;text-align:center;font-size:14px" autofocus>
-      ${q.trim().length >= 2 ? (results.length === 0 ? `<div style="font-size:12px;color:var(--text3);text-align:center;padding:12px 0">No match found. Contact Management or HR if you need an account.</div>` : `<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:280px;overflow-y:auto">
+        style="margin-bottom:14px;text-align:center;font-size:16px" autofocus>
+      ${q.trim().length >= 2 ? (results.length === 0 ? `<div style="font-size:13.5px;color:var(--text3);text-align:center;padding:12px 0">No match found. Contact Management or HR if you need an account.</div>` : `<div style="display:flex;flex-direction:column;gap:8px;margin-bottom:12px;max-height:280px;overflow-y:auto">
             ${results.map(function(r) {
-              return `<div class="card card-hover" style="padding:11px 14px;display:flex;align-items:center;gap:12px;cursor:pointer;text-align:left" onclick="authUnifiedSelect('${r.kind}','${r.id}')">
+              return `<div class="card card-hover" style="padding:13px 16px;display:flex;align-items:center;gap:12px;cursor:pointer;text-align:left" onclick="authUnifiedSelect('${r.kind}','${r.id}')">
               <div class="av av-sm ${avColor(r.color)}">${r.initials || "?"}</div>
-              <div style="flex:1"><div style="font-size:12px;font-weight:600">${r.label}</div><div style="font-size:12px;color:var(--text3)">${r.sub}</div></div>
-              <span style="font-size:12px;color:var(--teal)">\u2192</span>
+              <div style="flex:1"><div style="font-size:14.5px;font-weight:600">${r.label}</div><div style="font-size:13px;color:var(--text3)">${r.sub}</div></div>
+              <span style="font-size:14px;color:var(--teal)">\u2192</span>
             </div>`;
             }).join("")}
-          </div>`) : `<div style="font-size:12px;color:var(--text3);text-align:center;padding:8px 0">Type at least 2 characters to find your account</div>`}
-      <div style="font-size:12px;color:var(--text3)">Secure \u00B7 Accounts are created by Management or HR</div>
+          </div>`) : `<div style="font-size:13.5px;color:var(--text3);text-align:center;padding:8px 0">Type at least 2 characters to find your account</div>`}
+      <div style="font-size:13px;color:var(--text3)">Secure \u00B7 Accounts are created by Management or HR</div>
     </div>
   </div></div>`;
 };
